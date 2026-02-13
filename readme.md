@@ -1,269 +1,204 @@
-# 项目名称
+# 易宿酒店预订平台
 
-**易宿酒店预订平台**
-
----
-
-# 一、项目目标
+## 一、项目目标
 
 构建一个前后端分离的智慧酒店预订系统，包含：
 
-* 📱 用户端（多端支持）
-* 🖥 商户端后台管理系统（PC端）
+- **用户端**（多端支持：微信小程序、H5、React Native App）
+- **商户端后台管理系统**（PC 端）
 
-实现：
+实现以下核心功能：
 
-* 酒店查询
-* 列表筛选
-* 详情展示
-* 商户信息录入
-* 管理员审核发布流程
-
----
-
-# 二、技术选型
-
-## 前端（用户端）
-
-推荐：**Taro + React + TypeScript**
-
-原因：
-
-* 一套代码多端输出：
-
-  * 微信小程序
-  * H5网页
-  * React Native App
-* 方便做主题切换
-* 易做组件化抽象
-* 你本身会前端，完全能驾驭
+- 酒店查询
+- 列表筛选
+- 详情展示
+- 商户信息录入
+- 管理员审核发布流程
 
 ---
 
-## 后台管理系统（PC）
+## 二、技术选型
 
-推荐：
+### 前端（用户端）
 
-* React + Ant Design
-* 或者直接用 Ant Design Pro
+- **框架**：Taro + React + TypeScript  
+  **优势**：一套代码多端输出（微信小程序、H5、React Native），支持主题切换，组件化抽象，开发效率高。
 
-要求不高，重点在功能实现。
+### 后台管理系统（PC）
 
----
+- **框架**：React + Ant Design（或 Ant Design Pro）  
+  **要求**：功能实现为主，UI 美观为辅。
 
-## 后端
+### 后端
 
-Node.js + Express
-
-数据库：
-
-* 开发阶段：MongoDB
-* 或 MySQL（更贴合真实业务）
-
-建议：
-
-> 如果你想拿高分，用 MySQL 更加“企业化”
+- **运行环境**：Node.js + Express  
+- **数据库**（二选一）：
+  - 开发阶段：MongoDB（灵活）
+  - **推荐（更具企业化、加分）**：MySQL
 
 ---
 
-# 三、系统架构设计
+## 三、系统架构设计
 
 ```
-             用户端（多端）
-    ┌────────────────────┐
-    │ 小程序 / H5 / App  │
-    └──────────┬─────────┘
-               │ REST API
-               ▼
-        Node.js 服务端
-               │
-     ┌─────────┴─────────┐
-     │                   │
-   MySQL            文件存储
- (酒店数据)        (图片资源)
+用户端（小程序 / H5 / App）
+        │
+        ▼ REST API
+   Node.js 服务端
+        │
+    ┌────┴────┐
+    │         │
+  MySQL   文件存储
+（酒店数据）（图片资源）
 ```
 
 ---
 
-# 四、数据库设计（核心表）
+## 四、数据库设计（核心表）
 
-## 1️⃣ 用户表 users
+### 1️⃣ 用户表（users）
 
-| 字段         | 类型                    |
-| ---------- | --------------------- |
-| id         | int                   |
-| username   | varchar               |
-| password   | varchar               |
-| role       | enum(admin, merchant) |
-| created_at | datetime              |
+| 字段名       | 类型                        | 说明                 |
+| ------------ | --------------------------- | -------------------- |
+| id           | int                         | 主键                 |
+| username     | varchar                     | 用户名               |
+| password     | varchar                     | 密码（加密存储）     |
+| role         | enum('admin','merchant')    | 角色：管理员/商户    |
+| created_at   | datetime                    | 创建时间             |
 
----
+### 2️⃣ 酒店表（hotels）
 
-## 2️⃣ 酒店表 hotels
+| 字段名       | 类型                                            | 说明                         |
+| ------------ | ----------------------------------------------- | ---------------------------- |
+| id           | int                                             | 主键                         |
+| name_cn      | varchar                                         | 中文名称                     |
+| name_en      | varchar                                         | 英文名称                     |
+| address      | varchar                                         | 地址                         |
+| star         | int                                             | 星级                         |
+| open_date    | date                                            | 开业日期                     |
+| status       | enum('draft','pending','published','offline') | 状态：草稿/待审/已发布/已下线 |
+| created_by   | int                                             | 创建人（user_id）            |
 
-| 字段         | 类型                                       |
-| ---------- | ---------------------------------------- |
-| id         | int                                      |
-| name_cn    | varchar                                  |
-| name_en    | varchar                                  |
-| address    | varchar                                  |
-| star       | int                                      |
-| open_date  | date                                     |
-| status     | enum(draft, pending, published, offline) |
-| created_by | user_id                                  |
+### 3️⃣ 房型表（rooms）
 
----
+| 字段名     | 类型    | 说明             |
+| ---------- | ------- | ---------------- |
+| id         | int     | 主键             |
+| hotel_id   | int     | 所属酒店         |
+| room_type  | varchar | 房型名称         |
+| price      | decimal | 基础价格         |
+| stock      | int     | 库存             |
 
-## 3️⃣ 房型表 rooms
+### 4️⃣ 价格策略表（price_strategies）
 
-| 字段        | 类型      |
-| --------- | ------- |
-| id        | int     |
-| hotel_id  | int     |
-| room_type | varchar |
-| price     | decimal |
-| stock     | int     |
+**创新点**：支持节假日折扣、套餐优惠等动态价格计算。
 
----
-
-## 4️⃣ 价格策略表（创新点）
-
-支持节日折扣、套餐优惠。
-
----
-
-# 五、两人分工方案
-
-假设：
-
-你 = 技术能力更强
-队友 = 协作开发
+| 字段名       | 类型    | 说明                       |
+| ------------ | ------- | -------------------------- |
+| id           | int     | 主键                       |
+| hotel_id     | int     | 所属酒店                   |
+| room_id      | int     | 关联房型（可选）           |
+| strategy_name| varchar | 策略名称（如“国庆折扣”）   |
+| discount     | decimal | 折扣系数（0.8 表示八折）   |
+| start_date   | date    | 生效开始日期               |
+| end_date     | date    | 生效结束日期               |
 
 ---
 
-## 👨‍💻 A 负责（建议你）
+## 五、两人分工方案
 
-### 1. 后端设计
+### 👨‍💻 A 负责（技术能力较强）
 
-* 数据库设计
-* RESTful API
-* 权限控制
-* 审核发布逻辑
+**1. 后端设计与开发**
+- 数据库设计
+- RESTful API 实现
+- 权限控制
+- 审核发布逻辑
 
-### 2. 用户端核心页面
+**2. 用户端核心页面**
+- 酒店查询页
+- 酒店列表页（含虚拟列表优化）
+- 酒店详情页（含日历组件、实时价格计算）
+- 主题系统（深色模式、老年模式）
 
-* 查询页
-* 列表页
-* 详情页
-* 日历组件
+**3. 多端适配与性能优化**
+- Taro 多端构建
+- 长列表性能优化
+- 联调与 bug 修复
 
-### 3. 多端适配
+### 👨‍💻 B 负责（协作开发）
 
-* 主题系统
-* 字体放大模式
+**1. 后台管理系统**
+- 登录 / 注册
+- 酒店信息录入
+- 酒店审核列表
+- 发布 / 下线操作
 
----
+**2. UI/UX 优化**
+- Banner 设计
+- 页面布局美化
+- 筛选交互体验提升
 
-## 👨‍💻 B 负责
-
-### 1. 后台管理系统
-
-* 登录注册
-* 酒店信息录入
-* 酒店审核列表
-* 发布/下线
-
-### 2. UI优化
-
-* Banner设计
-* 页面布局美化
-* 筛选交互体验
-
----
-
-## 最终整合
-
-* 联调 API
-* 修复Bug
-* 性能优化
+**3. 联调辅助**
+- 配合 API 联调
+- 基础 bug 修复
 
 ---
 
-# 六、用户端功能设计
+## 六、用户端功能设计
+
+### 1️⃣ 酒店查询页（首页）
+
+**功能模块**：
+- Banner 轮播
+- 定位服务（Taro 定位 API）
+- 关键字搜索
+- 自定义日历组件（入住/离店日期选择）
+- 筛选面板（价格、星级、区域）
+- 快捷标签（热门推荐、附近）
+- 查询按钮
+
+**技术重点**：
+- 状态管理（Zustand / Redux）
+- 自定义组件抽象
 
 ---
 
-# 1️⃣ 酒店查询页（首页）
+### 2️⃣ 酒店列表页
 
-功能：
+**功能模块**：
+- 条件展示头（当前筛选条件）
+- 二级筛选（更多筛选条件展开）
+- 无限滚动加载（IntersectionObserver / onReachBottom）
 
-* Banner
-* 定位功能
-* 关键字搜索
-* 日历组件
-* 筛选
-* 快捷标签
-* 查询按钮
-
----
-
-### 技术重点
-
-* 使用Taro定位API
-* 自定义日历组件
-* 状态管理（Zustand 或 Redux）
+**技术重点（加分项）**：
+- **虚拟列表优化**（react-window 或手写虚拟滚动）
+- 提升长列表渲染性能
 
 ---
 
-# 2️⃣ 酒店列表页
+### 3️⃣ 酒店详情页
 
-功能：
+**功能模块**：
+- 图片轮播
+- 酒店信息展示
+- 日历选择（入住/离店）
+- 房型列表（含库存、价格）
+- **实时价格计算**（基础价 + 节假日加价 - 优惠）
 
-* 条件展示头
-* 二级筛选
-* 无限滚动加载
-
----
-
-### 技术重点
-
-* 虚拟列表优化（长列表加分项）
-* IntersectionObserver 或 onReachBottom
+**技术重点（加分项）**：
+- 动态价格策略引擎
+- 房型库存实时校验
 
 ---
 
-# 3️⃣ 酒店详情页
+## 七、多端适配设计（创新+加分）
 
-功能：
+### 🌗 1. 深色模式
 
-* 图片轮播
-* 酒店信息
-* 日历选择
-* 房型列表
-* 实时价格计算
-
----
-
-### 实时价格机制（加分点）
-
-```
-基础价格
-+ 节假日加价
-- 优惠券
-= 实时显示价格
-```
-
----
-
-# 七、多端适配设计（创新 + 加分）
-
-你可以把这一块写进“项目创新性”。
-
----
-
-## 🌗 1️⃣ 深色模式
-
-实现方案：
+- **检测**：`prefers-color-scheme`
+- **切换**：手动开关
+- **实现**：CSS 变量 + `[data-theme="dark"]`
 
 ```css
 [data-theme="dark"] {
@@ -272,16 +207,10 @@ Node.js + Express
 }
 ```
 
-使用：
+### 👴 2. 老年模式（字体放大）
 
-* 读取系统 prefers-color-scheme
-* 用户可手动切换
-
----
-
-## 👴 2️⃣ 老年模式（字体放大）
-
-实现：
+- **原理**：根节点 `font-size` 按比例放大，页面所有尺寸使用 `rem` 单位。
+- **切换**：一键切换 `html[data-font="large"]`。
 
 ```css
 html[data-font="large"] {
@@ -289,20 +218,11 @@ html[data-font="large"] {
 }
 ```
 
-页面中所有尺寸用 rem。
+### 📱 3. 多端输出
 
-优点：
+Taro 构建命令示例：
 
-* 一键切换
-* 全局生效
-
----
-
-## 📱 3️⃣ 多端输出
-
-Taro build：
-
-```
+```bash
 taro build --type weapp
 taro build --type h5
 taro build --type rn
@@ -310,125 +230,267 @@ taro build --type rn
 
 ---
 
-# 八、后台管理系统设计
+## 八、后台管理系统设计
 
-简单实用即可。
+**页面清单**：
+- 登录页
+- 注册页
+- 酒店列表（管理）
+- 酒店信息录入
+- 酒店审核页
 
----
-
-## 页面：
-
-1. 登录页
-2. 注册页
-3. 酒店列表
-4. 酒店录入
-5. 审核页面
-
----
-
-## 审核流程
-
+**审核流程**：
 ```
 商户提交 → 状态 pending
-管理员审核 → published
-管理员下线 → offline
+管理员审核 → 状态 published
+管理员下线 → 状态 offline
 ```
 
 ---
 
-# 九、项目创新点（建议做）
+## 九、项目创新点（建议做，冲高分）
 
-你要冲高分的话建议：
+1. **价格实时计算**  
+   根据入住天数、房型库存、节日折扣动态计算总价，前端实时反馈。
 
----
+2. **虚拟列表优化**  
+   酒店列表页采用虚拟列表，大幅提升大量数据渲染性能。
 
-### ⭐ 1. 价格实时计算
+3. **用户偏好缓存**  
+   localStorage 存储上次入住城市、最近筛选条件，提升用户体验。
 
-根据：
-
-* 入住天数
-* 房型库存
-* 节日折扣
-
-动态计算总价。
+4. **酒店热度排序算法**  
+   热度 = 浏览量 × 0.3 + 评分 × 0.7，提供“智能排序”选项。
 
 ---
 
-### ⭐ 2. 虚拟列表优化
-
-使用：
-
-* react-window
-* 或手写虚拟滚动
-
----
-
-### ⭐ 3. 用户偏好缓存
-
-本地存储：
-
-* 上次入住城市
-* 最近筛选条件
-
----
-
-### ⭐ 4. 酒店热度排序算法
-
-简单实现：
-
-```
-热度 = 浏览量 * 0.3 + 评分 * 0.7
-```
-
----
-
-# 十、项目初始文件夹结构
-
-## 整体结构
+## 十、项目初始文件夹结构
 
 ```
 easy-stay/
 │
-├── server/                # Node 后端
+├── server/                       # Node 后端
 │   ├── src/
-│   │   ├── controllers/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   ├── middleware/
-│   │   ├── utils/
-│   │   └── app.js
+│   │   ├── controllers/          # 控制器
+│   │   ├── models/              # 数据模型
+│   │   ├── routes/              # 路由
+│   │   ├── middleware/          # 中间件（权限、日志等）
+│   │   ├── utils/              # 工具函数
+│   │   ├── config/             # 配置文件
+│   │   └── app.js              # 应用入口
 │   └── package.json
 │
-├── client-user/           # 用户端（Taro）
+├── client-user/                  # 用户端（Taro）
 │   ├── src/
 │   │   ├── pages/
-│   │   │   ├── home/
-│   │   │   ├── list/
-│   │   │   ├── detail/
-│   │   │   └── profile/
-│   │   ├── components/
-│   │   │   ├── Calendar/
-│   │   │   ├── HotelCard/
-│   │   │   ├── FilterPanel/
-│   │   │   └── ThemeSwitcher/
-│   │   ├── store/
-│   │   ├── hooks/
-│   │   ├── services/
-│   │   ├── theme/
-│   │   └── app.tsx
+│   │   │   ├── home/           # 首页
+│   │   │   ├── list/           # 列表页
+│   │   │   ├── detail/         # 详情页
+│   │   │   └── profile/        # 个人中心
+│   │   ├── components/         # 公共组件
+│   │   │   ├── Calendar/       # 日历组件
+│   │   │   ├── HotelCard/      # 酒店卡片
+│   │   │   ├── FilterPanel/    # 筛选面板
+│   │   │   └── ThemeSwitcher/  # 主题切换
+│   │   ├── store/             # 状态管理
+│   │   ├── hooks/             # 自定义 Hooks
+│   │   ├── services/          # API 服务
+│   │   ├── theme/             # 主题配置
+│   │   └── app.tsx            # 应用入口
 │   └── package.json
 │
-├── client-admin/          # 后台管理系统
+├── client-admin/                 # 后台管理系统（React + AntD）
 │   ├── src/
 │   │   ├── pages/
-│   │   │   ├── login/
-│   │   │   ├── hotel-list/
-│   │   │   ├── hotel-edit/
-│   │   │   └── audit/
-│   │   ├── components/
-│   │   ├── services/
-│   │   └── App.tsx
+│   │   │   ├── login/         # 登录
+│   │   │   ├── hotel-list/    # 酒店管理列表
+│   │   │   ├── hotel-edit/    # 酒店录入/编辑
+│   │   │   └── audit/         # 审核页
+│   │   ├── components/        # 公共组件
+│   │   ├── services/          # API 服务
+│   │   └── App.tsx            # 应用入口
 │   └── package.json
 │
 └── README.md
+```
+
+---
+
+## 十一、代码规范与命名规范
+
+为保证项目可维护性与团队协作效率，制定以下统一规范。
+
+---
+
+### 一、变量命名规范
+
+**风格**：全小写 + 下划线分隔（snake_case）
+
+**适用范围**：变量名、数据库字段、接口参数、JSON 字段、常量（大写）
+
+✅ 推荐：
+```js
+hotel_list
+user_info
+check_in_date
+total_price
+is_published
+```
+
+❌ 避免：
+```js
+hotelList
+checkInDate
+TotalPrice
+data1
+```
+
+**布尔变量**：`is_xxx` / `has_xxx` / `can_xxx`
+
+**常量**：全大写 + 下划线  
+```js
+MAX_ROOM_COUNT
+HOTEL_STATUS_PENDING
+```
+
+---
+
+### 二、数据库字段命名规范
+
+统一使用 **snake_case**，例如：`created_at`、`hotel_id`、`open_date`。
+
+---
+
+### 三、接口命名规范（RESTful）
+
+- 资源使用复数形式
+- 特殊操作使用动词后缀
+
+```
+GET    /api/hotels
+GET    /api/hotels/:id
+POST   /api/hotels
+PUT    /api/hotels/:id
+DELETE /api/hotels/:id
+
+POST   /api/hotels/:id/publish
+POST   /api/hotels/:id/offline
+```
+
+---
+
+### 四、文件命名规范
+
+- **前端组件**：kebab-case（短横线分隔）  
+  例：`hotel-card.tsx`、`filter-panel.tsx`
+
+- **后端文件**：snake_case  
+  例：`hotel_controller.js`、`user_model.js`
+
+---
+
+### 五、Git 提交规范
+
+```
+feat: 新增酒店查询接口
+fix: 修复价格计算错误
+refactor: 重构酒店审核逻辑
+style: 优化列表样式
+docs: 更新 README
+```
+
+---
+
+### 六、代码风格规范
+
+1. **缩进**：2 空格
+2. **异步**：统一使用 `async/await`，避免回调
+3. **错误处理**：统一响应格式
+
+```js
+return res.status(400).json({
+  success: false,
+  message: 'hotel_not_found'
+})
+```
+
+---
+
+### 七、状态枚举规范
+
+```js
+HOTEL_STATUS = {
+  DRAFT: 'draft',
+  PENDING: 'pending',
+  PUBLISHED: 'published',
+  OFFLINE: 'offline'
+}
+```
+
+数据库存储小写字符串。
+
+---
+
+### 八、时间统一规范
+
+- 后端存储：UTC 时间
+- 前端传输：ISO 字符串（`2026-02-13T08:00:00Z`）
+
+---
+
+### 九、项目目录层级原则
+
+- 功能模块独立目录
+- Controller 不直接操作数据库 → 经过 Service 层
+- 权限控制统一使用 Middleware
+
+---
+
+### 十、接口响应格式统一
+
+**成功**：
+```json
+{
+  "success": true,
+  "data": {},
+  "message": ""
+}
+```
+
+**失败**：
+```json
+{
+  "success": false,
+  "message": "hotel_not_found"
+}
+```
+
+---
+
+### 十一、注释规范
+
+函数必须包含 JSDoc 注释：
+
+```js
+/**
+ * 计算实时价格
+ * @param {number} base_price - 基础价格
+ * @param {number} days - 入住天数
+ * @param {number} discount - 折扣系数
+ * @returns {number} 最终价格
+ */
+```
+
+---
+
+### 十二、环境变量规范
+
+使用 `.env` 文件管理配置：
+
+```
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=123456
+JWT_SECRET=your_secret
+PORT=3000
 ```
