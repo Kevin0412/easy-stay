@@ -1,0 +1,422 @@
+{
+  "info": {
+    "name": "易宿酒店预订平台 API",
+    "description": "易宿酒店预订平台后端 API 测试集合",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "认证",
+      "item": [
+        {
+          "name": "用户注册",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"merchant1\",\n  \"password\": \"password123\",\n  \"role\": \"merchant\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "用户登录",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "酒店管理",
+      "item": [
+        {
+          "name": "创建酒店",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name_cn\": \"上海外滩酒店\",\n  \"name_en\": \"Shanghai Bund Hotel\",\n  \"address\": \"上海市黄浦区中山东一路\",\n  \"star\": 5,\n  \"open_date\": \"2025-01-01\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/hotels",
+              "host": ["{{base_url}}"],
+              "path": ["api", "hotels"]
+            }
+          }
+        },
+        {
+          "name": "获取酒店列表",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/hotels?status=published",
+              "host": ["{{base_url}}"],
+              "path": ["api", "hotels"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "published"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "获取酒店详情",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/hotels/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "hotels", "1"]
+            }
+          }
+        },
+        {
+          "name": "更新酒店信息",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name_cn\": \"上海外滩大酒店\",\n  \"name_en\": \"Shanghai Bund Grand Hotel\",\n  \"address\": \"上海市黄浦区中山东一路100号\",\n  \"star\": 5,\n  \"open_date\": \"2025-01-01\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/hotels/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "hotels", "1"]
+            }
+          }
+        },
+        {
+          "name": "提交审核",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/hotels/1/publish",
+              "host": ["{{base_url}}"],
+              "path": ["api", "hotels", "1", "publish"]
+            }
+          }
+        },
+        {
+          "name": "审核通过（管理员）",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/hotels/1/approve",
+              "host": ["{{base_url}}"],
+              "path": ["api", "hotels", "1", "approve"]
+            }
+          }
+        },
+        {
+          "name": "下线酒店（管理员）",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/hotels/1/offline",
+              "host": ["{{base_url}}"],
+              "path": ["api", "hotels", "1", "offline"]
+            }
+          }
+        },
+        {
+          "name": "删除酒店",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/hotels/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "hotels", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "房型管理",
+      "item": [
+        {
+          "name": "创建房型",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hotel_id\": 1,\n  \"room_type\": \"豪华大床房\",\n  \"price\": 888.00,\n  \"stock\": 10\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/rooms",
+              "host": ["{{base_url}}"],
+              "path": ["api", "rooms"]
+            }
+          }
+        },
+        {
+          "name": "获取酒店房型列表",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/rooms/hotel/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "rooms", "hotel", "1"]
+            }
+          }
+        },
+        {
+          "name": "更新房型",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"room_type\": \"豪华大床房\",\n  \"price\": 999.00,\n  \"stock\": 15\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/rooms/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "rooms", "1"]
+            }
+          }
+        },
+        {
+          "name": "删除房型",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/rooms/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "rooms", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "价格策略",
+      "item": [
+        {
+          "name": "创建价格策略",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hotel_id\": 1,\n  \"room_id\": 1,\n  \"strategy_name\": \"春节优惠\",\n  \"discount\": 0.8,\n  \"start_date\": \"2026-02-01\",\n  \"end_date\": \"2026-02-28\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/prices",
+              "host": ["{{base_url}}"],
+              "path": ["api", "prices"]
+            }
+          }
+        },
+        {
+          "name": "获取价格策略",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/prices/hotel/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "prices", "hotel", "1"]
+            }
+          }
+        },
+        {
+          "name": "计算价格",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/prices/calculate?room_id=1&start_date=2026-02-20&end_date=2026-02-25",
+              "host": ["{{base_url}}"],
+              "path": ["api", "prices", "calculate"],
+              "query": [
+                {
+                  "key": "room_id",
+                  "value": "1"
+                },
+                {
+                  "key": "start_date",
+                  "value": "2026-02-20"
+                },
+                {
+                  "key": "end_date",
+                  "value": "2026-02-25"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "更新价格策略",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"strategy_name\": \"春节特惠\",\n  \"discount\": 0.75,\n  \"start_date\": \"2026-02-01\",\n  \"end_date\": \"2026-02-28\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/prices/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "prices", "1"]
+            }
+          }
+        },
+        {
+          "name": "删除价格策略",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/prices/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "prices", "1"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
