@@ -61,4 +61,4 @@ CREATE TABLE IF NOT EXISTS price_strategies (
 
 -- 插入默认管理员账户（密码: admin123）
 INSERT INTO users (username, password, role) VALUES
-('admin', '$2a$10$YourHashedPasswordHere', 'admin');
+('admin', '$2a$10$i6mRBBF6b8hR1q9ex3ttIOsrCF3UlW1agdR1.8TlzS5YAaV8JM8z6', 'admin');
