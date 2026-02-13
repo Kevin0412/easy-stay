@@ -1,0 +1,64 @@
+-- 创建数据库
+CREATE DATABASE IF NOT EXISTS easy_stay CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+USE easy_stay;
+
+-- 用户表
+CREATE TABLE IF NOT EXISTS users (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  username VARCHAR(50) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  role ENUM('admin', 'merchant') NOT NULL DEFAULT 'merchant',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_username (username)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 酒店表
+CREATE TABLE IF NOT EXISTS hotels (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  name_cn VARCHAR(100) NOT NULL,
+  name_en VARCHAR(100),
+  address VARCHAR(255) NOT NULL,
+  star INT DEFAULT 0,
+  open_date DATE,
+  status ENUM('draft', 'pending', 'published', 'offline') NOT NULL DEFAULT 'draft',
+  created_by INT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (created_by) REFERENCES users(id),
+  INDEX idx_status (status),
+  INDEX idx_created_by (created_by)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 房型表
+CREATE TABLE IF NOT EXISTS rooms (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  hotel_id INT NOT NULL,
+  room_type VARCHAR(50) NOT NULL,
+  price DECIMAL(10, 2) NOT NULL,
+  stock INT NOT NULL DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (hotel_id) REFERENCES hotels(id) ON DELETE CASCADE,
+  INDEX idx_hotel_id (hotel_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 价格策略表
+CREATE TABLE IF NOT EXISTS price_strategies (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  hotel_id INT NOT NULL,
+  room_id INT,
+  strategy_name VARCHAR(100) NOT NULL,
+  discount DECIMAL(3, 2) NOT NULL DEFAULT 1.00,
+  start_date DATE NOT NULL,
+  end_date DATE NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (hotel_id) REFERENCES hotels(id) ON DELETE CASCADE,
+  FOREIGN KEY (room_id) REFERENCES rooms(id) ON DELETE CASCADE,
+  INDEX idx_hotel_id (hotel_id),
+  INDEX idx_date_range (start_date, end_date)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 插入默认管理员账户（密码: admin123）
+INSERT INTO users (username, password, role) VALUES
+('admin', '$2a$10$YourHashedPasswordHere', 'admin');
