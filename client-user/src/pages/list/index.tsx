@@ -6,32 +6,19 @@ import HotelCard from '../../components/HotelCard'
 import './index.scss'
 
 export default function List() {
-  const [hotels, setHotels] = useState<Hotel[]>([])
+  const [allHotels, setAllHotels] = useState<Hotel[]>([])
   const [loading, setLoading] = useState(false)
-  const [hasMore, setHasMore] = useState(true)
   const [filterStar, setFilterStar] = useState<number | undefined>(undefined)
 
   // 加载酒店列表
-  const loadHotels = async (isRefresh = false) => {
+  const loadHotels = async () => {
     if (loading) return
 
     setLoading(true)
     try {
-      const params: any = { status: 'published' }
-      if (filterStar) {
-        params.star = filterStar
-      }
-
-      const res = await getHotels(params)
+      const res = await getHotels({ status: 'published' })
       if (res.success) {
-        if (isRefresh) {
-          setHotels(res.data)
-        } else {
-          setHotels([...hotels, ...res.data])
-        }
-
-        // 简单判断是否还有更多数据
-        setHasMore(res.data.length > 0)
+        setAllHotels(res.data)
       }
     } catch (error) {
       console.error('加载酒店列表失败:', error)
@@ -44,33 +31,26 @@ export default function List() {
     }
   }
 
+  // 前端筛选酒店
+  const filteredHotels = filterStar
+    ? allHotels.filter(hotel => hotel.star === filterStar)
+    : allHotels
+
   // 页面加载时获取数据
   useLoad(() => {
-    loadHotels(true)
+    loadHotels()
   })
 
   // 下拉刷新
   usePullDownRefresh(() => {
-    loadHotels(true).then(() => {
+    loadHotels().then(() => {
       Taro.stopPullDownRefresh()
     })
-  })
-
-  // 上拉加载更多
-  useReachBottom(() => {
-    if (hasMore && !loading) {
-      loadHotels(false)
-    }
   })
 
   // 筛选星级
   const handleFilterStar = (star: number | undefined) => {
     setFilterStar(star)
-    setHotels([])
-    // 延迟加载，确保状态更新
-    setTimeout(() => {
-      loadHotels(true)
-    }, 100)
   }
 
   return (
@@ -99,25 +79,19 @@ export default function List() {
 
       {/* 酒店列表 */}
       <View className='hotel-list'>
-        {hotels.length === 0 && !loading && (
+        {filteredHotels.length === 0 && !loading && (
           <View className='empty-state'>
             <Text className='empty-text'>暂无酒店数据</Text>
           </View>
         )}
 
-        {hotels.map(hotel => (
+        {filteredHotels.map(hotel => (
           <HotelCard key={hotel.id} hotel={hotel} />
         ))}
 
         {loading && (
           <View className='loading-state'>
             <Text className='loading-text'>加载中...</Text>
-          </View>
-        )}
-
-        {!hasMore && hotels.length > 0 && (
-          <View className='no-more-state'>
-            <Text className='no-more-text'>没有更多了</Text>
           </View>
         )}
       </View>

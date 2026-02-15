@@ -28,6 +28,18 @@ const mock_data = {
       created_by: 2,
       created_at: new Date(),
       updated_at: new Date()
+    },
+    {
+      id: 2,
+      name_cn: '西安豪庭大酒店（西工大长安校区店）',
+      name_en: 'Xi\'an Haoting Hotel (NPU Chang\'an Campus)',
+      address: '陕西西安长安区东大街道东大村东翔路1号',
+      star: 3,
+      open_date: '2020-01-01',
+      status: 'published',
+      created_by: 2,
+      created_at: new Date(),
+      updated_at: new Date()
     }
   ],
   rooms: [
