@@ -9,6 +9,7 @@ export default function List() {
   const [allHotels, setAllHotels] = useState<Hotel[]>([])
   const [loading, setLoading] = useState(false)
   const [filterStar, setFilterStar] = useState<number | undefined>(undefined)
+  const [keyword, setKeyword] = useState('')
 
   // 加载酒店列表
   const loadHotels = async () => {
@@ -32,12 +33,38 @@ export default function List() {
   }
 
   // 前端筛选酒店
-  const filteredHotels = filterStar
-    ? allHotels.filter(hotel => hotel.star === filterStar)
-    : allHotels
+  const filteredHotels = allHotels.filter(hotel => {
+    // 星级筛选
+    if (filterStar && hotel.star !== filterStar) {
+      return false
+    }
+    // 关键词筛选
+    if (keyword && !hotel.name_cn.includes(keyword) && !hotel.address.includes(keyword)) {
+      return false
+    }
+    return true
+  })
 
-  // 页面加载时获取数据
+  // 页面加载时获取数据和参数
   useLoad(() => {
+    // 获取路由参数
+    const instance = Taro.getCurrentInstance()
+    const params = instance.router?.params || {}
+
+    console.log('接收到的路由参数:', params)
+
+    if (params.star) {
+      const starValue = Number(params.star)
+      console.log('设置星级筛选:', starValue)
+      setFilterStar(starValue)
+    }
+    if (params.keyword) {
+      // 解码 URL 编码的关键词
+      const decodedKeyword = decodeURIComponent(params.keyword)
+      console.log('设置关键词筛选:', decodedKeyword)
+      setKeyword(decodedKeyword)
+    }
+
     loadHotels()
   })
 
@@ -53,8 +80,18 @@ export default function List() {
     setFilterStar(star)
   }
 
+  // 返回首页
+  const handleBackHome = () => {
+    Taro.navigateBack()
+  }
+
   return (
     <View className='list-container'>
+      {/* 返回首页按钮 */}
+      <View className='back-home-btn' onClick={handleBackHome}>
+        <Text className='back-home-text'>← 返回首页</Text>
+      </View>
+
       {/* 筛选栏 */}
       <View className='filter-bar'>
         <View className='filter-title'>星级筛选：</View>
