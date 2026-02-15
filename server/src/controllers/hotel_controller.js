@@ -50,8 +50,8 @@ async function getHotels(req, res) {
     if (status) filters.status = status;
     if (star) filters.star = parseInt(star);
 
-    // 商户只能看到自己的酒店
-    if (req.user.role === 'merchant') {
+    // 如果有用户认证，商户只能看到自己的酒店
+    if (req.user && req.user.role === 'merchant') {
       filters.created_by = req.user.user_id;
     }
 
@@ -86,8 +86,8 @@ async function getHotelById(req, res) {
       });
     }
 
-    // 商户只能查看自己的酒店
-    if (req.user.role === 'merchant' && hotel.created_by !== req.user.user_id) {
+    // 如果有用户认证，商户只能查看自己的酒店
+    if (req.user && req.user.role === 'merchant' && hotel.created_by !== req.user.user_id) {
       return res.status(403).json({
         success: false,
         message: 'access_denied'
