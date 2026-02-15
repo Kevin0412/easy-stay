@@ -1,18 +1,58 @@
 .list-container {
-  padding: 40px;
-  text-align: center;
+  min-height: 100vh;
+  background: #f5f5f5;
 
-  .title {
-    display: block;
-    font-size: 48px;
-    font-weight: bold;
-    color: #1890ff;
-    margin-bottom: 20px;
+  // 筛选栏
+  .filter-bar {
+    background: #fff;
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+    .filter-title {
+      font-size: 28px;
+      color: #333;
+      margin-bottom: 16px;
+      font-weight: bold;
+    }
+
+    .filter-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+
+      .filter-item {
+        padding: 12px 24px;
+        background: #f5f5f5;
+        border-radius: 8px;
+        font-size: 28px;
+        color: #666;
+        transition: all 0.3s;
+
+        &.active {
+          background: #1890ff;
+          color: #fff;
+        }
+      }
+    }
   }
 
-  .subtitle {
-    display: block;
-    font-size: 32px;
-    color: #666;
+  // 酒店列表
+  .hotel-list {
+    padding: 0 24px 24px;
+
+    .empty-state,
+    .loading-state,
+    .no-more-state {
+      text-align: center;
+      padding: 80px 0;
+
+      .empty-text,
+      .loading-text,
+      .no-more-text {
+        font-size: 28px;
+        color: #999;
+      }
+    }
   }
 }

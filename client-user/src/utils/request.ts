@@ -60,8 +60,18 @@ export function request<T = any>(options: RequestOptions): Promise<Response<T>> 
 }
 
 // GET 请求
-export function get<T = any>(url: string, data?: any): Promise<Response<T>> {
-  return request<T>({ url, method: 'GET', data })
+export function get<T = any>(url: string, params?: any): Promise<Response<T>> {
+  // 将参数拼接到URL中
+  if (params) {
+    const queryString = Object.keys(params)
+      .filter(key => params[key] !== undefined && params[key] !== null)
+      .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+      .join('&')
+    if (queryString) {
+      url = `${url}?${queryString}`
+    }
+  }
+  return request<T>({ url, method: 'GET' })
 }
 
 // POST 请求
