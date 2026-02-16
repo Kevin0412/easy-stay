@@ -577,51 +577,128 @@ npm run build:weapp
 
 ### 📲 React Native (Android/iOS App)
 
-#### 编译 React Native Bundle
+本项目使用 **WebView + Taro H5** 方案实现原生 APP，具有以下优势：
+- ✅ 开发效率高，一套代码多端运行
+- ✅ 支持热更新，无需重新编译 APK
+- ✅ 体验接近原生 APP
 
-```bash
-npm run build:rn
-```
+#### 前置准备
 
-生成的 bundle 文件位于 `dist/index.bundle`
-
-#### Android APK 编译
-
-由于 Taro 3.x 的 React Native 支持需要完整的原生项目结构，推荐以下方案：
-
-**方案一：使用 Expo Go（快速测试）**
-
-1. 在手机上安装 Expo Go 应用
-2. 运行开发服务器：
+1. **安装 Android SDK**（如果还没有）
    ```bash
-   npm run dev:rn
+   # 检查 Android SDK 是否已安装
+   ls ~/Android/Sdk
    ```
-3. 扫描二维码在 Expo Go 中打开
 
-**方案二：编译独立 APK**
-
-1. 确保已安装 Android SDK 和配置环境变量：
+2. **配置环境变量**
    ```bash
    export ANDROID_HOME=$HOME/Android/Sdk
    export PATH=$PATH:$ANDROID_HOME/platform-tools
    ```
 
-2. 使用 React Native CLI 编译：
+3. **连接 Android 设备**
    ```bash
-   # 连接 Android 设备或启动模拟器
+   # 启用 USB 调试，连接手机后检查
    adb devices
-
-   # 编译并安装到设备
-   npx react-native run-android
    ```
 
-3. 生成 release APK：
-   ```bash
-   cd android
-   ./gradlew assembleRelease
-   ```
+#### 编译和运行步骤
 
-   APK 文件位于：`android/app/build/outputs/apk/release/app-release.apk`
+**步骤 1：启动后端服务器**
+
+```bash
+cd server
+npm start
+# 后端运行在 http://localhost:3000
+```
+
+**步骤 2：启动 Taro H5 开发服务器**
+
+```bash
+cd client-user
+npm run dev:h5
+# H5 运行在 http://localhost:10086
+```
+
+**步骤 3：配置本机 IP 地址**
+
+编辑 `client-user/src/config/index.ts`，修改 `DEV_HOST` 为你的局域网 IP：
+
+```typescript
+// 查看本机 IP：ip addr 或 ifconfig
+export const DEV_HOST = '192.168.x.x'  // 修改为你的 IP
+```
+
+**步骤 4：编译并安装 APP**
+
+```bash
+cd ../EasyStayNative
+
+# 首次运行需要安装依赖
+npm install
+
+# 编译并安装到设备
+export ANDROID_HOME=$HOME/Android/Sdk
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+npx react-native run-android --deviceId <你的设备ID>
+
+# 或者不指定设备ID（如果只连接了一个设备）
+npx react-native run-android
+```
+
+**步骤 5：在手机上打开 APP**
+
+- APP 名称：**EasyStayNative**
+- APP 会自动加载 Taro H5 页面
+- 支持热更新：修改代码后 H5 自动刷新
+
+#### 快速重新部署
+
+如果修改了 APP 代码（EasyStayNative/App.tsx），需要重新编译：
+
+```bash
+cd EasyStayNative
+
+# 卸载旧版本（可选）
+adb uninstall com.easystaynative
+
+# 重新编译安装
+npx react-native run-android
+```
+
+如果只修改了 Taro 项目代码（client-user/src），**无需重新编译 APP**，H5 会自动热更新。
+
+#### 生成 Release APK
+
+```bash
+cd EasyStayNative/android
+
+# 生成签名的 release APK
+./gradlew assembleRelease
+
+# APK 位置
+# android/app/build/outputs/apk/release/app-release.apk
+```
+
+#### 常用 ADB 命令
+
+```bash
+# 查看连接的设备
+adb devices
+
+# 安装 APK
+adb install app-release.apk
+
+# 卸载应用
+adb uninstall com.easystaynative
+
+# 查看应用日志
+adb logcat | grep EasyStay
+
+# 重启 ADB 服务
+adb kill-server
+adb start-server
+```
 
 ---
 
