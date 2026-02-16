@@ -56,26 +56,33 @@ async function deleteById(id) {
  * @param {number} room_id - 房型 ID
  * @param {string} start_date - 开始日期
  * @param {string} end_date - 结束日期
- * @returns {Promise<number>} 总价格
+ * @returns {Promise<number>} 总价格（单位：分）
  */
 async function calculatePrice(room_id, start_date, end_date) {
   const [room_rows] = await pool.query('SELECT price FROM rooms WHERE id = ?', [room_id]);
   if (!room_rows.length) return 0;
 
-  const base_price = parseFloat(room_rows[0].price);
+  // 将价格转换为分（整数运算）
+  const base_price_cents = Math.round(parseFloat(room_rows[0].price) * 100);
 
   const [strategy_rows] = await pool.query(
     'SELECT discount FROM price_strategies WHERE room_id = ? AND start_date <= ? AND end_date >= ?',
     [room_id, end_date, start_date]
   );
 
-  let discount = 1.0;
+  // 折扣也转换为整数（乘以100）
+  let discount_percent = 100;
   if (strategy_rows.length > 0) {
-    discount = parseFloat(strategy_rows[0].discount);
+    discount_percent = Math.round(parseFloat(strategy_rows[0].discount) * 100);
   }
 
   const days = Math.ceil((new Date(end_date) - new Date(start_date)) / (1000 * 60 * 60 * 24));
-  return base_price * days * discount;
+
+  // 使用整数运算：(价格分 * 天数 * 折扣百分比) / 100 / 100
+  const total_cents = Math.round((base_price_cents * days * discount_percent) / 100);
+
+  // 返回元（除以100）
+  return total_cents / 100;
 }
 
 module.exports = {
