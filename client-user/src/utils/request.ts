@@ -1,7 +1,8 @@
 import Taro from '@tarojs/taro'
+import { getApiBaseUrl } from '../config'
 
 // API 基础地址
-const BASE_URL = 'http://localhost:3000'
+const BASE_URL = getApiBaseUrl()
 
 interface RequestOptions {
   url: string

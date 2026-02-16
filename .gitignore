@@ -29,3 +29,6 @@ Thumbs.db
 # Temporary files
 *.tmp
 .cache/
+
+# React Native project (auto-generated)
+EasyStayNative/

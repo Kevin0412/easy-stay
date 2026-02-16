@@ -502,3 +502,197 @@ DB_PASSWORD=123456
 JWT_SECRET=your_secret
 PORT=3000
 ```
+
+---
+
+## 十三、多端编译与运行指南
+
+### 📱 用户端多端支持
+
+用户端基于 Taro 3.6.23 框架开发，支持以下平台：
+
+- **H5 网页版**：浏览器访问
+- **微信小程序**：微信开发者工具
+- **React Native**：Android/iOS App
+
+---
+
+### 🚀 快速开始
+
+#### 1. 安装依赖
+
+```bash
+cd client-user
+npm install --legacy-peer-deps
+```
+
+> 注意：由于 Taro 3.x 的依赖兼容性问题，需要使用 `--legacy-peer-deps` 参数
+
+---
+
+### 🌐 H5 网页版
+
+#### 开发模式（推荐）
+
+```bash
+npm run dev:h5
+```
+
+启动后访问：`http://localhost:10086`
+
+- 支持热更新
+- 实时预览修改
+- 局域网访问：`http://0.0.0.0:10086`（可在手机浏览器测试）
+
+#### 生产构建
+
+```bash
+npm run build:h5
+```
+
+构建产物位于 `dist/` 目录，可直接部署到静态服务器。
+
+---
+
+### 📱 微信小程序
+
+#### 开发模式
+
+```bash
+npm run dev:weapp
+```
+
+#### 生产构建
+
+```bash
+npm run build:weapp
+```
+
+构建完成后：
+1. 打开微信开发者工具
+2. 导入项目，选择 `dist/` 目录
+3. 预览或上传代码
+
+---
+
+### 📲 React Native (Android/iOS App)
+
+#### 编译 React Native Bundle
+
+```bash
+npm run build:rn
+```
+
+生成的 bundle 文件位于 `dist/index.bundle`
+
+#### Android APK 编译
+
+由于 Taro 3.x 的 React Native 支持需要完整的原生项目结构，推荐以下方案：
+
+**方案一：使用 Expo Go（快速测试）**
+
+1. 在手机上安装 Expo Go 应用
+2. 运行开发服务器：
+   ```bash
+   npm run dev:rn
+   ```
+3. 扫描二维码在 Expo Go 中打开
+
+**方案二：编译独立 APK**
+
+1. 确保已安装 Android SDK 和配置环境变量：
+   ```bash
+   export ANDROID_HOME=$HOME/Android/Sdk
+   export PATH=$PATH:$ANDROID_HOME/platform-tools
+   ```
+
+2. 使用 React Native CLI 编译：
+   ```bash
+   # 连接 Android 设备或启动模拟器
+   adb devices
+
+   # 编译并安装到设备
+   npx react-native run-android
+   ```
+
+3. 生成 release APK：
+   ```bash
+   cd android
+   ./gradlew assembleRelease
+   ```
+
+   APK 文件位于：`android/app/build/outputs/apk/release/app-release.apk`
+
+---
+
+### 🔧 常见问题
+
+#### 1. H5 编译报错 `Cannot find module 'ajv'`
+
+```bash
+npm install --legacy-peer-deps ajv
+```
+
+#### 2. React Native 编译报错
+
+确保已安装以下依赖：
+```bash
+npm install --legacy-peer-deps @tarojs/rn-runner@3.6.23 @tarojs/rn-supporter@3.6.23
+```
+
+#### 3. 样式在 React Native 中不显示
+
+React Native 不支持以下 CSS 特性：
+- `linear-gradient`（使用纯色替代）
+- `transition`（使用 Animated API）
+- `box-shadow` 的 rgba 值（使用简化版本）
+- 组合选择器（如 `.parent .child`）
+
+#### 4. Gradle 下载超时
+
+配置国内镜像或使用已下载的 Gradle：
+```bash
+# 在 android/gradle/wrapper/gradle-wrapper.properties 中修改
+distributionUrl=https\://mirrors.cloud.tencent.com/gradle/gradle-8.3-all.zip
+```
+
+---
+
+### 📊 多端兼容性说明
+
+| 功能 | H5 | 微信小程序 | React Native |
+|------|----|-----------|--------------|
+| 酒店列表 | ✅ | ✅ | ✅ |
+| 酒店详情 | ✅ | ✅ | ✅ |
+| 价格计算 | ✅ | ✅ | ✅ |
+| 日期选择 | ✅ | ✅ | ✅ |
+| 星级筛选 | ✅ | ✅ | ✅ |
+| 深色模式 | ✅ | ⚠️ 部分支持 | ✅ |
+| 定位服务 | ⚠️ 需 HTTPS | ✅ | ✅ |
+
+---
+
+### 🎯 推荐开发流程
+
+1. **H5 优先开发**：使用 H5 模式快速开发和调试
+2. **小程序适配**：完成功能后在微信开发者工具中测试
+3. **React Native 测试**：最后进行 App 端适配和测试
+
+---
+
+### 📝 版本信息
+
+- **Taro**: 3.6.23
+- **React**: 18.3.1
+- **Node.js**: 建议 v16-v20
+- **npm**: 建议 v8+
+
+---
+
+### 🔗 相关文档
+
+- [Taro 官方文档](https://taro-docs.jd.com/)
+- [React Native 官方文档](https://reactnative.dev/)
+- [微信小程序开发文档](https://developers.weixin.qq.com/miniprogram/dev/framework/)
+
+---

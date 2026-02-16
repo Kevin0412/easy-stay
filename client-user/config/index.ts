@@ -74,5 +74,13 @@ export default {
       port: 10086,
       host: '0.0.0.0'  // 允许局域网访问
     }
+  },
+  rn: {
+    appName: 'EasyStay',
+    postcss: {
+      cssModules: {
+        enable: false
+      }
+    }
   }
 } satisfies UserConfigExport
