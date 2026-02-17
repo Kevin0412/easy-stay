@@ -8,8 +8,22 @@ export interface Hotel {
   address: string
   star: number
   open_date: string
+  cover_image?: string
+  images?: string
   status: string
   created_by: number
+  created_at: string
+  updated_at: string
+  rooms?: Room[]
+}
+
+// 房型数据类型
+export interface Room {
+  id: number
+  hotel_id: number
+  room_type: string
+  price: number
+  stock: number
   created_at: string
   updated_at: string
 }

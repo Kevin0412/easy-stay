@@ -21,6 +21,8 @@ CREATE TABLE IF NOT EXISTS hotels (
   address VARCHAR(255) NOT NULL,
   star INT DEFAULT 0,
   open_date DATE,
+  cover_image VARCHAR(500),
+  images TEXT,
   status ENUM('draft', 'pending', 'published', 'offline') NOT NULL DEFAULT 'draft',
   created_by INT NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,

@@ -1,4 +1,4 @@
-import { View, Text, Picker } from '@tarojs/components'
+import { View, Text, Picker, Swiper, SwiperItem, Image } from '@tarojs/components'
 import React, { useState } from 'react'
 import Taro, { useLoad } from '@tarojs/taro'
 import { getHotelById, Hotel } from '../../services/hotel'
@@ -132,6 +132,46 @@ export default function Detail() {
       <View className='back-btn' onClick={handleBack}>
         <Text className='back-text'>← 返回</Text>
       </View>
+
+      {/* 酒店图片轮播 */}
+      {hotel.images && (
+        <View className='hotel-images'>
+          <Swiper
+            className='images-swiper'
+            indicatorColor='rgba(255, 255, 255, 0.5)'
+            indicatorActiveColor='#fff'
+            circular
+            autoplay
+            interval={4000}
+            indicatorDots
+          >
+            {(() => {
+              try {
+                const imageList = JSON.parse(hotel.images)
+                return imageList.map((img: string, index: number) => (
+                  <SwiperItem key={index}>
+                    <Image
+                      className='hotel-image'
+                      src={img}
+                      mode='aspectFill'
+                    />
+                  </SwiperItem>
+                ))
+              } catch (e) {
+                return (
+                  <SwiperItem>
+                    <Image
+                      className='hotel-image'
+                      src={hotel.cover_image || 'https://via.placeholder.com/800x400?text=Hotel'}
+                      mode='aspectFill'
+                    />
+                  </SwiperItem>
+                )
+              }
+            })()}
+          </Swiper>
+        </View>
+      )}
 
       {/* 酒店信息 */}
       <View className='hotel-info'>

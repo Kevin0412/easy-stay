@@ -18,6 +18,35 @@
     }
   }
 
+  // 筛选条件展示
+  .filter-summary {
+    background: #fff;
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+    .summary-title {
+      font-size: 26px;
+      color: #666;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .summary-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+
+      .summary-tag {
+        padding: 8px 16px;
+        background: #e6f7ff;
+        color: #1890ff;
+        border-radius: 6px;
+        font-size: 24px;
+      }
+    }
+  }
+
   // 筛选栏
   .filter-bar {
     background: #fff;
@@ -56,10 +85,25 @@
   // 酒店列表
   .hotel-list {
     padding: 0 24px 24px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+      padding: 0 40px 40px;
+    }
+
+    @media (min-width: 1200px) {
+      grid-template-columns: repeat(3, 1fr);
+      max-width: 1400px;
+      margin: 0 auto;
+    }
 
     .empty-state,
     .loading-state,
     .no-more-state {
+      grid-column: 1 / -1;
       text-align: center;
       padding: 80px 0;
 

@@ -24,7 +24,7 @@ export default function HotelCard({ hotel }: HotelCardProps) {
       <View className='hotel-card-image'>
         <Image
           className='image'
-          src='https://via.placeholder.com/300x200?text=Hotel'
+          src={hotel.cover_image || 'https://via.placeholder.com/300x200?text=Hotel'}
           mode='aspectFill'
         />
       </View>

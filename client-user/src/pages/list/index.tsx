@@ -10,6 +10,10 @@ export default function List() {
   const [loading, setLoading] = useState(false)
   const [filterStar, setFilterStar] = useState<number | undefined>(undefined)
   const [keyword, setKeyword] = useState('')
+  const [minPrice, setMinPrice] = useState<number | undefined>(undefined)
+  const [maxPrice, setMaxPrice] = useState<number | undefined>(undefined)
+  const [checkInDate, setCheckInDate] = useState('')
+  const [checkOutDate, setCheckOutDate] = useState('')
 
   // 加载酒店列表
   const loadHotels = async () => {
@@ -42,6 +46,17 @@ export default function List() {
     if (keyword && !hotel.name_cn.includes(keyword) && !hotel.address.includes(keyword)) {
       return false
     }
+    // 价格筛选 (需要从房型中获取最低价格)
+    // 注意: 这里假设 hotel 对象包含 rooms 数组，如果没有则跳过价格筛选
+    if ((minPrice !== undefined || maxPrice !== undefined) && hotel.rooms && hotel.rooms.length > 0) {
+      const hotelMinPrice = Math.min(...hotel.rooms.map(room => room.price))
+      if (minPrice !== undefined && hotelMinPrice < minPrice) {
+        return false
+      }
+      if (maxPrice !== undefined && hotelMinPrice > maxPrice) {
+        return false
+      }
+    }
     return true
   })
 
@@ -63,6 +78,18 @@ export default function List() {
       const decodedKeyword = decodeURIComponent(params.keyword)
       console.log('设置关键词筛选:', decodedKeyword)
       setKeyword(decodedKeyword)
+    }
+    if (params.minPrice) {
+      setMinPrice(Number(params.minPrice))
+    }
+    if (params.maxPrice) {
+      setMaxPrice(Number(params.maxPrice))
+    }
+    if (params.checkIn) {
+      setCheckInDate(params.checkIn)
+    }
+    if (params.checkOut) {
+      setCheckOutDate(params.checkOut)
     }
 
     loadHotels()
@@ -91,6 +118,21 @@ export default function List() {
       <View className='back-home-btn' onClick={handleBackHome}>
         <Text className='back-home-text'>← 返回首页</Text>
       </View>
+
+      {/* 筛选条件展示 */}
+      {(keyword || filterStar || minPrice || maxPrice || checkInDate || checkOutDate) && (
+        <View className='filter-summary'>
+          <Text className='summary-title'>当前筛选条件：</Text>
+          <View className='summary-tags'>
+            {keyword && <Text className='summary-tag'>关键词: {keyword}</Text>}
+            {filterStar && <Text className='summary-tag'>星级: {filterStar}星</Text>}
+            {minPrice && <Text className='summary-tag'>最低价: ¥{minPrice}</Text>}
+            {maxPrice && <Text className='summary-tag'>最高价: ¥{maxPrice}</Text>}
+            {checkInDate && <Text className='summary-tag'>入住: {checkInDate}</Text>}
+            {checkOutDate && <Text className='summary-tag'>离店: {checkOutDate}</Text>}
+          </View>
+        </View>
+      )}
 
       {/* 筛选栏 */}
       <View className='filter-bar'>

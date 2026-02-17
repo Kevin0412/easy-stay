@@ -40,6 +40,36 @@ async function createHotel(req, res) {
 }
 
 /**
+ * 获取轮播图酒店列表
+ */
+async function getCarouselHotels(req, res) {
+  try {
+    // 获取已发布的高星级酒店作为轮播图展示
+    const hotels = await hotelModel.findAll({ status: 'published' });
+
+    // 按星级和ID排序，取前5个
+    const carousel_hotels = hotels
+      .sort((a, b) => {
+        if (b.star !== a.star) return b.star - a.star;
+        return b.id - a.id;
+      })
+      .slice(0, 5);
+
+    res.json({
+      success: true,
+      data: carousel_hotels,
+      message: ''
+    });
+  } catch (error) {
+    console.error('Get carousel hotels error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'failed_to_fetch_carousel_hotels'
+    });
+  }
+}
+
+/**
  * 获取酒店列表
  */
 async function getHotels(req, res) {
@@ -291,6 +321,7 @@ async function deleteHotel(req, res) {
 
 module.exports = {
   createHotel,
+  getCarouselHotels,
   getHotels,
   getHotelById,
   updateHotel,

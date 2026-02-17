@@ -4,6 +4,8 @@ const hotelController = require('../controllers/hotel_controller');
 const { authenticate, requireAdmin, requireMerchant } = require('../middleware/auth_middleware');
 
 router.post('/', authenticate, requireMerchant, hotelController.createHotel);
+// 获取轮播图酒店列表
+router.get('/carousel', hotelController.getCarouselHotels);
 // 获取酒店列表不需要认证（用户端浏览酒店）
 router.get('/', hotelController.getHotels);
 // 获取酒店详情不需要认证（用户端查看详情）
