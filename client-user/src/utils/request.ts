@@ -1,9 +1,6 @@
 import Taro from '@tarojs/taro'
 import { getApiBaseUrl } from '../config'
 
-// API 基础地址
-const BASE_URL = getApiBaseUrl()
-
 interface RequestOptions {
   url: string
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE'
@@ -31,7 +28,7 @@ export function request<T = any>(options: RequestOptions): Promise<Response<T>> 
 
   return new Promise((resolve, reject) => {
     Taro.request({
-      url: `${BASE_URL}${url}`,
+      url: `${getApiBaseUrl()}${url}`,
       method,
       data,
       header: {
