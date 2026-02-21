@@ -100,6 +100,7 @@ Mock 数据库包含以下测试数据：
 **用户：**
 - 管理员：`admin` / `admin123`
 - 商户：`merchant1` / `admin123`
+- 普通用户：`testuser` / `user123`
 
 **酒店：**
 - 北京希尔顿酒店（ID: 1，已发布）
@@ -118,13 +119,31 @@ Mock 数据库包含以下测试数据：
 
 #### 注册
 - **POST** `/api/auth/register`
-- Body: `{ username, password, role }`
+- Body: `{ username, password, email, phone, role }`
+- role 可选值: `admin`, `merchant`, `user`（默认为 `user`）
 - 返回: `{ success, data: { user_id }, message }`
 
-#### 登录
+#### 登录（通用）
 - **POST** `/api/auth/login`
 - Body: `{ username, password }`
 - 返回: `{ success, data: { token, user }, message }`
+
+#### 登录（客户端专用）
+- **POST** `/api/auth/login/user`
+- Body: `{ username, password }`
+- 仅允许 `user` 角色登录
+- 返回: `{ success, data: { token, user }, message }`
+
+#### 登录（管理端专用）
+- **POST** `/api/auth/login/admin`
+- Body: `{ username, password }`
+- 仅允许 `admin` 和 `merchant` 角色登录
+- 返回: `{ success, data: { token, user }, message }`
+
+#### 获取当前用户信息
+- **GET** `/api/auth/me`
+- Header: `Authorization: Bearer <token>`
+- 返回: `{ success, data: { id, username, email, phone, created_at } }`
 
 ---
 
@@ -224,7 +243,8 @@ Authorization: Bearer <token>
 ## 数据库表结构
 
 ### users（用户表）
-- id, username, password, role, created_at
+- id, username, password, email, phone, role, created_at
+- role: `admin`（管理员）, `merchant`（商户）, `user`（普通用户）
 
 ### hotels（酒店表）
 - id, name_cn, name_en, address, star, open_date, status, created_by, created_at, updated_at

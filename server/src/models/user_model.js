@@ -20,7 +20,7 @@ async function findByUsername(username) {
  */
 async function findById(id) {
   const [rows] = await pool.query(
-    'SELECT id, username, role, created_at FROM users WHERE id = ?',
+    'SELECT id, username, email, phone, role, created_at FROM users WHERE id = ?',
     [id]
   );
   return rows[0];
@@ -33,10 +33,10 @@ async function findById(id) {
  * @param {string} role - 用户角色
  * @returns {Promise<Object>} 创建结果
  */
-async function create(username, hashed_password, role = 'merchant') {
+async function create(username, hashed_password, role = 'user', email = null, phone = null) {
   const [result] = await pool.query(
-    'INSERT INTO users (username, password, role) VALUES (?, ?, ?)',
-    [username, hashed_password, role]
+    'INSERT INTO users (username, password, role, email, phone) VALUES (?, ?, ?, ?, ?)',
+    [username, hashed_password, role, email, phone]
   );
   return result;
 }

@@ -5,6 +5,8 @@ const mock_data = {
       id: 1,
       username: 'admin',
       password: '$2a$10$i6mRBBF6b8hR1q9ex3ttIOsrCF3UlW1agdR1.8TlzS5YAaV8JM8z6', // admin123
+      email: 'admin@example.com',
+      phone: '13900000000',
       role: 'admin',
       created_at: new Date()
     },
@@ -12,7 +14,18 @@ const mock_data = {
       id: 2,
       username: 'merchant1',
       password: '$2a$10$i6mRBBF6b8hR1q9ex3ttIOsrCF3UlW1agdR1.8TlzS5YAaV8JM8z6', // admin123
+      email: 'merchant@example.com',
+      phone: '13800000000',
       role: 'merchant',
+      created_at: new Date()
+    },
+    {
+      id: 3,
+      username: 'testuser',
+      password: '$2a$10$viNePCXbtDwYoTT.TDxUFONXJ7i5hNuDHyGEed0tcZ6iAE4sjkyoO', // user123
+      email: 'test@example.com',
+      phone: '13800138000',
+      role: 'user',
       created_at: new Date()
     }
   ],
@@ -617,7 +630,7 @@ const mock_data = {
 };
 
 let next_id = {
-  users: 3,
+  users: 4,
   hotels: 16,
   rooms: 31,
   price_strategies: 6
@@ -708,12 +721,14 @@ async function query(sql, params = []) {
   // INSERT 查询
   if (sql.trim().toUpperCase().startsWith('INSERT')) {
     if (sql.includes('INTO users')) {
-      const [username, password, role] = params;
+      const [username, password, role, email, phone] = params;
       const new_user = {
         id: next_id.users++,
         username,
         password,
-        role,
+        email: email || null,
+        phone: phone || null,
+        role: role || 'user',
         created_at: new Date()
       };
       mock_data.users.push(new_user);

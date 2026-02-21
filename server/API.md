@@ -6,9 +6,11 @@ POST /api/auth/register
 Content-Type: application/json
 
 {
-  "username": "merchant1",
-  "password": "password123",
-  "role": "merchant"
+  "username": "testuser",
+  "password": "user123",
+  "email": "test@example.com",
+  "phone": "13800138000",
+  "role": "user"
 }
 ```
 
@@ -17,13 +19,13 @@ Content-Type: application/json
 {
   "success": true,
   "data": {
-    "user_id": 3
+    "user_id": 4
   },
   "message": "user_registered_successfully"
 }
 ```
 
-#### 2. 用户登录
+#### 2. 用户登录（通用）
 ```http
 POST /api/auth/login
 Content-Type: application/json
@@ -43,10 +45,58 @@ Content-Type: application/json
     "user": {
       "id": 1,
       "username": "admin",
+      "email": "admin@example.com",
+      "phone": "13900000000",
       "role": "admin"
     }
   },
   "message": "login_successful"
+}
+```
+
+#### 3. 客户端登录（仅 user 角色）
+```http
+POST /api/auth/login/user
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": "user123"
+}
+```
+
+**说明：** 仅允许 `user` 角色登录，用于客户端(client-user)
+
+#### 4. 管理端登录（仅 admin/merchant 角色）
+```http
+POST /api/auth/login/admin
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+```
+
+**说明：** 仅允许 `admin` 和 `merchant` 角色登录，用于管理端(client-admin)
+
+#### 5. 获取当前用户信息
+```http
+GET /api/auth/me
+Authorization: Bearer {token}
+```
+
+**响应示例：**
+```json
+{
+  "success": true,
+  "data": {
+    "id": 3,
+    "username": "testuser",
+    "email": "test@example.com",
+    "phone": "13800138000",
+    "created_at": "2026-02-21T18:00:00.000Z"
+  }
 }
 ```
 

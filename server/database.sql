@@ -8,7 +8,9 @@ CREATE TABLE IF NOT EXISTS users (
   id INT PRIMARY KEY AUTO_INCREMENT,
   username VARCHAR(50) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
-  role ENUM('admin', 'merchant') NOT NULL DEFAULT 'merchant',
+  email VARCHAR(100),
+  phone VARCHAR(20),
+  role ENUM('admin', 'merchant', 'user') NOT NULL DEFAULT 'user',
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   INDEX idx_username (username)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -64,3 +66,12 @@ CREATE TABLE IF NOT EXISTS price_strategies (
 -- 插入默认管理员账户（密码: admin123）
 INSERT INTO users (username, password, role) VALUES
 ('admin', '$2a$10$i6mRBBF6b8hR1q9ex3ttIOsrCF3UlW1agdR1.8TlzS5YAaV8JM8z6', 'admin');
+
+-- 插入测试用户账户（密码: user123）
+INSERT INTO users (username, password, email, phone, role) VALUES
+('testuser', '$2a$10$i6mRBBF6b8hR1q9ex3ttIOsrCF3UlW1agdR1.8TlzS5YAaV8JM8z6', 'test@example.com', '13800138000', 'user');
+
+-- 如果表已存在，添加新字段的迁移脚本
+ALTER TABLE users ADD COLUMN IF NOT EXISTS email VARCHAR(100);
+ALTER TABLE users ADD COLUMN IF NOT EXISTS phone VARCHAR(20);
+ALTER TABLE users MODIFY COLUMN role ENUM('admin', 'merchant', 'user') NOT NULL DEFAULT 'user';

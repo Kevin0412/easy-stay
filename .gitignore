@@ -31,5 +31,4 @@ Thumbs.db
 *.tmp
 .cache/
 
-# React Native project (auto-generated)
-EasyStayNative/
+commit_message.txt
