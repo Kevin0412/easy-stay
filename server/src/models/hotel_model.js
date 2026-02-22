@@ -4,10 +4,10 @@ const pool = require('../config/database');
  * 创建酒店
  */
 async function create(hotel_data) {
-  const { name_cn, name_en, address, star, open_date, created_by } = hotel_data;
+  const { name_cn, name_en, address, star, open_date, created_by, cover_image, images, tags } = hotel_data;
   const [result] = await pool.query(
-    'INSERT INTO hotels (name_cn, name_en, address, star, open_date, created_by, status) VALUES (?, ?, ?, ?, ?, ?, ?)',
-    [name_cn, name_en, address, star, open_date, created_by, 'draft']
+    'INSERT INTO hotels (name_cn, name_en, address, star, open_date, created_by, status, cover_image, images, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    [name_cn, name_en, address, star, open_date, created_by, 'draft', cover_image || null, images || null, tags || null]
   );
   return result;
 }
@@ -62,10 +62,10 @@ async function findById(id) {
  * 更新酒店信息
  */
 async function update(id, hotel_data) {
-  const { name_cn, name_en, address, star, open_date } = hotel_data;
+  const { name_cn, name_en, address, star, open_date, cover_image, images, tags } = hotel_data;
   const [result] = await pool.query(
-    'UPDATE hotels SET name_cn = ?, name_en = ?, address = ?, star = ?, open_date = ? WHERE id = ?',
-    [name_cn, name_en, address, star, open_date, id]
+    'UPDATE hotels SET name_cn = ?, name_en = ?, address = ?, star = ?, open_date = ?, cover_image = ?, images = ?, tags = ? WHERE id = ?',
+    [name_cn, name_en, address, star, open_date, cover_image || null, images || null, tags || null, id]
   );
   return result;
 }
@@ -77,6 +77,28 @@ async function updateStatus(id, status) {
   const [result] = await pool.query(
     'UPDATE hotels SET status = ? WHERE id = ?',
     [status, id]
+  );
+  return result;
+}
+
+/**
+ * 审核不通过（记录原因）
+ */
+async function rejectWithReason(id, reason) {
+  const [result] = await pool.query(
+    'UPDATE hotels SET status = ?, reject_reason = ? WHERE id = ?',
+    ['rejected', reason, id]
+  );
+  return result;
+}
+
+/**
+ * 清空拒绝原因（通过或恢复时调用）
+ */
+async function clearRejectReason(id) {
+  const [result] = await pool.query(
+    'UPDATE hotels SET reject_reason = NULL WHERE id = ?',
+    [id]
   );
   return result;
 }
@@ -95,5 +117,7 @@ module.exports = {
   findById,
   update,
   updateStatus,
+  rejectWithReason,
+  clearRejectReason,
   deleteById
 };

@@ -21,7 +21,10 @@ async function createHotel(req, res) {
       address,
       star: star || 0,
       open_date,
-      created_by: req.user.user_id
+      created_by: req.user.user_id,
+      cover_image: req.body.cover_image || null,
+      images: req.body.images || null,
+      tags: req.body.tags || null
     };
 
     const result = await hotelModel.create(hotel_data);
@@ -172,8 +175,8 @@ async function updateHotel(req, res) {
       });
     }
 
-    const { name_cn, name_en, address, star, open_date } = req.body;
-    const hotel_data = { name_cn, name_en, address, star, open_date };
+    const { name_cn, name_en, address, star, open_date, cover_image, images, tags } = req.body;
+    const hotel_data = { name_cn, name_en, address, star, open_date, cover_image, images, tags };
 
     await hotelModel.update(id, hotel_data);
 
@@ -245,6 +248,7 @@ async function approveHotel(req, res) {
     }
 
     await hotelModel.updateStatus(id, 'published');
+    await hotelModel.clearRejectReason(id);
 
     res.json({
       success: true,
@@ -256,6 +260,45 @@ async function approveHotel(req, res) {
     res.status(500).json({
       success: false,
       message: 'approval_failed'
+    });
+  }
+}
+
+/**
+ * 审核不通过（管理员）
+ */
+async function rejectHotel(req, res) {
+  try {
+    const { id } = req.params;
+    const { reason } = req.body;
+
+    if (!reason || !reason.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: 'reject_reason_required'
+      });
+    }
+
+    const hotel = await hotelModel.findById(id);
+    if (!hotel) {
+      return res.status(404).json({
+        success: false,
+        message: 'hotel_not_found'
+      });
+    }
+
+    await hotelModel.rejectWithReason(id, reason.trim());
+
+    res.json({
+      success: true,
+      data: {},
+      message: 'hotel_rejected'
+    });
+  } catch (error) {
+    console.error('Reject hotel error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'rejection_failed'
     });
   }
 }
@@ -287,6 +330,37 @@ async function offlineHotel(req, res) {
     res.status(500).json({
       success: false,
       message: 'offline_failed'
+    });
+  }
+}
+
+/**
+ * 恢复下线酒店（管理员）
+ */
+async function restoreHotel(req, res) {
+  try {
+    const { id } = req.params;
+    const hotel = await hotelModel.findById(id);
+
+    if (!hotel) {
+      return res.status(404).json({
+        success: false,
+        message: 'hotel_not_found'
+      });
+    }
+
+    await hotelModel.updateStatus(id, 'published');
+
+    res.json({
+      success: true,
+      data: {},
+      message: 'hotel_restored'
+    });
+  } catch (error) {
+    console.error('Restore hotel error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'restore_failed'
     });
   }
 }
@@ -338,6 +412,8 @@ module.exports = {
   updateHotel,
   publishHotel,
   approveHotel,
+  rejectHotel,
   offlineHotel,
+  restoreHotel,
   deleteHotel
 };

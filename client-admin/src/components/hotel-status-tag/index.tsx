@@ -3,9 +3,10 @@ import { HotelStatus } from '@/services/hotel'
 
 const STATUS_CONFIG = {
   draft: { color: 'default', text: '草稿' },
-  pending: { color: 'processing', text: '待审核' },
-  published: { color: 'success', text: '已发布' },
-  offline: { color: 'error', text: '已下线' }
+  pending: { color: 'processing', text: '审核中' },
+  published: { color: 'success', text: '已通过' },
+  rejected: { color: 'error', text: '未通过' },
+  offline: { color: 'warning', text: '已下线' }
 }
 
 interface Props {

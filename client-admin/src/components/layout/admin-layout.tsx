@@ -14,24 +14,23 @@ export default function AdminLayout() {
     navigate('/login')
   }
 
-  const menuItems = [
-    {
-      key: '/hotels',
-      icon: <HomeOutlined />,
-      label: '酒店管理',
-      onClick: () => navigate('/hotels')
-    }
-  ]
-
-  // 管理员显示审核菜单
-  if (user?.role === 'admin') {
-    menuItems.push({
-      key: '/audit',
-      icon: <AuditOutlined />,
-      label: '酒店审核',
-      onClick: () => navigate('/audit')
-    })
-  }
+  const menuItems = user?.role === 'admin'
+    ? [
+        {
+          key: '/audit',
+          icon: <AuditOutlined />,
+          label: '酒店审核',
+          onClick: () => navigate('/audit')
+        }
+      ]
+    : [
+        {
+          key: '/hotels',
+          icon: <HomeOutlined />,
+          label: '酒店管理',
+          onClick: () => navigate('/hotels')
+        }
+      ]
 
   return (
     <Layout style={{ minHeight: '100vh' }}>

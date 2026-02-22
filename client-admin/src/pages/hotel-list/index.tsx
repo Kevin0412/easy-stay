@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Table, Button, Space, Select, Modal, message } from 'antd'
-import { PlusOutlined } from '@ant-design/icons'
+import { Table, Button, Space, Select, Modal, message, Alert, Typography } from 'antd'
+import { PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import { getHotels, deleteHotel, publishHotel, Hotel, HotelStatus } from '@/services/hotel'
 import { useUserStore } from '@/store/user-store'
 import HotelStatusTag from '@/components/hotel-status-tag'
 import styles from './index.module.scss'
+
+const { Text } = Typography
 
 export default function HotelList() {
   const [hotels, setHotels] = useState<Hotel[]>([])
@@ -15,7 +17,6 @@ export default function HotelList() {
   const navigate = useNavigate()
   const user = useUserStore((state) => state.user)
 
-  // 获取酒店列表
   const fetchHotels = async () => {
     setLoading(true)
     try {
@@ -32,7 +33,6 @@ export default function HotelList() {
     fetchHotels()
   }, [statusFilter, starFilter])
 
-  // 删除酒店
   const handleDelete = (id: number) => {
     Modal.confirm({
       title: '确认删除',
@@ -45,14 +45,14 @@ export default function HotelList() {
     })
   }
 
-  // 提交审核
   const handlePublish = async (id: number) => {
     await publishHotel(id)
     message.success('已提交审核')
     fetchHotels()
   }
 
-  // 表格列定义
+  const rejectedHotels = hotels.filter((h) => h.status === 'rejected')
+
   const columns = [
     {
       title: 'ID',
@@ -77,36 +77,38 @@ export default function HotelList() {
     {
       title: '状态',
       dataIndex: 'status',
-      width: 120,
-      render: (status: HotelStatus) => <HotelStatusTag status={status} />
+      width: 160,
+      render: (status: HotelStatus, record: Hotel) => (
+        <Space direction="vertical" size={2}>
+          <HotelStatusTag status={status} />
+          {status === 'rejected' && record.reject_reason && (
+            <Text type="danger" style={{ fontSize: 12 }}>
+              原因：{record.reject_reason}
+            </Text>
+          )}
+        </Space>
+      )
     },
     {
       title: '操作',
-      width: 300,
+      width: 280,
       render: (_: any, record: Hotel) => (
         <Space>
-          <Button
-            size="small"
-            onClick={() => navigate(`/hotels/${record.id}/edit`)}
-          >
+          <Button size="small" onClick={() => navigate(`/hotels/${record.id}/edit`)}>
             编辑
           </Button>
 
-          {record.status === 'draft' && (
+          {(record.status === 'draft' || record.status === 'rejected') && (
             <Button
               size="small"
               type="primary"
               onClick={() => handlePublish(record.id)}
             >
-              提交审核
+              {record.status === 'rejected' ? '修改后重新提交' : '提交审核'}
             </Button>
           )}
 
-          <Button
-            size="small"
-            danger
-            onClick={() => handleDelete(record.id)}
-          >
+          <Button size="small" danger onClick={() => handleDelete(record.id)}>
             删除
           </Button>
         </Space>
@@ -127,6 +129,17 @@ export default function HotelList() {
         </Button>
       </div>
 
+      {rejectedHotels.length > 0 && (
+        <Alert
+          type="warning"
+          icon={<ExclamationCircleOutlined />}
+          showIcon
+          style={{ marginBottom: 16 }}
+          message={`有 ${rejectedHotels.length} 家酒店审核未通过`}
+          description="请根据审核意见修改酒店信息后重新提交审核。"
+        />
+      )}
+
       <div className={styles.filters}>
         <Select
           style={{ width: 150 }}
@@ -136,8 +149,9 @@ export default function HotelList() {
           onChange={setStatusFilter}
           options={[
             { label: '草稿', value: 'draft' },
-            { label: '待审核', value: 'pending' },
-            { label: '已发布', value: 'published' },
+            { label: '审核中', value: 'pending' },
+            { label: '已通过', value: 'published' },
+            { label: '审核未通过', value: 'rejected' },
             { label: '已下线', value: 'offline' }
           ]}
         />

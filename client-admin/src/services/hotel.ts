@@ -1,6 +1,6 @@
 import request, { ApiResponse } from '@/utils/request'
 
-export type HotelStatus = 'draft' | 'pending' | 'published' | 'offline'
+export type HotelStatus = 'draft' | 'pending' | 'published' | 'rejected' | 'offline'
 
 export interface Hotel {
   id: number
@@ -10,6 +10,10 @@ export interface Hotel {
   star: number
   open_date: string
   status: HotelStatus
+  reject_reason: string | null
+  cover_image: string | null
+  images: string | null
+  tags: string | null
   created_by: number
   created_at: string
   updated_at: string
@@ -21,6 +25,9 @@ export interface HotelFormData {
   address: string
   star: number
   open_date?: string
+  cover_image?: string
+  images?: string
+  tags?: string
 }
 
 export function getHotels(params?: { status?: HotelStatus; star?: number }) {
@@ -51,6 +58,14 @@ export function approveHotel(id: number) {
   return request.post<ApiResponse<{}>>(`/hotels/${id}/approve`)
 }
 
+export function rejectHotel(id: number, reason: string) {
+  return request.post<ApiResponse<{}>>(`/hotels/${id}/reject`, { reason })
+}
+
 export function offlineHotel(id: number) {
   return request.post<ApiResponse<{}>>(`/hotels/${id}/offline`)
+}
+
+export function restoreHotel(id: number) {
+  return request.post<ApiResponse<{}>>(`/hotels/${id}/restore`)
 }

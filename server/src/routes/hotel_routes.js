@@ -15,6 +15,8 @@ router.delete('/:id', authenticate, hotelController.deleteHotel);
 
 router.post('/:id/publish', authenticate, requireMerchant, hotelController.publishHotel);
 router.post('/:id/approve', authenticate, requireAdmin, hotelController.approveHotel);
+router.post('/:id/reject', authenticate, requireAdmin, hotelController.rejectHotel);
 router.post('/:id/offline', authenticate, requireAdmin, hotelController.offlineHotel);
+router.post('/:id/restore', authenticate, requireAdmin, hotelController.restoreHotel);
 
 module.exports = router;

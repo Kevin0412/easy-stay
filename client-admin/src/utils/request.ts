@@ -28,12 +28,20 @@ request.interceptors.request.use(
 request.interceptors.response.use(
   (response) => response,
   (error: AxiosError<ApiResponse>) => {
+    const is_login_page = window.location.pathname === '/login'
+
     if (error.response?.status === 401) {
-      message.error('登录已过期，请重新登录')
-      useUserStore.getState().clearUser()
-      window.location.href = '/login'
+      if (!is_login_page) {
+        message.error('登录已过期，请重新登录')
+        useUserStore.getState().clearUser()
+        window.location.href = '/login'
+      }
+      // 登录页的401由登录组件自行处理
     } else if (error.response?.status === 403) {
-      message.error('没有权限访问')
+      if (!is_login_page) {
+        message.error('没有权限访问')
+      }
+      // 登录页的403由登录组件自行处理
     } else {
       message.error(error.response?.data?.message || '请求失败')
     }

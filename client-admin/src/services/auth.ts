@@ -23,7 +23,7 @@ export interface LoginResponse {
 }
 
 export function login(params: LoginParams) {
-  return request.post<ApiResponse<LoginResponse>>('/auth/login', params)
+  return request.post<ApiResponse<LoginResponse>>('/auth/login/admin', params)
 }
 
 export function register(params: RegisterParams) {
