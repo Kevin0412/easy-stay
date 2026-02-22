@@ -6,6 +6,7 @@ export interface Room {
   room_type: string
   price: number
   stock: number
+  image?: string
   created_at: string
   updated_at: string
 }
@@ -15,6 +16,7 @@ export interface RoomFormData {
   room_type: string
   price: number
   stock: number
+  image?: string
 }
 
 export function getRoomsByHotelId(hotel_id: number) {

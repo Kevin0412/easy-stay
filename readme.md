@@ -857,11 +857,11 @@ distributionUrl=https\://mirrors.cloud.tencent.com/gradle/gradle-8.3-all.zip
 - [x] 实时价格计算（含折扣策略）
 - [x] 立即预订跳转
 - [x] 收藏/取消收藏
-- [ ] **房型图片**（rooms 表无图片字段）
+- [x] **房型图片**（rooms 表新增 image 字段，详情页展示，后台录入支持）
 
 #### 后台管理（25分，B 负责）
 - [x] 登录/注册（商户/管理员角色）
-- [x] 酒店信息录入/编辑
+- [x] 酒店信息录入/编辑（含 facilities、nearby、房型图片字段）
 - [x] 审核列表（pending/approved/rejected/offline）
 - [x] 审核通过/拒绝（含原因）/下线/恢复
 

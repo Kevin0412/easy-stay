@@ -100,6 +100,8 @@ export default function HotelEdit() {
         cover_image: hotel.cover_image || '',
         images: imageList,
         tags: tagList,
+        facilities: hotel.facilities || '',
+        nearby: hotel.nearby || '',
       })
     } catch (error) {
       // 错误已在拦截器处理
@@ -125,6 +127,8 @@ export default function HotelEdit() {
         cover_image: values.cover_image?.trim() || undefined,
         images: imageUrls.length > 0 ? JSON.stringify(imageUrls) : undefined,
         tags: tagsStr,
+        facilities: values.facilities?.trim() || undefined,
+        nearby: values.nearby?.trim() || undefined,
       }
 
       if (isEdit) {
@@ -243,6 +247,14 @@ export default function HotelEdit() {
                 ))}
               </Space>
             </Checkbox.Group>
+          </Form.Item>
+
+          <Form.Item name="facilities" label="设施服务" extra="逗号分隔，如：免费WiFi,停车场,游泳池">
+            <Input placeholder="免费WiFi,停车场,游泳池,健身房" />
+          </Form.Item>
+
+          <Form.Item name="nearby" label="附近景点" extra="逗号分隔，如：故宫,天安门,王府井">
+            <Input placeholder="故宫,天安门,王府井" />
           </Form.Item>
 
           <Form.Item>

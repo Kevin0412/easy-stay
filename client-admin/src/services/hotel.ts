@@ -14,6 +14,8 @@ export interface Hotel {
   cover_image: string | null
   images: string | null
   tags: string | null
+  facilities: string | null
+  nearby: string | null
   created_by: number
   created_at: string
   updated_at: string
@@ -28,6 +30,8 @@ export interface HotelFormData {
   cover_image?: string
   images?: string
   tags?: string
+  facilities?: string
+  nearby?: string
 }
 
 export function getHotels(params?: { status?: HotelStatus; star?: number }) {

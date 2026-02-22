@@ -4,10 +4,10 @@ const pool = require('../config/database');
  * 创建酒店
  */
 async function create(hotel_data) {
-  const { name_cn, name_en, address, star, open_date, created_by, cover_image, images, tags } = hotel_data;
+  const { name_cn, name_en, address, star, open_date, created_by, cover_image, images, tags, facilities, nearby } = hotel_data;
   const [result] = await pool.query(
-    'INSERT INTO hotels (name_cn, name_en, address, star, open_date, created_by, status, cover_image, images, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-    [name_cn, name_en, address, star, open_date, created_by, 'draft', cover_image || null, images || null, tags || null]
+    'INSERT INTO hotels (name_cn, name_en, address, star, open_date, created_by, status, cover_image, images, tags, facilities, nearby) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    [name_cn, name_en, address, star, open_date, created_by, 'draft', cover_image || null, images || null, tags || null, facilities || null, nearby || null]
   );
   return result;
 }
@@ -66,10 +66,10 @@ async function findById(id) {
  * 更新酒店信息
  */
 async function update(id, hotel_data) {
-  const { name_cn, name_en, address, star, open_date, cover_image, images, tags } = hotel_data;
+  const { name_cn, name_en, address, star, open_date, cover_image, images, tags, facilities, nearby } = hotel_data;
   const [result] = await pool.query(
-    'UPDATE hotels SET name_cn = ?, name_en = ?, address = ?, star = ?, open_date = ?, cover_image = ?, images = ?, tags = ? WHERE id = ?',
-    [name_cn, name_en, address, star, open_date, cover_image || null, images || null, tags || null, id]
+    'UPDATE hotels SET name_cn = ?, name_en = ?, address = ?, star = ?, open_date = ?, cover_image = ?, images = ?, tags = ?, facilities = ?, nearby = ? WHERE id = ?',
+    [name_cn, name_en, address, star, open_date, cover_image || null, images || null, tags || null, facilities || null, nearby || null, id]
   );
   return result;
 }

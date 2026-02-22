@@ -47,7 +47,8 @@ export default function RoomManager({ hotelId }: RoomManagerProps) {
         hotel_id: hotelId,
         room_type: values.room_type,
         price: values.price,
-        stock: values.stock
+        stock: values.stock,
+        image: values.image?.trim() || undefined
       }
 
       if (editingRoom) {
@@ -153,6 +154,10 @@ export default function RoomManager({ hotelId }: RoomManagerProps) {
             rules={[{ required: true, message: '请输入库存' }]}
           >
             <InputNumber min={0} style={{ width: '100%' }} />
+          </Form.Item>
+
+          <Form.Item name="image" label="房型图片 URL（可选）">
+            <Input placeholder="https://example.com/room.jpg" />
           </Form.Item>
 
           <Form.Item>
