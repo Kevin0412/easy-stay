@@ -107,6 +107,30 @@
       color: #666;
       margin-bottom: 10px;
     }
+
+    .hotel-nearby {
+      margin-top: 16px;
+      padding: 16px;
+      background: #f5f7ff;
+      border-radius: 8px;
+
+      .nearby-title {
+        display: block;
+        font-size: 26px;
+        color: #666;
+        margin-bottom: 10px;
+      }
+
+      .nearby-item {
+        display: inline-block;
+        font-size: 24px;
+        color: #1890ff;
+        background: #e6f7ff;
+        border-radius: 6px;
+        padding: 4px 12px;
+        margin: 4px 8px 4px 0;
+      }
+    }
   }
 
   .room-section {

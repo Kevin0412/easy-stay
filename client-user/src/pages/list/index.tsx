@@ -11,18 +11,19 @@ export default function List() {
   const [loading, setLoading] = useState(false)
   const [filterStar, setFilterStar] = useState<number | undefined>(undefined)
   const [keyword, setKeyword] = useState('')
+  const [city, setCity] = useState('')
   const [minPrice, setMinPrice] = useState<number | undefined>(undefined)
   const [maxPrice, setMaxPrice] = useState<number | undefined>(undefined)
   const [checkInDate, setCheckInDate] = useState('')
   const [checkOutDate, setCheckOutDate] = useState('')
 
   // 加载酒店列表
-  const loadHotels = async (kw?: string) => {
+  const loadHotels = async (kw?: string, ct?: string) => {
     if (loading) return
 
     setLoading(true)
     try {
-      const res = await getHotels({ status: 'published', keyword: kw || keyword || undefined })
+      const res = await getHotels({ status: 'published', keyword: kw || keyword || undefined, city: ct || city || undefined })
       if (res.success) {
         setAllHotels(res.data)
       }
@@ -59,16 +60,21 @@ export default function List() {
       setFilterStar(Number(params.star))
     }
     let kw = ''
+    let ct = ''
     if (params.keyword) {
       kw = decodeURIComponent(params.keyword)
       setKeyword(kw)
+    }
+    if (params.city) {
+      ct = decodeURIComponent(params.city)
+      setCity(ct)
     }
     if (params.minPrice) setMinPrice(Number(params.minPrice))
     if (params.maxPrice) setMaxPrice(Number(params.maxPrice))
     if (params.checkIn) setCheckInDate(params.checkIn)
     if (params.checkOut) setCheckOutDate(params.checkOut)
 
-    loadHotels(kw)
+    loadHotels(kw, ct)
   })
 
   // 下拉刷新

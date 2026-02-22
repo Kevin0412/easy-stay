@@ -16,6 +16,8 @@ export interface Hotel {
   updated_at: string
   rooms?: Room[]
   min_price?: number
+  tags?: string
+  nearby?: string
 }
 
 // 房型数据类型
@@ -30,7 +32,7 @@ export interface Room {
 }
 
 // 获取酒店列表
-export function getHotels(params?: { status?: string; star?: number }) {
+export function getHotels(params?: { status?: string; star?: number; keyword?: string; city?: string }) {
   return get<Hotel[]>('/api/hotels', params)
 }
 

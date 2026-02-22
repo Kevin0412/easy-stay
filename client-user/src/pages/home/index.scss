@@ -106,7 +106,13 @@
 
       .location-icon { font-size: 28px; margin-right: 8px; }
       .location-text { font-size: 28px; color: #333; flex: 1; }
-      .location-refresh { font-size: 22px; color: #1890ff; }
+      .location-locate {
+        font-size: 22px;
+        color: #1890ff;
+        padding: 8px 16px;
+        border: 1px solid #1890ff;
+        border-radius: 8px;
+      }
     }
 
     .search-box {

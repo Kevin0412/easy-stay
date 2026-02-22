@@ -38,6 +38,7 @@ const mock_data = {
       star: 5,
       open_date: '2020-01-01',
       tags: '豪华套房,免费停车,健身中心',
+      nearby: '国贸商城(0.5km),三里屯(2km),天安门广场(8km)',
       cover_image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800',
@@ -57,6 +58,7 @@ const mock_data = {
       star: 3,
       open_date: '2020-01-01',
       tags: '免费停车,亲子设施',
+      nearby: '西北工业大学(0.3km),长安区政府(1km),终南山(15km)',
       cover_image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800',
@@ -75,6 +77,7 @@ const mock_data = {
       star: 5,
       open_date: '2018-06-15',
       tags: '豪华套房,亲子设施,免费停车',
+      nearby: '外滩(0.1km),南京路步行街(0.8km),豫园(1.5km)',
       cover_image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800',
@@ -94,6 +97,7 @@ const mock_data = {
       star: 5,
       open_date: '2019-03-20',
       tags: '豪华套房,亲子设施',
+      nearby: '沙面岛(0.1km),上下九步行街(2km),广州塔(5km)',
       cover_image: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800',
@@ -112,7 +116,7 @@ const mock_data = {
       star: 5,
       open_date: '2021-08-10',
       tags: '豪华套房,免费停车',
-      cover_image: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=800',
+      nearby: '深圳湾公园(2km),海岸城购物中心(0.5km),世界之窗(8km)',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=800',
         'https://images.unsplash.com/photo-1596436889106-be35e843f974?w=800'
@@ -130,6 +134,7 @@ const mock_data = {
       star: 5,
       open_date: '2017-05-01',
       tags: '豪华套房,亲子设施,免费停车',
+      nearby: '西湖(0.5km),灵隐寺(5km),西溪湿地(8km)',
       cover_image: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=800',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=800',
@@ -148,6 +153,7 @@ const mock_data = {
       star: 4,
       open_date: '2019-11-12',
       tags: '亲子设施,免费停车',
+      nearby: '宽窄巷子(2km),锦里(3km),大熊猫繁育基地(10km)',
       cover_image: 'https://images.unsplash.com/photo-1549294413-26f195200c16?w=800',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1549294413-26f195200c16?w=800',
@@ -166,6 +172,7 @@ const mock_data = {
       star: 4,
       open_date: '2018-09-25',
       tags: '豪华套房,免费停车',
+      nearby: '夫子庙(3km),中山陵(8km),玄武湖(5km)',
       cover_image: 'https://images.unsplash.com/photo-1455587734955-081b22074882?w=800',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1455587734955-081b22074882?w=800',
@@ -184,6 +191,7 @@ const mock_data = {
       star: 4,
       open_date: '2020-07-18',
       tags: '亲子设施,免费停车',
+      nearby: '苏州园林(2km),寒山寺(4km),太湖(20km)',
       cover_image: 'https://images.unsplash.com/photo-1496417263034-38ec4f0b665a?w=800',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1496417263034-38ec4f0b665a?w=800',
@@ -202,6 +210,7 @@ const mock_data = {
       star: 4,
       open_date: '2019-04-30',
       tags: '亲子设施,免费停车',
+      nearby: '鼓浪屿(3km),南普陀寺(2km),厦门大学(1km)',
       cover_image: 'https://images.unsplash.com/photo-1537726235470-8504e3beef77?w=800',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1537726235470-8504e3beef77?w=800',
@@ -220,6 +229,7 @@ const mock_data = {
       star: 3,
       open_date: '2018-12-05',
       tags: '免费停车,亲子设施',
+      nearby: '栈桥(1km),八大关(2km),崂山(30km)',
       cover_image: 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=800',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=800',
@@ -238,6 +248,7 @@ const mock_data = {
       star: 4,
       open_date: '2021-02-14',
       tags: '豪华套房,免费停车',
+      nearby: '光谷广场(0.5km),东湖(5km),武汉大学(3km)',
       cover_image: 'https://images.unsplash.com/photo-1590381105924-c72589b9ef3f?w=800',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1590381105924-c72589b9ef3f?w=800',
@@ -256,6 +267,7 @@ const mock_data = {
       star: 5,
       open_date: '2020-10-01',
       tags: '豪华套房,亲子设施,免费停车',
+      nearby: '解放碑(0.3km),洪崖洞(1km),磁器口(8km)',
       cover_image: 'https://images.unsplash.com/photo-1563911302283-d2bc129e7570?w=800',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1563911302283-d2bc129e7570?w=800',
@@ -274,6 +286,7 @@ const mock_data = {
       star: 4,
       open_date: '2019-06-20',
       tags: '亲子设施,免费停车',
+      nearby: '橘子洲头(3km),岳麓山(5km),湖南博物馆(4km)',
       cover_image: 'https://images.unsplash.com/photo-1529290130-4ca3753253ae?w=800',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1529290130-4ca3753253ae?w=800',
@@ -292,11 +305,108 @@ const mock_data = {
       star: 5,
       open_date: '2017-09-15',
       tags: '豪华套房,免费停车',
+      nearby: '兵马俑(30km),大雁塔(5km),回民街(2km)',
       cover_image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800',
         'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800'
       ]),
+      status: 'published',
+      created_by: 2,
+      created_at: new Date(),
+      updated_at: new Date()
+    },
+    {
+      id: 16,
+      name_cn: '北京王府井大饭店',
+      name_en: 'Beijing Hotel Wangfujing',
+      address: '北京市东城区王府井大街12号',
+      star: 5,
+      open_date: '2016-05-01',
+      tags: '豪华套房,免费停车',
+      nearby: '王府井步行街(0.1km),故宫(1.5km),天安门广场(2km)',
+      cover_image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800',
+      images: JSON.stringify(['https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800']),
+      status: 'published',
+      created_by: 2,
+      created_at: new Date(),
+      updated_at: new Date()
+    },
+    {
+      id: 17,
+      name_cn: '北京国贸大酒店',
+      name_en: 'China World Hotel Beijing',
+      address: '北京市朝阳区建国门外大街1号',
+      star: 5,
+      open_date: '2015-08-20',
+      tags: '豪华套房,亲子设施,免费停车',
+      nearby: '国贸商城(0.1km),CCTV大楼(1km),三里屯(3km)',
+      cover_image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800',
+      images: JSON.stringify(['https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800']),
+      status: 'published',
+      created_by: 2,
+      created_at: new Date(),
+      updated_at: new Date()
+    },
+    {
+      id: 18,
+      name_cn: '北京前门建国饭店',
+      name_en: 'Jianguo Hotel Qianmen Beijing',
+      address: '北京市西城区前门西大街175号',
+      star: 4,
+      open_date: '2018-03-15',
+      tags: '免费停车,亲子设施',
+      nearby: '前门大街(0.2km),天安门广场(0.8km),大栅栏(0.5km)',
+      cover_image: 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800',
+      images: JSON.stringify(['https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800']),
+      status: 'published',
+      created_by: 2,
+      created_at: new Date(),
+      updated_at: new Date()
+    },
+    {
+      id: 19,
+      name_cn: '上海浦东香格里拉大酒店',
+      name_en: 'Shangri-La Hotel Pudong Shanghai',
+      address: '上海市浦东新区富城路33号',
+      star: 5,
+      open_date: '2017-11-01',
+      tags: '豪华套房,亲子设施,免费停车',
+      nearby: '东方明珠(0.5km),陆家嘴金融区(0.3km),上海中心大厦(0.8km)',
+      cover_image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800',
+      images: JSON.stringify(['https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800']),
+      status: 'published',
+      created_by: 2,
+      created_at: new Date(),
+      updated_at: new Date()
+    },
+    {
+      id: 20,
+      name_cn: '上海静安希尔顿酒店',
+      name_en: 'Hilton Shanghai Jing An',
+      address: '上海市静安区华山路250号',
+      star: 5,
+      open_date: '2019-06-01',
+      tags: '豪华套房,免费停车',
+      nearby: '静安寺(0.3km),南京西路(0.5km),人民广场(2km)',
+      cover_image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800',
+      images: JSON.stringify(['https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800']),
+      status: 'published',
+      created_by: 2,
+      created_at: new Date(),
+      updated_at: new Date()
+    },
+    {
+      id: 21,
+      name_cn: '上海虹桥万豪酒店',
+      name_en: 'Shanghai Marriott Hotel Hongqiao',
+      address: '上海市长宁区虹桥路2270号',
+      star: 4,
+      open_date: '2020-04-10',
+      tags: '亲子设施,免费停车',
+      nearby: '虹桥机场(3km),古北水镇(5km),中山公园(2km)',
+      cover_image: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800',
+      images: JSON.stringify(['https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=800']),
       status: 'published',
       created_by: 2,
       created_at: new Date(),
@@ -588,9 +698,26 @@ const mock_data = {
       stock: 4,
       created_at: new Date(),
       updated_at: new Date()
-    }
+    },
+    // 北京王府井大饭店
+    { id: 31, hotel_id: 16, room_type: '豪华大床房', price: 1288.00, stock: 10, created_at: new Date(), updated_at: new Date() },
+    { id: 32, hotel_id: 16, room_type: '行政套房', price: 2288.00, stock: 4, created_at: new Date(), updated_at: new Date() },
+    // 北京国贸大酒店
+    { id: 33, hotel_id: 17, room_type: '豪华房', price: 1488.00, stock: 12, created_at: new Date(), updated_at: new Date() },
+    { id: 34, hotel_id: 17, room_type: '国贸套房', price: 2888.00, stock: 3, created_at: new Date(), updated_at: new Date() },
+    // 北京前门建国饭店
+    { id: 35, hotel_id: 18, room_type: '标准大床房', price: 688.00, stock: 20, created_at: new Date(), updated_at: new Date() },
+    { id: 36, hotel_id: 18, room_type: '高级双床房', price: 888.00, stock: 10, created_at: new Date(), updated_at: new Date() },
+    // 上海浦东香格里拉
+    { id: 37, hotel_id: 19, room_type: '浦江景观房', price: 1988.00, stock: 8, created_at: new Date(), updated_at: new Date() },
+    { id: 38, hotel_id: 19, room_type: '香格里拉套房', price: 3888.00, stock: 3, created_at: new Date(), updated_at: new Date() },
+    // 上海静安希尔顿
+    { id: 39, hotel_id: 20, room_type: '希尔顿客房', price: 1188.00, stock: 15, created_at: new Date(), updated_at: new Date() },
+    { id: 40, hotel_id: 20, room_type: '行政套房', price: 2188.00, stock: 5, created_at: new Date(), updated_at: new Date() },
+    // 上海虹桥万豪
+    { id: 41, hotel_id: 21, room_type: '豪华房', price: 788.00, stock: 18, created_at: new Date(), updated_at: new Date() },
+    { id: 42, hotel_id: 21, room_type: '万豪套房', price: 1588.00, stock: 6, created_at: new Date(), updated_at: new Date() }
   ],
-  price_strategies: [
     {
       id: 1,
       hotel_id: 1,
@@ -648,8 +775,8 @@ const mock_data = {
 
 let next_id = {
   users: 4,
-  hotels: 16,
-  rooms: 31,
+  hotels: 22,
+  rooms: 43,
   price_strategies: 6,
   favorites: 1,
   orders: 1
@@ -701,6 +828,11 @@ async function query(sql, params = []) {
         if (sql.includes('AND (name_cn LIKE')) {
           const kw = params[param_index++].replace(/%/g, '');
           results = results.filter(h => h.name_cn.includes(kw) || h.address.includes(kw) || (h.tags && h.tags.includes(kw)));
+          param_index++; // skip tags param
+        }
+        if (sql.includes('AND address LIKE')) {
+          const city = params[param_index++].replace(/%/g, '');
+          results = results.filter(h => h.address.includes(city));
         }
       }
 

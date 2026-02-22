@@ -215,6 +215,14 @@ export default function Detail() {
         <View className='hotel-stars'>{renderStars()}</View>
         <Text className='hotel-address'>地址：{hotel.address}</Text>
         <Text className='hotel-open-date'>开业时间：{hotel.open_date}</Text>
+        {hotel.nearby && (
+          <View className='hotel-nearby'>
+            <Text className='nearby-title'>附近景点：</Text>
+            {hotel.nearby.split(',').map((item, i) => (
+              <Text key={i} className='nearby-item'>{item}</Text>
+            ))}
+          </View>
+        )}
       </View>
 
       {/* 房型列表 */}

@@ -35,8 +35,13 @@ async function findAll(filters = {}) {
   }
 
   if (filters.keyword) {
-    query += ' AND (name_cn LIKE ? OR address LIKE ?)';
-    params.push(`%${filters.keyword}%`, `%${filters.keyword}%`);
+    query += ' AND (name_cn LIKE ? OR address LIKE ? OR tags LIKE ?)';
+    params.push(`%${filters.keyword}%`, `%${filters.keyword}%`, `%${filters.keyword}%`);
+  }
+
+  if (filters.city) {
+    query += ' AND address LIKE ?';
+    params.push(`%${filters.city}%`);
   }
 
   query += ' ORDER BY created_at DESC';

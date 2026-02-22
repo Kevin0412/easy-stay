@@ -24,6 +24,9 @@ export default function Home() {
   const [checkOutDate, setCheckOutDate] = useState('')
   const [showAdvancedFilter, setShowAdvancedFilter] = useState(false)
   const [city, setCity] = useState('')
+  const [showCityPicker, setShowCityPicker] = useState(false)
+
+  const CITIES = ['北京市', '上海市', '广州市', '深圳市', '杭州市', '成都市', '南京市', '武汉市', '西安市', '重庆市', '苏州市', '厦门市', '青岛市', '长沙市']
 
   // 获取轮播图酒店
   useEffect(() => {
@@ -51,17 +54,26 @@ export default function Home() {
     Taro.getLocation({
       type: 'wgs84',
       success: (res) => {
-        // 简单根据经纬度范围判断城市（演示用）
         const { latitude, longitude } = res
-        let cityName = '定位中...'
+        let cityName = ''
         if (latitude > 39.4 && latitude < 41.1 && longitude > 115.4 && longitude < 117.5) cityName = '北京市'
         else if (latitude > 30.6 && latitude < 31.9 && longitude > 120.8 && longitude < 122.2) cityName = '上海市'
         else if (latitude > 22.3 && latitude < 23.9 && longitude > 112.9 && longitude < 114.5) cityName = '广州市'
         else if (latitude > 22.4 && latitude < 22.9 && longitude > 113.7 && longitude < 114.6) cityName = '深圳市'
-        else cityName = `${latitude.toFixed(2)}°N`
-        setCity(cityName)
+        else if (latitude > 29.9 && latitude < 30.6 && longitude > 119.9 && longitude < 120.7) cityName = '杭州市'
+        else if (latitude > 30.4 && latitude < 31.0 && longitude > 103.7 && longitude < 104.5) cityName = '成都市'
+        else if (latitude > 31.7 && latitude < 32.3 && longitude > 118.5 && longitude < 119.2) cityName = '南京市'
+        else if (latitude > 30.3 && latitude < 31.0 && longitude > 113.7 && longitude < 114.7) cityName = '武汉市'
+        else if (latitude > 33.9 && latitude < 34.5 && longitude > 108.7 && longitude < 109.3) cityName = '西安市'
+        else if (latitude > 29.2 && latitude < 30.0 && longitude > 106.2 && longitude < 107.0) cityName = '重庆市'
+        if (cityName) {
+          setCity(cityName)
+          Taro.showToast({ title: `已定位到${cityName}`, icon: 'success' })
+        } else {
+          Taro.showToast({ title: '未能识别城市，请手动选择', icon: 'none' })
+        }
       },
-      fail: () => setCity('定位失败')
+      fail: () => Taro.showToast({ title: '定位失败，请手动选择', icon: 'none' })
     })
   }
 
@@ -70,6 +82,9 @@ export default function Home() {
     const queryParams: string[] = []
     if (keyword.trim()) {
       queryParams.push(`keyword=${encodeURIComponent(keyword.trim())}`)
+    }
+    if (city) {
+      queryParams.push(`city=${encodeURIComponent(city.replace('市', ''))}`)
     }
     if (selectedStar) {
       queryParams.push(`star=${selectedStar}`)
@@ -168,10 +183,17 @@ export default function Home() {
       {/* 搜索区域 */}
       <View className='search-section'>
         {/* 当前地点 */}
-        <View className='location-row' onClick={getLocation}>
+        <View className='location-row'>
           <Text className='location-icon'>📍</Text>
-          <Text className='location-text'>{city || '获取定位'}</Text>
-          <Text className='location-refresh'>重新定位</Text>
+          <Picker
+            mode='selector'
+            range={CITIES}
+            value={CITIES.indexOf(city)}
+            onChange={(e) => setCity(CITIES[Number(e.detail.value)])}
+          >
+            <Text className='location-text'>{city || '选择城市'}</Text>
+          </Picker>
+          <Text className='location-locate' onClick={getLocation}>定位</Text>
         </View>
 
         <View className='search-box'>
