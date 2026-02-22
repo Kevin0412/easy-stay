@@ -18,6 +18,51 @@
     }
   }
 
+  // 顶部核心条件筛选
+  .top-filter {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+    .top-filter-item {
+      flex: 1;
+      padding: 20px 24px;
+      text-align: center;
+
+      .top-filter-label {
+        display: block;
+        font-size: 22px;
+        color: #999;
+        margin-bottom: 6px;
+      }
+
+      .top-filter-value {
+        display: block;
+        font-size: 28px;
+        color: #333;
+        font-weight: 500;
+      }
+    }
+
+    .top-filter-divider {
+      width: 80px;
+      text-align: center;
+
+      .top-filter-arrow {
+        font-size: 28px;
+        color: #ccc;
+      }
+
+      .top-filter-nights {
+        font-size: 24px;
+        color: #667eea;
+        font-weight: bold;
+      }
+    }
+  }
+
   // 筛选条件展示
   .filter-summary {
     background: #fff;
@@ -112,6 +157,19 @@
       .no-more-text {
         font-size: 28px;
         color: #999;
+      }
+    }
+
+    .load-more,
+    .no-more {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 40px 0;
+
+      .load-more-text,
+      .no-more-text {
+        font-size: 26px;
+        color: #ccc;
       }
     }
   }

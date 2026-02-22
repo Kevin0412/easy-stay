@@ -23,10 +23,12 @@ export default function Home() {
   const [checkInDate, setCheckInDate] = useState('')
   const [checkOutDate, setCheckOutDate] = useState('')
   const [showAdvancedFilter, setShowAdvancedFilter] = useState(false)
+  const [city, setCity] = useState('')
 
   // 获取轮播图酒店
   useEffect(() => {
     fetchCarouselHotels()
+    getLocation()
   }, [])
 
   const fetchCarouselHotels = async () => {
@@ -43,6 +45,24 @@ export default function Home() {
     } catch (error) {
       console.error('获取轮播图失败:', error)
     }
+  }
+
+  const getLocation = () => {
+    Taro.getLocation({
+      type: 'wgs84',
+      success: (res) => {
+        // 简单根据经纬度范围判断城市（演示用）
+        const { latitude, longitude } = res
+        let cityName = '定位中...'
+        if (latitude > 39.4 && latitude < 41.1 && longitude > 115.4 && longitude < 117.5) cityName = '北京市'
+        else if (latitude > 30.6 && latitude < 31.9 && longitude > 120.8 && longitude < 122.2) cityName = '上海市'
+        else if (latitude > 22.3 && latitude < 23.9 && longitude > 112.9 && longitude < 114.5) cityName = '广州市'
+        else if (latitude > 22.4 && latitude < 22.9 && longitude > 113.7 && longitude < 114.6) cityName = '深圳市'
+        else cityName = `${latitude.toFixed(2)}°N`
+        setCity(cityName)
+      },
+      fail: () => setCity('定位失败')
+    })
   }
 
   // 搜索酒店
@@ -102,6 +122,14 @@ export default function Home() {
 
   return (
     <View className='home-container'>
+      {/* 顶部导航 */}
+      <View className='top-nav'>
+        <Text className='nav-title'>易宿</Text>
+        <View className='nav-profile' onClick={() => Taro.navigateTo({ url: '/pages/profile/index' })}>
+          <Text className='nav-profile-text'>我的</Text>
+        </View>
+      </View>
+
       {/* 轮播图区域 */}
       {carouselHotels.length > 0 && (
         <View className='carousel-section'>
@@ -139,6 +167,13 @@ export default function Home() {
 
       {/* 搜索区域 */}
       <View className='search-section'>
+        {/* 当前地点 */}
+        <View className='location-row' onClick={getLocation}>
+          <Text className='location-icon'>📍</Text>
+          <Text className='location-text'>{city || '获取定位'}</Text>
+          <Text className='location-refresh'>重新定位</Text>
+        </View>
+
         <View className='search-box'>
           <Input
             className='search-input'
@@ -146,6 +181,32 @@ export default function Home() {
             value={keyword}
             onInput={(e) => setKeyword(e.detail.value)}
           />
+        </View>
+
+        {/* 日期选择 - 核心区域直接显示 */}
+        <View className='date-row'>
+          <Picker mode='date' value={checkInDate} onChange={(e) => handleDateChange('checkIn', e)}>
+            <View className='date-item'>
+              <Text className='date-item-label'>入住</Text>
+              <Text className={checkInDate ? 'date-item-value' : 'date-item-placeholder'}>
+                {checkInDate || '选择日期'}
+              </Text>
+            </View>
+          </Picker>
+          <View className='date-divider'>
+            {checkInDate && checkOutDate && checkInDate < checkOutDate
+              ? <Text className='nights-count'>{Math.round((new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) / 86400000)}晚</Text>
+              : <Text className='date-arrow'>→</Text>
+            }
+          </View>
+          <Picker mode='date' value={checkOutDate} onChange={(e) => handleDateChange('checkOut', e)}>
+            <View className='date-item'>
+              <Text className='date-item-label'>离店</Text>
+              <Text className={checkOutDate ? 'date-item-value' : 'date-item-placeholder'}>
+                {checkOutDate || '选择日期'}
+              </Text>
+            </View>
+          </Picker>
         </View>
 
         {/* 星级筛选 */}
@@ -173,14 +234,13 @@ export default function Home() {
         {/* 高级筛选切换 */}
         <View className='advanced-toggle' onClick={() => setShowAdvancedFilter(!showAdvancedFilter)}>
           <Text className='toggle-text'>
-            {showAdvancedFilter ? '收起高级筛选 ▲' : '展开高级筛选 ▼'}
+            {showAdvancedFilter ? '收起价格筛选 ▲' : '展开价格筛选 ▼'}
           </Text>
         </View>
 
         {/* 高级筛选面板 */}
         {showAdvancedFilter && (
           <View className='advanced-filter'>
-            {/* 价格范围 */}
             <View className='filter-row'>
               <Text className='filter-label'>价格范围：</Text>
               <View className='price-inputs'>
@@ -201,29 +261,6 @@ export default function Home() {
                 />
               </View>
             </View>
-
-            {/* 日期选择 */}
-            <View className='filter-row'>
-              <Text className='filter-label'>入住日期：</Text>
-              <Picker mode='date' value={checkInDate} onChange={(e) => handleDateChange('checkIn', e)}>
-                <View className='date-picker'>
-                  <Text className={checkInDate ? 'date-text' : 'date-placeholder'}>
-                    {checkInDate || '选择入住日期'}
-                  </Text>
-                </View>
-              </Picker>
-            </View>
-
-            <View className='filter-row'>
-              <Text className='filter-label'>离店日期：</Text>
-              <Picker mode='date' value={checkOutDate} onChange={(e) => handleDateChange('checkOut', e)}>
-                <View className='date-picker'>
-                  <Text className={checkOutDate ? 'date-text' : 'date-placeholder'}>
-                    {checkOutDate || '选择离店日期'}
-                  </Text>
-                </View>
-              </Picker>
-            </View>
           </View>
         )}
 
@@ -233,34 +270,22 @@ export default function Home() {
         </View>
       </View>
 
-      {/* 快捷入口 */}
+      {/* 快捷标签 */}
       <View className='quick-section'>
-        <Text className='section-title'>热门推荐</Text>
+        <Text className='section-title'>快捷标签</Text>
         <View className='quick-tags'>
-          <View className='tag-item' onClick={() => {
-            // 直接跳转，不依赖状态
-            Taro.navigateTo({
-              url: '/pages/list/index?star=5'
-            })
-          }}>
-            五星酒店
-          </View>
-          <View className='tag-item' onClick={() => {
-            // 直接跳转，不依赖状态
-            Taro.navigateTo({
-              url: '/pages/list/index?star=4'
-            })
-          }}>
-            四星酒店
-          </View>
-          <View className='tag-item' onClick={() => {
-            // 直接跳转到列表页，不带参数
-            Taro.navigateTo({
-              url: '/pages/list/index'
-            })
-          }}>
-            查看全部
-          </View>
+          {[
+            { label: '五星酒店', url: '/pages/list/index?star=5' },
+            { label: '四星酒店', url: '/pages/list/index?star=4' },
+            { label: '豪华套房', url: '/pages/list/index?keyword=套房' },
+            { label: '亲子出行', url: '/pages/list/index?keyword=亲子' },
+            { label: '免费停车', url: '/pages/list/index?keyword=停车' },
+            { label: '查看全部', url: '/pages/list/index' },
+          ].map(tag => (
+            <View key={tag.label} className='tag-item' onClick={() => Taro.navigateTo({ url: tag.url })}>
+              {tag.label}
+            </View>
+          ))}
         </View>
       </View>
     </View>

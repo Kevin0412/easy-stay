@@ -37,6 +37,7 @@ const mock_data = {
       address: '北京市朝阳区建国路88号',
       star: 5,
       open_date: '2020-01-01',
+      tags: '豪华套房,免费停车,健身中心',
       cover_image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800',
@@ -55,6 +56,7 @@ const mock_data = {
       address: '陕西西安长安区东大街道东大村东翔路1号',
       star: 3,
       open_date: '2020-01-01',
+      tags: '免费停车,亲子设施',
       cover_image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800',
@@ -72,6 +74,7 @@ const mock_data = {
       address: '上海市黄浦区中山东一路2号',
       star: 5,
       open_date: '2018-06-15',
+      tags: '豪华套房,亲子设施,免费停车',
       cover_image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800',
@@ -90,6 +93,7 @@ const mock_data = {
       address: '广州市沙面南街1号',
       star: 5,
       open_date: '2019-03-20',
+      tags: '豪华套房,亲子设施',
       cover_image: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800',
@@ -107,6 +111,7 @@ const mock_data = {
       address: '深圳市福田区深南大道5016号',
       star: 5,
       open_date: '2021-08-10',
+      tags: '豪华套房,免费停车',
       cover_image: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=800',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=800',
@@ -124,6 +129,7 @@ const mock_data = {
       address: '杭州市西湖区杨公堤18号',
       star: 5,
       open_date: '2017-05-01',
+      tags: '豪华套房,亲子设施,免费停车',
       cover_image: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=800',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=800',
@@ -141,6 +147,7 @@ const mock_data = {
       address: '成都市锦江区滨江东路9号',
       star: 4,
       open_date: '2019-11-12',
+      tags: '亲子设施,免费停车',
       cover_image: 'https://images.unsplash.com/photo-1549294413-26f195200c16?w=800',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1549294413-26f195200c16?w=800',
@@ -158,6 +165,7 @@ const mock_data = {
       address: '南京市鼓楼区汉中路2号',
       star: 4,
       open_date: '2018-09-25',
+      tags: '豪华套房,免费停车',
       cover_image: 'https://images.unsplash.com/photo-1455587734955-081b22074882?w=800',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1455587734955-081b22074882?w=800',
@@ -175,6 +183,7 @@ const mock_data = {
       address: '苏州市工业园区苏州大道西158号',
       star: 4,
       open_date: '2020-07-18',
+      tags: '亲子设施,免费停车',
       cover_image: 'https://images.unsplash.com/photo-1496417263034-38ec4f0b665a?w=800',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1496417263034-38ec4f0b665a?w=800',
@@ -192,6 +201,7 @@ const mock_data = {
       address: '厦门市思明区湖滨南路8号',
       star: 4,
       open_date: '2019-04-30',
+      tags: '亲子设施,免费停车',
       cover_image: 'https://images.unsplash.com/photo-1537726235470-8504e3beef77?w=800',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1537726235470-8504e3beef77?w=800',
@@ -209,6 +219,7 @@ const mock_data = {
       address: '青岛市市南区南海路9号',
       star: 3,
       open_date: '2018-12-05',
+      tags: '免费停车,亲子设施',
       cover_image: 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=800',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=800',
@@ -226,6 +237,7 @@ const mock_data = {
       address: '武汉市洪山区珞喻路889号',
       star: 4,
       open_date: '2021-02-14',
+      tags: '豪华套房,免费停车',
       cover_image: 'https://images.unsplash.com/photo-1590381105924-c72589b9ef3f?w=800',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1590381105924-c72589b9ef3f?w=800',
@@ -243,6 +255,7 @@ const mock_data = {
       address: '重庆市渝中区邹容路68号',
       star: 5,
       open_date: '2020-10-01',
+      tags: '豪华套房,亲子设施,免费停车',
       cover_image: 'https://images.unsplash.com/photo-1563911302283-d2bc129e7570?w=800',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1563911302283-d2bc129e7570?w=800',
@@ -260,6 +273,7 @@ const mock_data = {
       address: '长沙市开福区芙蓉中路一段478号',
       star: 4,
       open_date: '2019-06-20',
+      tags: '亲子设施,免费停车',
       cover_image: 'https://images.unsplash.com/photo-1529290130-4ca3753253ae?w=800',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1529290130-4ca3753253ae?w=800',
@@ -277,6 +291,7 @@ const mock_data = {
       address: '西安市新城区东新街319号',
       star: 5,
       open_date: '2017-09-15',
+      tags: '豪华套房,免费停车',
       cover_image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800',
       images: JSON.stringify([
         'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800',
@@ -626,14 +641,18 @@ const mock_data = {
       end_date: '2026-03-15',
       created_at: new Date()
     }
-  ]
+  ],
+  favorites: [],
+  orders: []
 };
 
 let next_id = {
   users: 4,
   hotels: 16,
   rooms: 31,
-  price_strategies: 6
+  price_strategies: 6,
+  favorites: 1,
+  orders: 1
 };
 
 // Mock query 函数
@@ -679,6 +698,10 @@ async function query(sql, params = []) {
           const star = params[param_index++];
           results = results.filter(h => h.star === parseInt(star));
         }
+        if (sql.includes('AND (name_cn LIKE')) {
+          const kw = params[param_index++].replace(/%/g, '');
+          results = results.filter(h => h.name_cn.includes(kw) || h.address.includes(kw) || (h.tags && h.tags.includes(kw)));
+        }
       }
 
       return [results, null];
@@ -713,6 +736,37 @@ async function query(sql, params = []) {
         const strategies = mock_data.price_strategies.filter(p => p.room_id === parseInt(room_id));
         return [strategies, null];
       }
+    }
+
+    if (sql.includes('FROM favorites')) {
+      if (sql.includes('WHERE user_id') && sql.includes('hotel_id')) {
+        const [user_id, hotel_id] = params;
+        const rows = mock_data.favorites.filter(f => f.user_id === parseInt(user_id) && f.hotel_id === parseInt(hotel_id));
+        return [rows, null];
+      }
+      if (sql.includes('JOIN hotels')) {
+        const user_id = params[0];
+        const rows = mock_data.favorites
+          .filter(f => f.user_id === parseInt(user_id))
+          .map(f => {
+            const hotel = mock_data.hotels.find(h => h.id === f.hotel_id);
+            return hotel ? { id: hotel.id, name_cn: hotel.name_cn, address: hotel.address, star: hotel.star, created_at: f.created_at } : null;
+          })
+          .filter(Boolean);
+        return [rows, null];
+      }
+    }
+
+    if (sql.includes('FROM orders')) {
+      const user_id = params[0];
+      const rows = mock_data.orders
+        .filter(o => o.user_id === parseInt(user_id))
+        .map(o => {
+          const hotel = mock_data.hotels.find(h => h.id === o.hotel_id);
+          const room = mock_data.rooms.find(r => r.id === o.room_id);
+          return { ...o, hotel_name: hotel ? hotel.name_cn : '', room_type: room ? room.room_type : '' };
+        });
+      return [rows, null];
     }
 
     return [[], null];
@@ -783,6 +837,24 @@ async function query(sql, params = []) {
       mock_data.price_strategies.push(new_strategy);
       return [{ insertId: new_strategy.id }, null];
     }
+
+    if (sql.includes('INTO favorites') || sql.includes('IGNORE INTO favorites')) {
+      const [user_id, hotel_id] = params;
+      const exists = mock_data.favorites.find(f => f.user_id === parseInt(user_id) && f.hotel_id === parseInt(hotel_id));
+      if (!exists) {
+        const fav = { id: next_id.favorites++, user_id: parseInt(user_id), hotel_id: parseInt(hotel_id), created_at: new Date() };
+        mock_data.favorites.push(fav);
+        return [{ insertId: fav.id }, null];
+      }
+      return [{ insertId: 0 }, null];
+    }
+
+    if (sql.includes('INTO orders')) {
+      const [user_id, hotel_id, room_id, check_in, check_out, nights, total_price, status] = params;
+      const order = { id: next_id.orders++, user_id, hotel_id, room_id, check_in, check_out, nights, total_price, status, created_at: new Date() };
+      mock_data.orders.push(order);
+      return [{ insertId: order.id }, null];
+    }
   }
 
   // UPDATE 查询
@@ -849,6 +921,15 @@ async function query(sql, params = []) {
       const index = mock_data.price_strategies.findIndex(p => p.id === parseInt(id));
       if (index !== -1) {
         mock_data.price_strategies.splice(index, 1);
+        return [{ affectedRows: 1 }, null];
+      }
+    }
+
+    if (sql.includes('FROM favorites')) {
+      const [user_id, hotel_id] = params;
+      const index = mock_data.favorites.findIndex(f => f.user_id === parseInt(user_id) && f.hotel_id === parseInt(hotel_id));
+      if (index !== -1) {
+        mock_data.favorites.splice(index, 1);
         return [{ affectedRows: 1 }, null];
       }
     }

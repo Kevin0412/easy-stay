@@ -33,6 +33,9 @@ export default function HotelCard({ hotel }: HotelCardProps) {
         <View className='hotel-name-en'>{hotel.name_en}</View>
         <View className='hotel-stars'>{renderStars()}</View>
         <View className='hotel-address'>{hotel.address}</View>
+        {hotel.min_price && (
+          <View className='hotel-price'>¥{hotel.min_price} <Text className='price-unit'>起/晚</Text></View>
+        )}
       </View>
     </View>
   )

@@ -75,3 +75,14 @@ INSERT INTO users (username, password, email, phone, role) VALUES
 ALTER TABLE users ADD COLUMN IF NOT EXISTS email VARCHAR(100);
 ALTER TABLE users ADD COLUMN IF NOT EXISTS phone VARCHAR(20);
 ALTER TABLE users MODIFY COLUMN role ENUM('admin', 'merchant', 'user') NOT NULL DEFAULT 'user';
+
+-- 收藏表
+CREATE TABLE IF NOT EXISTS favorites (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  user_id INT NOT NULL,
+  hotel_id INT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_user_hotel (user_id, hotel_id),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (hotel_id) REFERENCES hotels(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

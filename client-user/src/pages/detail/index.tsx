@@ -3,6 +3,8 @@ import React, { useState } from 'react'
 import Taro, { useLoad } from '@tarojs/taro'
 import { getHotelById, Hotel } from '../../services/hotel'
 import { getRoomsByHotelId, calculatePrice, Room } from '../../services/room'
+import { checkFavorite, addFavorite, removeFavorite } from '../../services/favorite'
+import { useUserStore } from '../../store/userStore'
 import './index.scss'
 
 export default function Detail() {
@@ -13,30 +15,42 @@ export default function Detail() {
   const [endDate, setEndDate] = useState('')
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null)
   const [totalPrice, setTotalPrice] = useState<number | null>(null)
+  const [isFav, setIsFav] = useState(false)
+  const { isLoggedIn } = useUserStore()
 
   // 加载酒店详情和房型列表
   const loadHotelDetail = async (hotelId: number) => {
     setLoading(true)
     try {
-      // 获取酒店详情
       const hotelRes = await getHotelById(hotelId)
-      if (hotelRes.success) {
-        setHotel(hotelRes.data)
-      }
+      if (hotelRes.success) setHotel(hotelRes.data)
 
-      // 获取房型列表
       const roomsRes = await getRoomsByHotelId(hotelId)
-      if (roomsRes.success) {
-        setRooms(roomsRes.data)
+      if (roomsRes.success) setRooms(roomsRes.data.sort((a, b) => a.price - b.price))
+
+      if (isLoggedIn()) {
+        const favRes = await checkFavorite(hotelId)
+        if (favRes.success) setIsFav(favRes.data)
       }
     } catch (error) {
-      console.error('加载酒店详情失败:', error)
-      Taro.showToast({
-        title: '加载失败',
-        icon: 'none'
-      })
+      Taro.showToast({ title: '加载失败', icon: 'none' })
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleToggleFav = async () => {
+    if (!isLoggedIn()) {
+      Taro.showToast({ title: '请先登录', icon: 'none' })
+      return
+    }
+    if (!hotel) return
+    if (isFav) {
+      await removeFavorite(hotel.id)
+      setIsFav(false)
+    } else {
+      await addFavorite(hotel.id)
+      setIsFav(true)
     }
   }
 
@@ -98,6 +112,22 @@ export default function Detail() {
     return '★'.repeat(hotel.star) + '☆'.repeat(5 - hotel.star)
   }
 
+  // 立即预订
+  const handleBook = () => {
+    if (!isLoggedIn()) {
+      Taro.showToast({ title: '请先登录', icon: 'none' })
+      return
+    }
+    if (!selectedRoom || !startDate || !endDate || totalPrice === null) {
+      Taro.showToast({ title: '请先计算总价', icon: 'none' })
+      return
+    }
+    const nights = Math.round((new Date(endDate).getTime() - new Date(startDate).getTime()) / 86400000)
+    Taro.navigateTo({
+      url: `/pages/order/index?hotelId=${hotel!.id}&hotelName=${encodeURIComponent(hotel!.name_cn)}&roomId=${selectedRoom.id}&roomType=${encodeURIComponent(selectedRoom.room_type)}&checkIn=${startDate}&checkOut=${endDate}&nights=${nights}&totalPrice=${totalPrice}`
+    })
+  }
+
   // 返回列表页
   const handleBack = () => {
     Taro.navigateBack({
@@ -129,8 +159,13 @@ export default function Detail() {
   return (
     <View className='detail-container'>
       {/* 返回按钮 */}
-      <View className='back-btn' onClick={handleBack}>
-        <Text className='back-text'>← 返回</Text>
+      <View className='top-bar'>
+        <View className='back-btn' onClick={handleBack}>
+          <Text className='back-text'>← 返回</Text>
+        </View>
+        <View className='fav-btn' onClick={handleToggleFav}>
+          <Text className={`fav-icon ${isFav ? 'active' : ''}`}>{isFav ? '♥' : '♡'}</Text>
+        </View>
       </View>
 
       {/* 酒店图片轮播 */}
@@ -206,38 +241,33 @@ export default function Detail() {
         )}
       </View>
 
-      {/* 日期选择 */}
+      {/* 日期选择 + 间夜 */}
       <View className='date-section'>
         <Text className='section-title'>选择日期</Text>
         <View className='date-picker-group'>
           <View className='date-picker-item'>
-            <Text className='date-label'>入住日期：</Text>
-            <Picker
-              mode='date'
-              value={startDate}
-              onChange={(e) => setStartDate(e.detail.value)}
-            >
-              <View className='date-value'>
-                {startDate || '请选择'}
-              </View>
+            <Text className='date-label'>入住：</Text>
+            <Picker mode='date' value={startDate} onChange={(e) => setStartDate(e.detail.value)}>
+              <View className='date-value'>{startDate || '请选择'}</View>
             </Picker>
           </View>
           <View className='date-picker-item'>
-            <Text className='date-label'>离店日期：</Text>
-            <Picker
-              mode='date'
-              value={endDate}
-              onChange={(e) => setEndDate(e.detail.value)}
-            >
-              <View className='date-value'>
-                {endDate || '请选择'}
-              </View>
+            <Text className='date-label'>离店：</Text>
+            <Picker mode='date' value={endDate} onChange={(e) => setEndDate(e.detail.value)}>
+              <View className='date-value'>{endDate || '请选择'}</View>
             </Picker>
           </View>
         </View>
+        {startDate && endDate && startDate < endDate && (
+          <View className='nights-banner'>
+            <Text className='nights-text'>
+              共 {Math.round((new Date(endDate).getTime() - new Date(startDate).getTime()) / 86400000)} 晚
+            </Text>
+          </View>
+        )}
       </View>
 
-      {/* 价格计算 */}
+      {/* 价格计算 + 预订 */}
       <View className='price-section'>
         <View className='calculate-btn' onClick={handleCalculatePrice}>
           <Text className='calculate-btn-text'>计算总价</Text>
@@ -246,6 +276,11 @@ export default function Detail() {
           <View className='total-price'>
             <Text className='price-label'>总价：</Text>
             <Text className='price-value'>¥{totalPrice.toFixed(2)}</Text>
+          </View>
+        )}
+        {totalPrice !== null && (
+          <View className='book-btn' onClick={handleBook}>
+            <Text className='book-btn-text'>立即预订</Text>
           </View>
         )}
       </View>

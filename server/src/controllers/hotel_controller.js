@@ -1,4 +1,5 @@
 const hotelModel = require('../models/hotel_model');
+const roomModel = require('../models/room_model');
 
 /**
  * 创建酒店
@@ -74,11 +75,12 @@ async function getCarouselHotels(req, res) {
  */
 async function getHotels(req, res) {
   try {
-    const { status, star } = req.query;
+    const { status, star, keyword } = req.query;
     const filters = {};
 
     if (status) filters.status = status;
     if (star) filters.star = parseInt(star);
+    if (keyword) filters.keyword = keyword;
 
     // 如果有用户认证，商户只能看到自己的酒店
     if (req.user && req.user.role === 'merchant') {
@@ -87,9 +89,16 @@ async function getHotels(req, res) {
 
     const hotels = await hotelModel.findAll(filters);
 
+    // 为每个酒店附加最低价格
+    const hotelsWithPrice = await Promise.all(hotels.map(async (hotel) => {
+      const rooms = await roomModel.findByHotelId(hotel.id);
+      const min_price = rooms.length > 0 ? Math.min(...rooms.map(r => r.price)) : null;
+      return { ...hotel, min_price };
+    }));
+
     res.json({
       success: true,
-      data: hotels,
+      data: hotelsWithPrice,
       message: ''
     });
   } catch (error) {

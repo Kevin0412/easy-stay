@@ -15,6 +15,7 @@ export interface Hotel {
   created_at: string
   updated_at: string
   rooms?: Room[]
+  min_price?: number
 }
 
 // 房型数据类型

@@ -34,6 +34,11 @@ async function findAll(filters = {}) {
     params.push(filters.star);
   }
 
+  if (filters.keyword) {
+    query += ' AND (name_cn LIKE ? OR address LIKE ?)';
+    params.push(`%${filters.keyword}%`, `%${filters.keyword}%`);
+  }
+
   query += ' ORDER BY created_at DESC';
 
   const [rows] = await pool.query(query, params);

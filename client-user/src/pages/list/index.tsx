@@ -1,4 +1,4 @@
-import { View, Text } from '@tarojs/components'
+import { View, Text, Picker } from '@tarojs/components'
 import React, { useState } from 'react'
 import Taro, { useLoad, useReachBottom, usePullDownRefresh } from '@tarojs/taro'
 import { getHotels, Hotel } from '../../services/hotel'
@@ -7,6 +7,7 @@ import './index.scss'
 
 export default function List() {
   const [allHotels, setAllHotels] = useState<Hotel[]>([])
+  const [displayCount, setDisplayCount] = useState(8)
   const [loading, setLoading] = useState(false)
   const [filterStar, setFilterStar] = useState<number | undefined>(undefined)
   const [keyword, setKeyword] = useState('')
@@ -16,12 +17,12 @@ export default function List() {
   const [checkOutDate, setCheckOutDate] = useState('')
 
   // 加载酒店列表
-  const loadHotels = async () => {
+  const loadHotels = async (kw?: string) => {
     if (loading) return
 
     setLoading(true)
     try {
-      const res = await getHotels({ status: 'published' })
+      const res = await getHotels({ status: 'published', keyword: kw || keyword || undefined })
       if (res.success) {
         setAllHotels(res.data)
       }
@@ -38,27 +39,15 @@ export default function List() {
 
   // 前端筛选酒店
   const filteredHotels = allHotels.filter(hotel => {
-    // 星级筛选
-    if (filterStar && hotel.star !== filterStar) {
-      return false
-    }
-    // 关键词筛选
-    if (keyword && !hotel.name_cn.includes(keyword) && !hotel.address.includes(keyword)) {
-      return false
-    }
-    // 价格筛选 (需要从房型中获取最低价格)
-    // 注意: 这里假设 hotel 对象包含 rooms 数组，如果没有则跳过价格筛选
-    if ((minPrice !== undefined || maxPrice !== undefined) && hotel.rooms && hotel.rooms.length > 0) {
-      const hotelMinPrice = Math.min(...hotel.rooms.map(room => room.price))
-      if (minPrice !== undefined && hotelMinPrice < minPrice) {
-        return false
-      }
-      if (maxPrice !== undefined && hotelMinPrice > maxPrice) {
-        return false
-      }
-    }
+    if (filterStar && hotel.star !== filterStar) return false
+    if (keyword && !hotel.name_cn.includes(keyword) && !hotel.address.includes(keyword)) return false
+    if (minPrice !== undefined && hotel.min_price !== undefined && hotel.min_price < minPrice) return false
+    if (maxPrice !== undefined && hotel.min_price !== undefined && hotel.min_price > maxPrice) return false
     return true
   })
+
+  const displayedHotels = filteredHotels.slice(0, displayCount)
+  const hasMore = displayCount < filteredHotels.length
 
   // 页面加载时获取数据和参数
   useLoad(() => {
@@ -66,40 +55,33 @@ export default function List() {
     const instance = Taro.getCurrentInstance()
     const params = instance.router?.params || {}
 
-    console.log('接收到的路由参数:', params)
-
     if (params.star) {
-      const starValue = Number(params.star)
-      console.log('设置星级筛选:', starValue)
-      setFilterStar(starValue)
+      setFilterStar(Number(params.star))
     }
+    let kw = ''
     if (params.keyword) {
-      // 解码 URL 编码的关键词
-      const decodedKeyword = decodeURIComponent(params.keyword)
-      console.log('设置关键词筛选:', decodedKeyword)
-      setKeyword(decodedKeyword)
+      kw = decodeURIComponent(params.keyword)
+      setKeyword(kw)
     }
-    if (params.minPrice) {
-      setMinPrice(Number(params.minPrice))
-    }
-    if (params.maxPrice) {
-      setMaxPrice(Number(params.maxPrice))
-    }
-    if (params.checkIn) {
-      setCheckInDate(params.checkIn)
-    }
-    if (params.checkOut) {
-      setCheckOutDate(params.checkOut)
-    }
+    if (params.minPrice) setMinPrice(Number(params.minPrice))
+    if (params.maxPrice) setMaxPrice(Number(params.maxPrice))
+    if (params.checkIn) setCheckInDate(params.checkIn)
+    if (params.checkOut) setCheckOutDate(params.checkOut)
 
-    loadHotels()
+    loadHotels(kw)
   })
 
   // 下拉刷新
   usePullDownRefresh(() => {
+    setDisplayCount(8)
     loadHotels().then(() => {
       Taro.stopPullDownRefresh()
     })
+  })
+
+  // 触底加载更多
+  useReachBottom(() => {
+    if (hasMore) setDisplayCount(prev => prev + 8)
   })
 
   // 筛选星级
@@ -117,6 +99,28 @@ export default function List() {
       {/* 返回首页按钮 */}
       <View className='back-home-btn' onClick={handleBackHome}>
         <Text className='back-home-text'>← 返回首页</Text>
+      </View>
+
+      {/* 顶部核心条件筛选 */}
+      <View className='top-filter'>
+        <Picker mode='date' value={checkInDate} onChange={(e) => setCheckInDate(e.detail.value)}>
+          <View className='top-filter-item'>
+            <Text className='top-filter-label'>入住</Text>
+            <Text className='top-filter-value'>{checkInDate || '选择日期'}</Text>
+          </View>
+        </Picker>
+        <View className='top-filter-divider'>
+          {checkInDate && checkOutDate && checkInDate < checkOutDate
+            ? <Text className='top-filter-nights'>{Math.round((new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) / 86400000)}晚</Text>
+            : <Text className='top-filter-arrow'>→</Text>
+          }
+        </View>
+        <Picker mode='date' value={checkOutDate} onChange={(e) => setCheckOutDate(e.detail.value)}>
+          <View className='top-filter-item'>
+            <Text className='top-filter-label'>离店</Text>
+            <Text className='top-filter-value'>{checkOutDate || '选择日期'}</Text>
+          </View>
+        </Picker>
       </View>
 
       {/* 筛选条件展示 */}
@@ -164,13 +168,25 @@ export default function List() {
           </View>
         )}
 
-        {filteredHotels.map(hotel => (
+        {displayedHotels.map(hotel => (
           <HotelCard key={hotel.id} hotel={hotel} />
         ))}
 
         {loading && (
           <View className='loading-state'>
             <Text className='loading-text'>加载中...</Text>
+          </View>
+        )}
+
+        {!loading && hasMore && (
+          <View className='load-more'>
+            <Text className='load-more-text'>上滑加载更多</Text>
+          </View>
+        )}
+
+        {!loading && !hasMore && filteredHotels.length > 0 && (
+          <View className='no-more'>
+            <Text className='no-more-text'>已显示全部酒店</Text>
           </View>
         )}
       </View>

@@ -12,16 +12,31 @@
     margin-top: 100px;
   }
 
-  .back-btn {
-    padding: 20px;
+  .top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     background-color: #fff;
     margin-bottom: 20px;
     border-radius: 8px;
-    cursor: pointer;
+    padding: 20px;
 
-    .back-text {
-      font-size: 28px;
-      color: #1890ff;
+    .back-btn {
+      .back-text {
+        font-size: 28px;
+        color: #1890ff;
+      }
+    }
+
+    .fav-btn {
+      .fav-icon {
+        font-size: 48px;
+        color: #ccc;
+
+        &.active {
+          color: #ff4d4f;
+        }
+      }
     }
   }
 
@@ -180,7 +195,7 @@
         .date-label {
           font-size: 28px;
           color: #333;
-          width: 180px;
+          width: 120px;
         }
 
         .date-value {
@@ -191,6 +206,20 @@
           font-size: 28px;
           color: #333;
         }
+      }
+    }
+
+    .nights-banner {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      margin-top: 10px;
+
+      .nights-text {
+        font-size: 36px;
+        font-weight: bold;
+        color: #fff;
       }
     }
   }
@@ -233,6 +262,20 @@
       .price-value {
         font-size: 40px;
         color: #ff4d4f;
+        font-weight: bold;
+      }
+    }
+
+    .book-btn {
+      margin-top: 20px;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-radius: 8px;
+      text-align: center;
+
+      .book-btn-text {
+        font-size: 32px;
+        color: #fff;
         font-weight: bold;
       }
     }

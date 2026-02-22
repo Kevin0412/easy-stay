@@ -59,5 +59,18 @@
         margin-right: 8px;
       }
     }
+
+    .hotel-price {
+      margin-top: 16px;
+      font-size: 36px;
+      font-weight: bold;
+      color: #ff6b35;
+
+      .price-unit {
+        font-size: 24px;
+        font-weight: normal;
+        color: #999;
+      }
+    }
   }
 }

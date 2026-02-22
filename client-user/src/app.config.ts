@@ -3,6 +3,7 @@ export default defineAppConfig({
     'pages/home/index',
     'pages/list/index',
     'pages/detail/index',
+    'pages/order/index',
     'pages/profile/index',
     'pages/login/index'
   ],
