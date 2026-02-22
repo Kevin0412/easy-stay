@@ -21,7 +21,10 @@ async function createHotel(req, res) {
       address,
       star: star || 0,
       open_date,
-      created_by: req.user.user_id
+      created_by: req.user.user_id,
+      cover_image: req.body.cover_image || null,
+      images: req.body.images || null,
+      tags: req.body.tags || null
     };
 
     const result = await hotelModel.create(hotel_data);
@@ -170,8 +173,8 @@ async function updateHotel(req, res) {
       });
     }
 
-    const { name_cn, name_en, address, star, open_date } = req.body;
-    const hotel_data = { name_cn, name_en, address, star, open_date };
+    const { name_cn, name_en, address, star, open_date, cover_image, images, tags } = req.body;
+    const hotel_data = { name_cn, name_en, address, star, open_date, cover_image, images, tags };
 
     await hotelModel.update(id, hotel_data);
 

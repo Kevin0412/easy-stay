@@ -749,7 +749,12 @@ async function query(sql, params = []) {
         }
         if (sql.includes('AND (name_cn LIKE')) {
           const kw = params[param_index++].replace(/%/g, '');
-          results = results.filter(h => h.name_cn.includes(kw) || h.address.includes(kw) || (h.tags && h.tags.includes(kw)));
+          param_index += 2; // 跳过 address LIKE 和 tags LIKE 的参数（mock 中合并处理）
+          results = results.filter(h =>
+            h.name_cn.includes(kw) ||
+            h.address.includes(kw) ||
+            (h.tags && h.tags.includes(kw))
+          );
         }
       }
 
@@ -839,7 +844,7 @@ async function query(sql, params = []) {
     }
 
     if (sql.includes('INTO hotels')) {
-      const [name_cn, name_en, address, star, open_date, created_by, status] = params;
+      const [name_cn, name_en, address, star, open_date, created_by, status, cover_image, images, tags] = params;
       const new_hotel = {
         id: next_id.hotels++,
         name_cn,
@@ -849,6 +854,10 @@ async function query(sql, params = []) {
         open_date,
         created_by,
         status,
+        cover_image: cover_image || null,
+        images: images || null,
+        tags: tags || null,
+        reject_reason: null,
         created_at: new Date(),
         updated_at: new Date()
       };
@@ -923,8 +932,9 @@ async function query(sql, params = []) {
         } else if (sql.includes('SET status')) {
           hotel.status = params[0];
         } else {
-          const [name_cn, name_en, address, star, open_date] = params;
-          Object.assign(hotel, { name_cn, name_en, address, star, open_date, updated_at: new Date() });
+          // 常规信息更新: name_cn, name_en, address, star, open_date, cover_image, images, tags
+          const [name_cn, name_en, address, star, open_date, cover_image, images, tags] = params;
+          Object.assign(hotel, { name_cn, name_en, address, star, open_date, cover_image, images, tags, updated_at: new Date() });
         }
       }
       return [{ affectedRows: hotel ? 1 : 0 }, null];

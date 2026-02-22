@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS hotels (
   images TEXT,
   status ENUM('draft', 'pending', 'published', 'rejected', 'offline') NOT NULL DEFAULT 'draft',
   reject_reason VARCHAR(500),
+  tags VARCHAR(500),
   created_by INT NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -80,6 +81,7 @@ ALTER TABLE users MODIFY COLUMN role ENUM('admin', 'merchant', 'user') NOT NULL 
 -- hotels 表迁移：添加 rejected 状态和 reject_reason 字段
 ALTER TABLE hotels MODIFY COLUMN status ENUM('draft', 'pending', 'published', 'rejected', 'offline') NOT NULL DEFAULT 'draft';
 ALTER TABLE hotels ADD COLUMN IF NOT EXISTS reject_reason VARCHAR(500);
+ALTER TABLE hotels ADD COLUMN IF NOT EXISTS tags VARCHAR(500);
 
 -- 收藏表
 CREATE TABLE IF NOT EXISTS favorites (

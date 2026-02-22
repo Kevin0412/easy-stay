@@ -11,6 +11,9 @@ export interface Hotel {
   open_date: string
   status: HotelStatus
   reject_reason: string | null
+  cover_image: string | null
+  images: string | null
+  tags: string | null
   created_by: number
   created_at: string
   updated_at: string
@@ -22,6 +25,9 @@ export interface HotelFormData {
   address: string
   star: number
   open_date?: string
+  cover_image?: string
+  images?: string
+  tags?: string
 }
 
 export function getHotels(params?: { status?: HotelStatus; star?: number }) {

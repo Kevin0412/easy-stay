@@ -4,10 +4,10 @@ const pool = require('../config/database');
  * 创建酒店
  */
 async function create(hotel_data) {
-  const { name_cn, name_en, address, star, open_date, created_by } = hotel_data;
+  const { name_cn, name_en, address, star, open_date, created_by, cover_image, images, tags } = hotel_data;
   const [result] = await pool.query(
-    'INSERT INTO hotels (name_cn, name_en, address, star, open_date, created_by, status) VALUES (?, ?, ?, ?, ?, ?, ?)',
-    [name_cn, name_en, address, star, open_date, created_by, 'draft']
+    'INSERT INTO hotels (name_cn, name_en, address, star, open_date, created_by, status, cover_image, images, tags) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    [name_cn, name_en, address, star, open_date, created_by, 'draft', cover_image || null, images || null, tags || null]
   );
   return result;
 }
@@ -35,8 +35,8 @@ async function findAll(filters = {}) {
   }
 
   if (filters.keyword) {
-    query += ' AND (name_cn LIKE ? OR address LIKE ?)';
-    params.push(`%${filters.keyword}%`, `%${filters.keyword}%`);
+    query += ' AND (name_cn LIKE ? OR address LIKE ? OR tags LIKE ?)';
+    params.push(`%${filters.keyword}%`, `%${filters.keyword}%`, `%${filters.keyword}%`);
   }
 
   query += ' ORDER BY created_at DESC';
@@ -57,10 +57,10 @@ async function findById(id) {
  * 更新酒店信息
  */
 async function update(id, hotel_data) {
-  const { name_cn, name_en, address, star, open_date } = hotel_data;
+  const { name_cn, name_en, address, star, open_date, cover_image, images, tags } = hotel_data;
   const [result] = await pool.query(
-    'UPDATE hotels SET name_cn = ?, name_en = ?, address = ?, star = ?, open_date = ? WHERE id = ?',
-    [name_cn, name_en, address, star, open_date, id]
+    'UPDATE hotels SET name_cn = ?, name_en = ?, address = ?, star = ?, open_date = ?, cover_image = ?, images = ?, tags = ? WHERE id = ?',
+    [name_cn, name_en, address, star, open_date, cover_image || null, images || null, tags || null, id]
   );
   return result;
 }
