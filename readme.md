@@ -66,26 +66,29 @@
 
 ### 1️⃣ 用户表（users）
 
-| 字段名       | 类型                        | 说明                 |
-| ------------ | --------------------------- | -------------------- |
-| id           | int                         | 主键                 |
-| username     | varchar                     | 用户名               |
-| password     | varchar                     | 密码（加密存储）     |
-| role         | enum('admin','merchant')    | 角色：管理员/商户    |
-| created_at   | datetime                    | 创建时间             |
+| 字段名       | 类型                               | 说明                          |
+| ------------ | ---------------------------------- | ----------------------------- |
+| id           | int                                | 主键                          |
+| username     | varchar                            | 用户名                        |
+| password     | varchar                            | 密码（加密存储）              |
+| role         | enum('admin','merchant','user')    | 角色：管理员/商户/普通用户    |
+| email        | varchar                            | 邮箱                          |
+| phone        | varchar                            | 手机号                        |
+| created_at   | datetime                           | 创建时间                      |
 
 ### 2️⃣ 酒店表（hotels）
 
-| 字段名       | 类型                                            | 说明                         |
-| ------------ | ----------------------------------------------- | ---------------------------- |
-| id           | int                                             | 主键                         |
-| name_cn      | varchar                                         | 中文名称                     |
-| name_en      | varchar                                         | 英文名称                     |
-| address      | varchar                                         | 地址                         |
-| star         | int                                             | 星级                         |
-| open_date    | date                                            | 开业日期                     |
-| status       | enum('draft','pending','published','offline') | 状态：草稿/待审/已发布/已下线 |
-| created_by   | int                                             | 创建人（user_id）            |
+| 字段名        | 类型                                                        | 说明                              |
+| ------------- | ----------------------------------------------------------- | --------------------------------- |
+| id            | int                                                         | 主键                              |
+| name_cn       | varchar                                                     | 中文名称                          |
+| name_en       | varchar                                                     | 英文名称                          |
+| address       | varchar                                                     | 地址                              |
+| star          | int                                                         | 星级                              |
+| open_date     | date                                                        | 开业日期                          |
+| status        | enum('draft','pending','published','rejected','offline')    | 状态：草稿/审核中/已通过/未通过/已下线 |
+| reject_reason | varchar(500)                                                | 审核不通过原因                    |
+| created_by    | int                                                         | 创建人（user_id）                 |
 
 ### 3️⃣ 房型表（rooms）
 
@@ -249,10 +252,17 @@ taro build --type rn
 
 **审核流程**：
 ```
-商户提交 → 状态 pending
-管理员审核 → 状态 published
-管理员下线 → 状态 offline
+商户提交 → 状态 pending（审核中）
+管理员审核通过 → 状态 published（已通过）
+管理员审核不通过 → 状态 rejected（未通过，含原因）
+管理员下线 → 状态 offline（已下线，可恢复）
+管理员恢复 → 状态 published（重新上线）
 ```
+
+**权限说明**：
+- 管理员（admin）：仅可访问酒店审核页，执行通过/不通过/下线/恢复操作
+- 商户（merchant）：仅可访问酒店管理页，进行酒店信息录入与提交
+- 普通用户（user）：无法登录后台管理系统
 
 ---
 
@@ -382,7 +392,10 @@ PUT    /api/hotels/:id
 DELETE /api/hotels/:id
 
 POST   /api/hotels/:id/publish
+POST   /api/hotels/:id/approve
+POST   /api/hotels/:id/reject
 POST   /api/hotels/:id/offline
+POST   /api/hotels/:id/restore
 ```
 
 ---
@@ -431,6 +444,7 @@ HOTEL_STATUS = {
   DRAFT: 'draft',
   PENDING: 'pending',
   PUBLISHED: 'published',
+  REJECTED: 'rejected',
   OFFLINE: 'offline'
 }
 ```
@@ -517,7 +531,47 @@ PORT=3000
 
 ---
 
-### 🚀 快速开始
+## 十三、后台管理系统运行指南
+
+### 🚀 快速启动
+
+需要同时启动后端服务和前端管理界面（各开一个终端）。
+
+#### 后端服务
+
+```bash
+cd server
+npm install       # 首次运行
+npm run dev       # 开发模式（nodemon 自动重启）
+```
+
+默认监听 `http://localhost:3000`。
+
+**使用 Mock 数据库（无需 MySQL）**：`.env` 中已配置 `USE_MOCK_DB=true`，直接启动即可，数据存储在内存中，重启后重置。
+
+**切换为真实数据库**：将 `.env` 中 `USE_MOCK_DB` 改为 `false`，并填写 MySQL 连接信息，然后执行 `database.sql` 初始化表结构。
+
+#### 前端管理界面
+
+```bash
+cd client-admin
+npm install       # 首次运行
+npm run dev
+```
+
+启动后访问终端显示的地址（通常为 `http://localhost:5173`）。
+
+### 🔑 测试账号
+
+| 账号       | 密码      | 角色     | 可访问页面   |
+| ---------- | --------- | -------- | ------------ |
+| admin      | admin123  | 管理员   | 酒店审核     |
+| merchant1  | admin123  | 商户     | 酒店管理     |
+| testuser   | user123   | 普通用户 | 无法登录后台 |
+
+---
+
+### 🌐 用户端多端支持
 
 #### 1. 安装依赖
 
