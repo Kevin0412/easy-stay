@@ -77,6 +77,28 @@ async function updateStatus(id, status) {
 }
 
 /**
+ * 审核不通过（记录原因）
+ */
+async function rejectWithReason(id, reason) {
+  const [result] = await pool.query(
+    'UPDATE hotels SET status = ?, reject_reason = ? WHERE id = ?',
+    ['rejected', reason, id]
+  );
+  return result;
+}
+
+/**
+ * 清空拒绝原因（通过或恢复时调用）
+ */
+async function clearRejectReason(id) {
+  const [result] = await pool.query(
+    'UPDATE hotels SET reject_reason = NULL WHERE id = ?',
+    [id]
+  );
+  return result;
+}
+
+/**
  * 删除酒店
  */
 async function deleteById(id) {
@@ -90,5 +112,7 @@ module.exports = {
   findById,
   update,
   updateStatus,
+  rejectWithReason,
+  clearRejectReason,
   deleteById
 };

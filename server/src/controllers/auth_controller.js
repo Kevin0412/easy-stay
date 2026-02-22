@@ -167,10 +167,20 @@ async function loginAdmin(req, res) {
     }
 
     const user = await userModel.findByUsername(username);
-    if (!user || (user.role !== 'admin' && user.role !== 'merchant')) {
+
+    // 账号不存在
+    if (!user) {
       return res.status(401).json({
         success: false,
         message: 'invalid_credentials'
+      });
+    }
+
+    // 账号存在但是普通用户，无权访问后台
+    if (user.role === 'user') {
+      return res.status(403).json({
+        success: false,
+        message: 'no_permission'
       });
     }
 

@@ -26,10 +26,16 @@ export default function Login() {
       message.success('登录成功')
 
       // 跳转到来源页或首页
-      const from = (location.state as any)?.from?.pathname || '/hotels'
+      const from = (location.state as any)?.from?.pathname || (user.role === 'admin' ? '/audit' : '/hotels')
       navigate(from, { replace: true })
-    } catch (error) {
-      // 错误已在拦截器处理
+    } catch (error: any) {
+      const status = error?.response?.status
+      if (status === 403) {
+        message.error('该账号为普通用户，无操作权限，请使用管理员或商户账号登录')
+      } else if (status === 401) {
+        message.error('账号或密码错误，请重新输入')
+      }
+      // 其他错误已由拦截器处理
     } finally {
       setLoading(false)
     }

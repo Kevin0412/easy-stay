@@ -300,7 +300,56 @@ const mock_data = {
       status: 'published',
       created_by: 2,
       created_at: new Date(),
-      updated_at: new Date()
+      updated_at: new Date(),
+      reject_reason: null
+    },
+    {
+      id: 16,
+      name_cn: '北京国贸大酒店',
+      name_en: 'China World Hotel Beijing',
+      address: '北京市朝阳区建国门外大街1号',
+      star: 5,
+      open_date: '2022-03-01',
+      tags: '豪华套房,商务中心',
+      cover_image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800',
+      images: JSON.stringify([]),
+      status: 'pending',
+      created_by: 2,
+      created_at: new Date(),
+      updated_at: new Date(),
+      reject_reason: null
+    },
+    {
+      id: 17,
+      name_cn: '上海浦东丽思卡尔顿酒店',
+      name_en: 'The Ritz-Carlton Shanghai Pudong',
+      address: '上海市浦东新区世纪大道8号',
+      star: 5,
+      open_date: '2022-06-15',
+      tags: '豪华套房,江景',
+      cover_image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800',
+      images: JSON.stringify([]),
+      status: 'pending',
+      created_by: 2,
+      created_at: new Date(),
+      updated_at: new Date(),
+      reject_reason: null
+    },
+    {
+      id: 18,
+      name_cn: '广州珠江新城雅高酒店',
+      name_en: 'Accor Hotel Guangzhou Zhujiang New Town',
+      address: '广州市天河区珠江新城花城大道88号',
+      star: 4,
+      open_date: '2023-01-10',
+      tags: '商务出行',
+      cover_image: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800',
+      images: JSON.stringify([]),
+      status: 'rejected',
+      created_by: 2,
+      created_at: new Date(),
+      updated_at: new Date(),
+      reject_reason: '提交的酒店图片不符合要求，请重新上传清晰的实景照片'
     }
   ],
   rooms: [
@@ -648,7 +697,7 @@ const mock_data = {
 
 let next_id = {
   users: 4,
-  hotels: 16,
+  hotels: 19,
   rooms: 31,
   price_strategies: 6,
   favorites: 1,
@@ -864,7 +913,14 @@ async function query(sql, params = []) {
       const hotel = mock_data.hotels.find(h => h.id === parseInt(id));
 
       if (hotel) {
-        if (sql.includes('SET status')) {
+        if (sql.includes('SET status = ?, reject_reason = ?')) {
+          // rejectWithReason: UPDATE hotels SET status = ?, reject_reason = ? WHERE id = ?
+          hotel.status = params[0];
+          hotel.reject_reason = params[1];
+        } else if (sql.includes('SET reject_reason = NULL')) {
+          // clearRejectReason: UPDATE hotels SET reject_reason = NULL WHERE id = ?
+          hotel.reject_reason = null;
+        } else if (sql.includes('SET status')) {
           hotel.status = params[0];
         } else {
           const [name_cn, name_en, address, star, open_date] = params;

@@ -5,6 +5,12 @@ import Login from '@/pages/login'
 import HotelList from '@/pages/hotel-list'
 import HotelEdit from '@/pages/hotel-edit'
 import Audit from '@/pages/audit'
+import { useUserStore } from '@/store/user-store'
+
+function RootRedirect() {
+  const user = useUserStore((state) => state.user)
+  return <Navigate to={user?.role === 'admin' ? '/audit' : '/hotels'} replace />
+}
 
 export const router = createBrowserRouter([
   {
@@ -21,19 +27,31 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to="/hotels" replace />
+        element: <RootRedirect />
       },
       {
         path: 'hotels',
-        element: <HotelList />
+        element: (
+          <AuthRoute merchantOnly>
+            <HotelList />
+          </AuthRoute>
+        )
       },
       {
         path: 'hotels/new',
-        element: <HotelEdit />
+        element: (
+          <AuthRoute merchantOnly>
+            <HotelEdit />
+          </AuthRoute>
+        )
       },
       {
         path: 'hotels/:id/edit',
-        element: <HotelEdit />
+        element: (
+          <AuthRoute merchantOnly>
+            <HotelEdit />
+          </AuthRoute>
+        )
       },
       {
         path: 'audit',
