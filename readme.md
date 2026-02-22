@@ -834,30 +834,29 @@ distributionUrl=https\://mirrors.cloud.tencent.com/gradle/gradle-8.3-all.zip
 - [x] Banner 轮播图（按城市筛选，点击跳转详情）
 - [x] 城市定位（Taro.getLocation，坐标匹配城市，失败可手动选择）
 - [x] 关键字搜索
-- [x] 日期选择（入住/离店，显示间夜数）
+- [x] 日期选择（入住/离店，显示间夜数，自定义 Calendar 组件）
 - [x] 星级筛选
 - [x] 价格范围筛选（可展开/收起）
 - [x] 快捷标签（携带当前城市参数）
-- [ ] **日期选择器要求使用自定义 Calendar 组件**（当前用的是 Taro Picker，`components/Calendar` 目录存在但为空）
 
 #### 列表页（15分）
 - [x] 筛选条件摘要展示（城市可移除标签）
 - [x] 日期/间夜展示栏
-- [x] 星级二次筛选
+- [x] 星级二次筛选（FilterPanel 组件）
+- [x] 价格范围筛选（FilterPanel 组件）
+- [x] 虚拟列表渲染（只渲染可视区域卡片，paddingTop/Bottom 撑高）
 - [x] 无限滚动加载（小程序 onReachBottom + H5 scroll 监听）
 - [x] 响应式布局
-- [ ] **筛选头部要求展示城市+日期+间夜**（当前只有日期，城市在 summary 里）
-- [ ] **详细筛选面板**（PDF 要求有更多筛选条件展开，当前只有星级）
 
 #### 详情页（15分）
 - [x] 图片横向轮播
 - [x] 酒店基础信息（名称/星级/地址/开业日期/附近景点）
+- [x] 设施信息展示（facilities 字段，绿色标签）
 - [x] 房型列表（价格从低到高排序，含库存）
-- [x] 日期选择 + 间夜数展示
+- [x] 日期选择 + 间夜数展示（自定义 Calendar 组件）
 - [x] 实时价格计算（含折扣策略）
 - [x] 立即预订跳转
 - [x] 收藏/取消收藏
-- [ ] **设施信息展示**（PDF 要求展示设施，hotels 表无 facilities 字段）
 - [ ] **房型图片**（rooms 表无图片字段）
 
 #### 后台管理（25分，B 负责）
@@ -877,8 +876,7 @@ distributionUrl=https\://mirrors.cloud.tencent.com/gradle/gradle-8.3-all.zip
 ### 技术复杂度（10分）
 
 - [x] 实时价格更新机制（基础价 × 折扣 × 间夜数）
-- [x] 长列表分页加载（前端切片 + 滚动触发）
-- [ ] **长列表渲染优化**（PDF 要求虚拟列表，当前是简单切片，3分项）
+- [x] 虚拟列表渲染优化（可视区域切片 + padding 撑高，列表页）
 - [x] 数据库事务（预订时库存锁）
 - [x] JWT 鉴权 + 角色权限中间件
 
@@ -888,8 +886,8 @@ distributionUrl=https\://mirrors.cloud.tencent.com/gradle/gradle-8.3-all.zip
 
 - [x] 响应式布局（H5/小程序）
 - [x] 多端兼容（H5 + 微信小程序 + React Native WebView）
-- [ ] **深色模式**（`theme/` 目录存在但为空，CSS 变量未建立）
-- [ ] **老年模式**（字体放大，未实现）
+- [x] 深色模式（CSS 变量 + `[data-theme="dark"]`，ThemeSwitcher 组件）
+- [x] 老年模式（`[data-font="elder"]` 根字体放大，一键切换）
 
 ---
 
@@ -899,7 +897,7 @@ distributionUrl=https\://mirrors.cloud.tencent.com/gradle/gradle-8.3-all.zip
 - [x] 统一响应格式 `{ success, data, message }`
 - [x] snake_case 命名规范
 - [x] README 文档
-- [ ] **组件复用**（`components/FilterPanel`、`components/ThemeSwitcher` 目录存在但为空）
+- [x] 组件复用（Calendar、FilterPanel、ThemeSwitcher、HotelCard）
 
 ---
 
@@ -908,17 +906,15 @@ distributionUrl=https\://mirrors.cloud.tencent.com/gradle/gradle-8.3-all.zip
 - [x] 价格折扣策略引擎（price_strategies 表）
 - [x] 坐标自动识别城市（定位 API）
 - [x] 预订库存事务锁（防超卖）
-- [ ] 酒店热度排序算法
-- [ ] 用户偏好缓存（上次搜索条件）
+- [x] 自定义 Calendar 日历组件（日期范围选择，首页+详情页）
+- [x] 深色/老年模式切换（ThemeSwitcher）
+- [x] 酒店热度排序算法（views × 0.3 + star × 0.7，列表页"热度排序"切换）
+- [x] 用户偏好缓存（localStorage 存储上次搜索条件，首页自动恢复）
 
 ---
 
-### 优先级待办（按评分影响排序）
+### 剩余待办
 
-1. **自定义 Calendar 组件**（首页/详情页日期选择，PDF 明确要求，影响首页5分+详情页15分评分）
-2. **虚拟列表优化**（列表页技术复杂度3分）
-3. **设施字段**（hotels 表加 facilities 字段，详情页展示）
-4. **FilterPanel 组件**（列表页详细筛选面板，提升代码复用分）
-5. **深色模式 / 老年模式**（用户体验分）
+- [ ] **房型图片**（rooms 表无图片字段，详情页无法展示房型图）
 
 ---

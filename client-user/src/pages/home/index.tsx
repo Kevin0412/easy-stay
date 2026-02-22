@@ -29,8 +29,20 @@ export default function Home() {
 
   const CITIES = ['全国', '北京市', '上海市', '广州市', '深圳市', '杭州市', '成都市', '南京市', '武汉市', '西安市', '重庆市', '苏州市', '厦门市', '青岛市', '长沙市']
 
-  // 获取轮播图酒店
+  // 恢复上次搜索偏好 + 初始化
   useEffect(() => {
+    try {
+      const saved = Taro.getStorageSync('last_search')
+      if (saved) {
+        const pref = JSON.parse(saved)
+        if (pref.keyword) setKeyword(pref.keyword)
+        if (pref.selectedStar) setSelectedStar(pref.selectedStar)
+        if (pref.minPrice) setMinPrice(pref.minPrice)
+        if (pref.maxPrice) setMaxPrice(pref.maxPrice)
+        if (pref.checkInDate) setCheckInDate(pref.checkInDate)
+        if (pref.checkOutDate) setCheckOutDate(pref.checkOutDate)
+      }
+    } catch (e) {}
     fetchCarouselHotels()
     getLocation()
   }, [])
@@ -108,15 +120,13 @@ export default function Home() {
       queryParams.push(`checkOut=${checkOutDate}`)
     }
 
+    // 缓存用户搜索偏好
+    try {
+      Taro.setStorageSync('last_search', JSON.stringify({ keyword: keyword.trim(), selectedStar, minPrice, maxPrice, checkInDate, checkOutDate }))
+    } catch (e) {}
+
     const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : ''
-    const targetUrl = `/pages/list/index${queryString}`
-
-    console.log('准备跳转到:', targetUrl)
-
-    // 跳转到列表页，传递筛选参数
-    Taro.navigateTo({
-      url: targetUrl
-    })
+    Taro.navigateTo({ url: `/pages/list/index${queryString}` })
   }
 
   // 跳转到酒店详情

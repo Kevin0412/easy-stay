@@ -33,7 +33,7 @@ export interface Room {
 }
 
 // 获取酒店列表
-export function getHotels(params?: { status?: string; star?: number; keyword?: string; city?: string }) {
+export function getHotels(params?: { status?: string; star?: number; keyword?: string; city?: string; sort?: string }) {
   return get<Hotel[]>('/api/hotels', params)
 }
 

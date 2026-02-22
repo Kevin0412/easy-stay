@@ -79,13 +79,14 @@ async function getCarouselHotels(req, res) {
  */
 async function getHotels(req, res) {
   try {
-    const { status, star, keyword, city } = req.query;
+    const { status, star, keyword, city, sort } = req.query;
     const filters = {};
 
     if (status) filters.status = status;
     if (star) filters.star = parseInt(star);
     if (keyword) filters.keyword = keyword;
     if (city) filters.city = city;
+    if (sort) filters.sort = sort;
 
     // 如果有用户认证，商户只能看到自己的酒店
     if (req.user && req.user.role === 'merchant') {
@@ -137,6 +138,9 @@ async function getHotelById(req, res) {
         message: 'access_denied'
       });
     }
+
+    // 增加浏览量（用于热度排序）
+    await hotelModel.incrementViews(id);
 
     res.json({
       success: true,

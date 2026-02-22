@@ -44,7 +44,11 @@ async function findAll(filters = {}) {
     params.push(`%${filters.city}%`);
   }
 
-  query += ' ORDER BY created_at DESC';
+  if (filters.sort === 'hot') {
+    query += ' ORDER BY (views * 0.3 + star * 0.7) DESC';
+  } else {
+    query += ' ORDER BY created_at DESC';
+  }
 
   const [rows] = await pool.query(query, params);
   return rows;
@@ -111,6 +115,13 @@ async function deleteById(id) {
   return result;
 }
 
+/**
+ * 增加浏览量
+ */
+async function incrementViews(id) {
+  await pool.query('UPDATE hotels SET views = views + 1 WHERE id = ?', [id]);
+}
+
 module.exports = {
   create,
   findAll,
@@ -119,5 +130,6 @@ module.exports = {
   updateStatus,
   rejectWithReason,
   clearRejectReason,
-  deleteById
+  deleteById,
+  incrementViews
 };

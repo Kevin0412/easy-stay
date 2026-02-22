@@ -21,12 +21,13 @@ export default function List() {
   const [checkOutDate, setCheckOutDate] = useState('')
   const [scrollTop, setScrollTop] = useState(0)
   const [viewportHeight, setViewportHeight] = useState(800)
+  const [sortMode, setSortMode] = useState<'default' | 'hot'>('default')
 
-  const loadHotels = async (kw?: string, ct?: string) => {
+  const loadHotels = async (kw?: string, ct?: string, sort?: string) => {
     if (loading) return
     setLoading(true)
     try {
-      const res = await getHotels({ status: 'published', keyword: kw || keyword || undefined, city: ct || city || undefined })
+      const res = await getHotels({ status: 'published', keyword: kw || keyword || undefined, city: ct || city || undefined, sort: sort })
       if (res.success) setAllHotels(res.data)
     } catch {
       Taro.showToast({ title: '加载失败', icon: 'none' })
@@ -128,6 +129,17 @@ export default function List() {
         onMinPriceChange={setMinPrice}
         onMaxPriceChange={setMaxPrice}
       />
+
+      <View className='sort-bar'>
+        <Text
+          className={`sort-item ${sortMode === 'default' ? 'active' : ''}`}
+          onClick={() => { setSortMode('default'); loadHotels(keyword, city, undefined) }}
+        >默认排序</Text>
+        <Text
+          className={`sort-item ${sortMode === 'hot' ? 'active' : ''}`}
+          onClick={() => { setSortMode('hot'); loadHotels(keyword, city, 'hot') }}
+        >🔥 热度排序</Text>
+      </View>
 
       <View className='hotel-list'>
         {filteredHotels.length === 0 && !loading && (
