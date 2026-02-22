@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Table, Button, Space, Modal, Input, message, Typography } from 'antd'
-import { CheckOutlined, CloseOutlined, StopOutlined, RedoOutlined } from '@ant-design/icons'
-import { getHotels, approveHotel, rejectHotel, offlineHotel, restoreHotel, Hotel } from '@/services/hotel'
+import { Table, Button, Space, Modal, Input, message, Typography, Select, Alert } from 'antd'
+import { CheckOutlined, CloseOutlined, StopOutlined, RedoOutlined, BellOutlined } from '@ant-design/icons'
+import { getHotels, approveHotel, rejectHotel, offlineHotel, restoreHotel, Hotel, HotelStatus } from '@/services/hotel'
 import HotelStatusTag from '@/components/hotel-status-tag'
 import styles from './index.module.scss'
 
@@ -11,6 +11,7 @@ const { Text } = Typography
 export default function Audit() {
   const [hotels, setHotels] = useState<Hotel[]>([])
   const [loading, setLoading] = useState(false)
+  const [statusFilter, setStatusFilter] = useState<HotelStatus | undefined>()
   const [rejectModal, setRejectModal] = useState<{ open: boolean; hotel: Hotel | null }>({
     open: false,
     hotel: null
@@ -21,7 +22,6 @@ export default function Audit() {
   const fetchHotels = async () => {
     setLoading(true)
     try {
-      // 获取所有非草稿状态的酒店（即进入审核流程的酒店）
       const [pending, published, rejected, offline] = await Promise.all([
         getHotels({ status: 'pending' }),
         getHotels({ status: 'published' }),
@@ -44,6 +44,12 @@ export default function Audit() {
   useEffect(() => {
     fetchHotels()
   }, [])
+
+  const displayedHotels = statusFilter
+    ? hotels.filter((h) => h.status === statusFilter)
+    : hotels
+
+  const pendingCount = hotels.filter((h) => h.status === 'pending').length
 
   const handleApprove = (record: Hotel) => {
     Modal.confirm({
@@ -126,7 +132,7 @@ export default function Audit() {
     {
       title: '审核状态',
       dataIndex: 'status',
-      width: 100,
+      width: 160,
       render: (status: Hotel['status'], record: Hotel) => (
         <Space direction="vertical" size={2}>
           <HotelStatusTag status={status} />
@@ -206,9 +212,36 @@ export default function Audit() {
     <div className={styles.container}>
       <h2>酒店审核</h2>
 
+      {pendingCount > 0 && (
+        <Alert
+          type="info"
+          icon={<BellOutlined />}
+          showIcon
+          style={{ marginBottom: 16 }}
+          message={`有 ${pendingCount} 家酒店待审核`}
+          description="请及时处理，通过或拒绝待审核酒店。"
+        />
+      )}
+
+      <div style={{ marginBottom: 16 }}>
+        <Select
+          style={{ width: 160 }}
+          placeholder="筛选审核状态"
+          allowClear
+          value={statusFilter}
+          onChange={setStatusFilter}
+          options={[
+            { label: '审核中', value: 'pending' },
+            { label: '已通过', value: 'published' },
+            { label: '未通过', value: 'rejected' },
+            { label: '已下线', value: 'offline' }
+          ]}
+        />
+      </div>
+
       <Table
         columns={columns}
-        dataSource={hotels}
+        dataSource={displayedHotels}
         rowKey="id"
         loading={loading}
         pagination={{ pageSize: 10 }}
