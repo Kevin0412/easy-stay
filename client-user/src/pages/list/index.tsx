@@ -1,5 +1,5 @@
 import { View, Text, Picker } from '@tarojs/components'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Taro, { useLoad, useReachBottom, usePullDownRefresh } from '@tarojs/taro'
 import { getHotels, Hotel } from '../../services/hotel'
 import HotelCard from '../../components/HotelCard'
@@ -85,10 +85,25 @@ export default function List() {
     })
   })
 
-  // 触底加载更多
+  // 触底加载更多（小程序）
   useReachBottom(() => {
     if (hasMore) setDisplayCount(prev => prev + 8)
   })
+
+  // 触底加载更多（H5）
+  useEffect(() => {
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = document.documentElement
+      if (scrollHeight - scrollTop - clientHeight < 50) {
+        setDisplayCount(prev => {
+          if (prev < filteredHotels.length) return prev + 8
+          return prev
+        })
+      }
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [filteredHotels.length])
 
   // 筛选星级
   const handleFilterStar = (star: number | undefined) => {

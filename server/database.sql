@@ -76,6 +76,11 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS email VARCHAR(100);
 ALTER TABLE users ADD COLUMN IF NOT EXISTS phone VARCHAR(20);
 ALTER TABLE users MODIFY COLUMN role ENUM('admin', 'merchant', 'user') NOT NULL DEFAULT 'user';
 
+-- 补充 hotels 表字段
+ALTER TABLE hotels ADD COLUMN IF NOT EXISTS tags VARCHAR(255);
+ALTER TABLE hotels ADD COLUMN IF NOT EXISTS nearby VARCHAR(500);
+ALTER TABLE hotels MODIFY COLUMN status ENUM('draft', 'pending', 'published', 'offline', 'rejected') NOT NULL DEFAULT 'draft';
+
 -- 收藏表
 CREATE TABLE IF NOT EXISTS favorites (
   id INT PRIMARY KEY AUTO_INCREMENT,
@@ -85,4 +90,22 @@ CREATE TABLE IF NOT EXISTS favorites (
   UNIQUE KEY uk_user_hotel (user_id, hotel_id),
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (hotel_id) REFERENCES hotels(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 订单表
+CREATE TABLE IF NOT EXISTS orders (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  user_id INT NOT NULL,
+  hotel_id INT NOT NULL,
+  room_id INT NOT NULL,
+  check_in DATE NOT NULL,
+  check_out DATE NOT NULL,
+  nights INT NOT NULL DEFAULT 1,
+  total_price DECIMAL(10, 2) NOT NULL,
+  status ENUM('confirmed', 'cancelled', 'completed') NOT NULL DEFAULT 'confirmed',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (hotel_id) REFERENCES hotels(id) ON DELETE CASCADE,
+  FOREIGN KEY (room_id) REFERENCES rooms(id) ON DELETE CASCADE,
+  INDEX idx_user_id (user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

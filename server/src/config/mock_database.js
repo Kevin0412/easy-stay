@@ -718,6 +718,7 @@ const mock_data = {
     { id: 41, hotel_id: 21, room_type: '豪华房', price: 788.00, stock: 18, created_at: new Date(), updated_at: new Date() },
     { id: 42, hotel_id: 21, room_type: '万豪套房', price: 1588.00, stock: 6, created_at: new Date(), updated_at: new Date() }
   ],
+  price_strategies: [
     {
       id: 1,
       hotel_id: 1,
@@ -1072,4 +1073,4 @@ async function query(sql, params = []) {
   return [[], null];
 }
 
-module.exports = { query };
+module.exports = { query, mock_data };
