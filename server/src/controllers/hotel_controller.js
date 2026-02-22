@@ -46,7 +46,8 @@ async function createHotel(req, res) {
 async function getCarouselHotels(req, res) {
   try {
     // 获取已发布的高星级酒店作为轮播图展示
-    const hotels = await hotelModel.findAll({ status: 'published' });
+    const { city } = req.query;
+    const hotels = await hotelModel.findAll({ status: 'published', city: city || undefined });
 
     // 按星级和ID排序，取前5个
     const carousel_hotels = hotels

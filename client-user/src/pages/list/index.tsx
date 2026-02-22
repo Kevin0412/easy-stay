@@ -41,7 +41,7 @@ export default function List() {
   // 前端筛选酒店
   const filteredHotels = allHotels.filter(hotel => {
     if (filterStar && hotel.star !== filterStar) return false
-    if (keyword && !hotel.name_cn.includes(keyword) && !hotel.address.includes(keyword)) return false
+    if (keyword && !hotel.name_cn.includes(keyword) && !hotel.address.includes(keyword) && !(hotel.tags || '').includes(keyword)) return false
     if (minPrice !== undefined && hotel.min_price !== undefined && hotel.min_price < minPrice) return false
     if (maxPrice !== undefined && hotel.min_price !== undefined && hotel.min_price > maxPrice) return false
     return true
@@ -145,10 +145,11 @@ export default function List() {
       </View>
 
       {/* 筛选条件展示 */}
-      {(keyword || filterStar || minPrice || maxPrice || checkInDate || checkOutDate) && (
+      {(city || keyword || filterStar || minPrice || maxPrice || checkInDate || checkOutDate) && (
         <View className='filter-summary'>
           <Text className='summary-title'>当前筛选条件：</Text>
           <View className='summary-tags'>
+            {city && <Text className='summary-tag' onClick={() => { setCity(''); loadHotels(keyword, '') }}>📍 {city} ✕</Text>}
             {keyword && <Text className='summary-tag'>关键词: {keyword}</Text>}
             {filterStar && <Text className='summary-tag'>星级: {filterStar}星</Text>}
             {minPrice && <Text className='summary-tag'>最低价: ¥{minPrice}</Text>}

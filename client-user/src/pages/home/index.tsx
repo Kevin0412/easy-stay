@@ -23,10 +23,9 @@ export default function Home() {
   const [checkInDate, setCheckInDate] = useState('')
   const [checkOutDate, setCheckOutDate] = useState('')
   const [showAdvancedFilter, setShowAdvancedFilter] = useState(false)
-  const [city, setCity] = useState('')
-  const [showCityPicker, setShowCityPicker] = useState(false)
+  const [city, setCity] = useState('全国')
 
-  const CITIES = ['北京市', '上海市', '广州市', '深圳市', '杭州市', '成都市', '南京市', '武汉市', '西安市', '重庆市', '苏州市', '厦门市', '青岛市', '长沙市']
+  const CITIES = ['全国', '北京市', '上海市', '广州市', '深圳市', '杭州市', '成都市', '南京市', '武汉市', '西安市', '重庆市', '苏州市', '厦门市', '青岛市', '长沙市']
 
   // 获取轮播图酒店
   useEffect(() => {
@@ -34,11 +33,16 @@ export default function Home() {
     getLocation()
   }, [])
 
+  useEffect(() => {
+    fetchCarouselHotels()
+  }, [city])
+
   const fetchCarouselHotels = async () => {
     try {
       const baseUrl = getApiBaseUrl()
+      const cityParam = city && city !== '全国' ? `?city=${encodeURIComponent(city.replace('市', ''))}` : ''
       const response = await Taro.request({
-        url: `${baseUrl}/api/hotels/carousel`,
+        url: `${baseUrl}/api/hotels/carousel${cityParam}`,
         method: 'GET'
       })
 
@@ -73,7 +77,7 @@ export default function Home() {
           Taro.showToast({ title: '未能识别城市，请手动选择', icon: 'none' })
         }
       },
-      fail: () => Taro.showToast({ title: '定位失败，请手动选择', icon: 'none' })
+      fail: () => { setCity('全国'); Taro.showToast({ title: '定位失败，请手动选择', icon: 'none' }) }
     })
   }
 
@@ -83,7 +87,7 @@ export default function Home() {
     if (keyword.trim()) {
       queryParams.push(`keyword=${encodeURIComponent(keyword.trim())}`)
     }
-    if (city) {
+    if (city && city !== '全国') {
       queryParams.push(`city=${encodeURIComponent(city.replace('市', ''))}`)
     }
     if (selectedStar) {
@@ -297,17 +301,21 @@ export default function Home() {
         <Text className='section-title'>快捷标签</Text>
         <View className='quick-tags'>
           {[
-            { label: '五星酒店', url: '/pages/list/index?star=5' },
-            { label: '四星酒店', url: '/pages/list/index?star=4' },
-            { label: '豪华套房', url: '/pages/list/index?keyword=套房' },
-            { label: '亲子出行', url: '/pages/list/index?keyword=亲子' },
-            { label: '免费停车', url: '/pages/list/index?keyword=停车' },
-            { label: '查看全部', url: '/pages/list/index' },
-          ].map(tag => (
-            <View key={tag.label} className='tag-item' onClick={() => Taro.navigateTo({ url: tag.url })}>
-              {tag.label}
-            </View>
-          ))}
+            { label: '五星酒店', params: 'star=5' },
+            { label: '四星酒店', params: 'star=4' },
+            { label: '豪华套房', params: 'keyword=套房' },
+            { label: '亲子出行', params: 'keyword=亲子' },
+            { label: '免费停车', params: 'keyword=停车' },
+            { label: '查看全部', params: '' },
+          ].map(tag => {
+            const cityParam = city && city !== '全国' ? `city=${encodeURIComponent(city.replace('市', ''))}` : ''
+            const query = [tag.params, cityParam].filter(Boolean).join('&')
+            return (
+              <View key={tag.label} className='tag-item' onClick={() => Taro.navigateTo({ url: `/pages/list/index${query ? '?' + query : ''}` })}>
+                {tag.label}
+              </View>
+            )
+          })}
         </View>
       </View>
     </View>
