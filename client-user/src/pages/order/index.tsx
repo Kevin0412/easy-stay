@@ -38,6 +38,8 @@ export default function Order() {
       if (res.success) {
         Taro.showToast({ title: '预订成功', icon: 'success' })
         setTimeout(() => Taro.navigateTo({ url: '/pages/profile/index' }), 1500)
+      } else if (res.message === 'room_out_of_stock') {
+        Taro.showToast({ title: '房间已售罄', icon: 'none' })
       }
     } catch (e) {
       Taro.showToast({ title: '预订失败', icon: 'none' })

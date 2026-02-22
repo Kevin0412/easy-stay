@@ -37,7 +37,7 @@ export default function Login() {
           setToken(res.data.token)
           setUser(res.data.user)
           Taro.showToast({ title: '登录成功', icon: 'success' })
-          setTimeout(() => Taro.navigateBack(), 1500)
+          setTimeout(() => Taro.navigateTo({ url: '/pages/home/index' }), 1500)
         } else {
           // 注册成功后自动登录
           const loginRes = await login({ username, password })
@@ -45,7 +45,7 @@ export default function Login() {
             setToken(loginRes.data.token)
             setUser(loginRes.data.user)
             Taro.showToast({ title: '注册成功', icon: 'success' })
-            setTimeout(() => Taro.navigateBack(), 1500)
+            setTimeout(() => Taro.navigateTo({ url: '/pages/home/index' }), 1500)
           }
         }
       }

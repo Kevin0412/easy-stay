@@ -163,13 +163,11 @@ export default function Home() {
           >
             {carouselHotels.map(hotel => (
               <SwiperItem key={hotel.id} onClick={() => handleCarouselClick(hotel.id)}>
-                <View className='carousel-item'>
+                <View className='carousel-item' style={{ backgroundImage: `url(${hotel.cover_image})` }}>
                   <View className='carousel-content'>
                     <Text className='carousel-title'>{hotel.name_cn}</Text>
                     <Text className='carousel-subtitle'>{hotel.address}</Text>
-                    <View className='carousel-star'>
-                      {'★'.repeat(hotel.star)}
-                    </View>
+                    <View className='carousel-star'>{'★'.repeat(hotel.star)}</View>
                   </View>
                 </View>
               </SwiperItem>

@@ -13,6 +13,9 @@ async function createOrder(req, res) {
     res.status(201).json({ success: true, data: { order_id: result.insertId }, message: 'order_created' });
   } catch (error) {
     console.error('Create order error:', error);
+    if (error.message === 'room_out_of_stock') {
+      return res.status(400).json({ success: false, message: 'room_out_of_stock' });
+    }
     res.status(500).json({ success: false, message: 'order_creation_failed' });
   }
 }

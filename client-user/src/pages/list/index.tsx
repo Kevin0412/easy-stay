@@ -7,7 +7,7 @@ import './index.scss'
 
 export default function List() {
   const [allHotels, setAllHotels] = useState<Hotel[]>([])
-  const [displayCount, setDisplayCount] = useState(8)
+  const [displayCount, setDisplayCount] = useState(12)
   const [loading, setLoading] = useState(false)
   const [filterStar, setFilterStar] = useState<number | undefined>(undefined)
   const [keyword, setKeyword] = useState('')
@@ -93,16 +93,21 @@ export default function List() {
   // 触底加载更多（H5）
   useEffect(() => {
     const handleScroll = () => {
-      const { scrollTop, scrollHeight, clientHeight } = document.documentElement
-      if (scrollHeight - scrollTop - clientHeight < 50) {
-        setDisplayCount(prev => {
-          if (prev < filteredHotels.length) return prev + 8
-          return prev
-        })
+      const el = document.documentElement
+      const body = document.body
+      const scrollTop = el.scrollTop || body.scrollTop
+      const scrollHeight = el.scrollHeight || body.scrollHeight
+      const clientHeight = el.clientHeight || body.clientHeight
+      if (scrollHeight - scrollTop - clientHeight < 100) {
+        setDisplayCount(prev => prev < filteredHotels.length ? prev + 8 : prev)
       }
     }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    document.addEventListener('scroll', handleScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      document.removeEventListener('scroll', handleScroll)
+    }
   }, [filteredHotels.length])
 
   // 筛选星级
@@ -112,7 +117,7 @@ export default function List() {
 
   // 返回首页
   const handleBackHome = () => {
-    Taro.navigateBack()
+    Taro.navigateTo({ url: '/pages/home/index' })
   }
 
   return (
@@ -201,8 +206,8 @@ export default function List() {
         )}
 
         {!loading && hasMore && (
-          <View className='load-more'>
-            <Text className='load-more-text'>上滑加载更多</Text>
+          <View className='load-more' onClick={() => setDisplayCount(prev => prev + 12)}>
+            <Text className='load-more-text'>加载更多</Text>
           </View>
         )}
 

@@ -1,6 +1,6 @@
 import { View, Text, Button } from '@tarojs/components'
 import React, { useState } from 'react'
-import Taro, { useLoad } from '@tarojs/taro'
+import Taro, { useDidShow } from '@tarojs/taro'
 import { useUserStore } from '../../store/userStore'
 import { getUserInfo } from '../../services/user'
 import { getFavorites, removeFavorite } from '../../services/favorite'
@@ -13,7 +13,7 @@ export default function Profile() {
   const [orders, setOrders] = useState<Order[]>([])
   const [tab, setTab] = useState<'orders' | 'favorites'>('orders')
 
-  useLoad(() => {
+  useDidShow(() => {
     if (isLoggedIn()) {
       loadUserInfo()
       loadFavorites()
@@ -75,7 +75,7 @@ export default function Profile() {
 
   return (
     <View className='profile-container'>
-      <View className='back-home-btn' onClick={() => Taro.navigateBack()}>
+      <View className='back-home-btn' onClick={() => Taro.navigateTo({ url: '/pages/home/index' })}>
         <Text className='back-home-text'>← 返回首页</Text>
       </View>
       <View className='user-info'>
@@ -102,7 +102,7 @@ export default function Profile() {
               <View key={order.id} className='order-item'>
                 <Text className='order-hotel'>{order.hotel_name}</Text>
                 <Text className='order-room'>{order.room_type}</Text>
-                <Text className='order-date'>{order.check_in} ~ {order.check_out}（{order.nights}晚）</Text>
+                <Text className='order-date'>{String(order.check_in).slice(0, 10)} 晚到 {String(order.check_out).slice(0, 10)} 早（{order.nights}晚）</Text>
                 <Text className='order-price'>¥{Number(order.total_price).toFixed(2)}</Text>
               </View>
             ))

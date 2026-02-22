@@ -141,7 +141,8 @@ async function loginUser(req, res) {
           id: user.id,
           username: user.username,
           email: user.email,
-          phone: user.phone
+          phone: user.phone,
+          role: user.role
         }
       },
       message: 'login_successful'
