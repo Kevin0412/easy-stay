@@ -18,6 +18,7 @@ export interface Hotel {
   min_price?: number
   tags?: string
   nearby?: string
+  facilities?: string
 }
 
 // 房型数据类型

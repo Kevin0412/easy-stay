@@ -1,10 +1,11 @@
-import { View, Text, Picker, Swiper, SwiperItem, Image } from '@tarojs/components'
+import { View, Text, Swiper, SwiperItem, Image } from '@tarojs/components'
 import React, { useState } from 'react'
 import Taro, { useLoad } from '@tarojs/taro'
 import { getHotelById, Hotel } from '../../services/hotel'
 import { getRoomsByHotelId, calculatePrice, Room } from '../../services/room'
 import { checkFavorite, addFavorite, removeFavorite } from '../../services/favorite'
 import { useUserStore } from '../../store/userStore'
+import Calendar from '../../components/Calendar'
 import './index.scss'
 
 export default function Detail() {
@@ -16,6 +17,7 @@ export default function Detail() {
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null)
   const [totalPrice, setTotalPrice] = useState<number | null>(null)
   const [isFav, setIsFav] = useState(false)
+  const [showCalendar, setShowCalendar] = useState(false)
   const { isLoggedIn } = useUserStore()
 
   // 加载酒店详情和房型列表
@@ -223,6 +225,16 @@ export default function Detail() {
             ))}
           </View>
         )}
+        {hotel.facilities && (
+          <View className='hotel-facilities'>
+            <Text className='facilities-title'>设施服务：</Text>
+            <View className='facilities-list'>
+              {hotel.facilities.split(',').map((item, i) => (
+                <Text key={i} className='facility-item'>{item}</Text>
+              ))}
+            </View>
+          </View>
+        )}
       </View>
 
       {/* 房型列表 */}
@@ -252,26 +264,28 @@ export default function Detail() {
       {/* 日期选择 + 间夜 */}
       <View className='date-section'>
         <Text className='section-title'>选择日期</Text>
-        <View className='date-picker-group'>
+        <View className='date-picker-group' onClick={() => setShowCalendar(true)}>
           <View className='date-picker-item'>
             <Text className='date-label'>入住：</Text>
-            <Picker mode='date' value={startDate} onChange={(e) => setStartDate(e.detail.value)}>
-              <View className='date-value'>{startDate || '请选择'}</View>
-            </Picker>
+            <View className='date-value'>{startDate || '请选择'}</View>
           </View>
           <View className='date-picker-item'>
             <Text className='date-label'>离店：</Text>
-            <Picker mode='date' value={endDate} onChange={(e) => setEndDate(e.detail.value)}>
-              <View className='date-value'>{endDate || '请选择'}</View>
-            </Picker>
+            <View className='date-value'>{endDate || '请选择'}</View>
           </View>
         </View>
         {startDate && endDate && startDate < endDate && (
           <View className='nights-banner'>
-            <Text className='nights-text'>
-              共 {Math.round((new Date(endDate).getTime() - new Date(startDate).getTime()) / 86400000)} 晚
-            </Text>
+            <Text className='nights-text'>共 {Math.round((new Date(endDate).getTime() - new Date(startDate).getTime()) / 86400000)} 晚</Text>
           </View>
+        )}
+        {showCalendar && (
+          <Calendar
+            startDate={startDate}
+            endDate={endDate}
+            onChange={(s, e) => { setStartDate(s); setEndDate(e); setTotalPrice(null) }}
+            onClose={() => setShowCalendar(false)}
+          />
         )}
       </View>
 

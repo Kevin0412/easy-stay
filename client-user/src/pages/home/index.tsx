@@ -2,15 +2,16 @@ import { View, Text, Input, Swiper, SwiperItem, Picker } from '@tarojs/component
 import React, { useState, useEffect } from 'react'
 import Taro from '@tarojs/taro'
 import { getApiBaseUrl } from '../../config'
+import Calendar from '../../components/Calendar'
+import ThemeSwitcher from '../../components/ThemeSwitcher'
 import './index.scss'
 
 interface Hotel {
   id: number
   name_cn: string
-  name_en?: string
   address: string
   star: number
-  open_date?: string
+  cover_image?: string
   status: string
 }
 
@@ -23,6 +24,7 @@ export default function Home() {
   const [checkInDate, setCheckInDate] = useState('')
   const [checkOutDate, setCheckOutDate] = useState('')
   const [showAdvancedFilter, setShowAdvancedFilter] = useState(false)
+  const [showCalendar, setShowCalendar] = useState(false)
   const [city, setCity] = useState('全国')
 
   const CITIES = ['全国', '北京市', '上海市', '广州市', '深圳市', '杭州市', '成都市', '南京市', '武汉市', '西安市', '重庆市', '苏州市', '厦门市', '青岛市', '长沙市']
@@ -117,16 +119,6 @@ export default function Home() {
     })
   }
 
-  // 选择日期
-  const handleDateChange = (type: 'checkIn' | 'checkOut', e: any) => {
-    const date = e.detail.value
-    if (type === 'checkIn') {
-      setCheckInDate(date)
-    } else {
-      setCheckOutDate(date)
-    }
-  }
-
   // 跳转到酒店详情
   const handleCarouselClick = (hotelId: number) => {
     Taro.navigateTo({
@@ -144,8 +136,11 @@ export default function Home() {
       {/* 顶部导航 */}
       <View className='top-nav'>
         <Text className='nav-title'>易宿</Text>
-        <View className='nav-profile' onClick={() => Taro.navigateTo({ url: '/pages/profile/index' })}>
-          <Text className='nav-profile-text'>我的</Text>
+        <View className='nav-right'>
+          <ThemeSwitcher />
+          <View className='nav-profile' onClick={() => Taro.navigateTo({ url: '/pages/profile/index' })}>
+            <Text className='nav-profile-text'>我的</Text>
+          </View>
         </View>
       </View>
 
@@ -207,31 +202,31 @@ export default function Home() {
           />
         </View>
 
-        {/* 日期选择 - 核心区域直接显示 */}
-        <View className='date-row'>
-          <Picker mode='date' value={checkInDate} onChange={(e) => handleDateChange('checkIn', e)}>
-            <View className='date-item'>
-              <Text className='date-item-label'>入住</Text>
-              <Text className={checkInDate ? 'date-item-value' : 'date-item-placeholder'}>
-                {checkInDate || '选择日期'}
-              </Text>
-            </View>
-          </Picker>
+        {/* 日期选择 */}
+        <View className='date-row' onClick={() => setShowCalendar(true)}>
+          <View className='date-item'>
+            <Text className='date-item-label'>入住</Text>
+            <Text className={checkInDate ? 'date-item-value' : 'date-item-placeholder'}>{checkInDate || '选择日期'}</Text>
+          </View>
           <View className='date-divider'>
             {checkInDate && checkOutDate && checkInDate < checkOutDate
               ? <Text className='nights-count'>{Math.round((new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) / 86400000)}晚</Text>
-              : <Text className='date-arrow'>→</Text>
-            }
+              : <Text className='date-arrow'>→</Text>}
           </View>
-          <Picker mode='date' value={checkOutDate} onChange={(e) => handleDateChange('checkOut', e)}>
-            <View className='date-item'>
-              <Text className='date-item-label'>离店</Text>
-              <Text className={checkOutDate ? 'date-item-value' : 'date-item-placeholder'}>
-                {checkOutDate || '选择日期'}
-              </Text>
-            </View>
-          </Picker>
+          <View className='date-item'>
+            <Text className='date-item-label'>离店</Text>
+            <Text className={checkOutDate ? 'date-item-value' : 'date-item-placeholder'}>{checkOutDate || '选择日期'}</Text>
+          </View>
         </View>
+
+        {showCalendar && (
+          <Calendar
+            startDate={checkInDate}
+            endDate={checkOutDate}
+            onChange={(s, e) => { setCheckInDate(s); setCheckOutDate(e) }}
+            onClose={() => setShowCalendar(false)}
+          />
+        )}
 
         {/* 星级筛选 */}
         <View className='filter-section'>

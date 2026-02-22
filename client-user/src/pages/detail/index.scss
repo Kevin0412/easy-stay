@@ -131,6 +131,13 @@
         margin: 4px 8px 4px 0;
       }
     }
+
+    .hotel-facilities {
+      margin-top: 16px; padding: 16px; background: #f0fff4; border-radius: 8px;
+      .facilities-title { display: block; font-size: 26px; color: #666; margin-bottom: 10px; }
+      .facilities-list { display: flex; flex-wrap: wrap; gap: 8px; }
+      .facility-item { font-size: 24px; color: #52c41a; background: #d9f7be; border-radius: 6px; padding: 4px 12px; }
+    }
   }
 
   .room-section {

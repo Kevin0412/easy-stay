@@ -83,6 +83,7 @@ ALTER TABLE hotels MODIFY COLUMN status ENUM('draft', 'pending', 'published', 'r
 ALTER TABLE hotels ADD COLUMN IF NOT EXISTS reject_reason VARCHAR(500);
 ALTER TABLE hotels ADD COLUMN IF NOT EXISTS tags VARCHAR(500);
 ALTER TABLE hotels ADD COLUMN IF NOT EXISTS nearby VARCHAR(500);
+-- ALTER TABLE hotels ADD COLUMN facilities VARCHAR(500); -- run manually if column doesn't exist
 
 -- 收藏表
 CREATE TABLE IF NOT EXISTS favorites (
