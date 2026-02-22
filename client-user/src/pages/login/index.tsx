@@ -33,15 +33,25 @@ export default function Login() {
         : await register({ username, password, email, phone })
 
       if (res.success) {
-        setToken(res.data.token)
-        setUser(res.data.user)
-        Taro.showToast({ title: isLogin ? '登录成功' : '注册成功', icon: 'success' })
-        setTimeout(() => {
-          Taro.switchTab({ url: '/pages/profile/index' })
-        }, 1500)
+        if (isLogin) {
+          setToken(res.data.token)
+          setUser(res.data.user)
+          Taro.showToast({ title: '登录成功', icon: 'success' })
+          setTimeout(() => Taro.navigateBack(), 1500)
+        } else {
+          // 注册成功后自动登录
+          const loginRes = await login({ username, password })
+          if (loginRes.success) {
+            setToken(loginRes.data.token)
+            setUser(loginRes.data.user)
+            Taro.showToast({ title: '注册成功', icon: 'success' })
+            setTimeout(() => Taro.navigateBack(), 1500)
+          }
+        }
       }
     } catch (error) {
       console.error('操作失败:', error)
+      Taro.showToast({ title: '操作失败，请重试', icon: 'none' })
     } finally {
       setLoading(false)
     }

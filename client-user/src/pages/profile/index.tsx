@@ -75,6 +75,9 @@ export default function Profile() {
 
   return (
     <View className='profile-container'>
+      <View className='back-home-btn' onClick={() => Taro.navigateBack()}>
+        <Text className='back-home-text'>← 返回首页</Text>
+      </View>
       <View className='user-info'>
         <View className='avatar'>{user?.username?.charAt(0).toUpperCase()}</View>
         <Text className='username'>{user?.username}</Text>

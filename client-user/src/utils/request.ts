@@ -36,7 +36,7 @@ export function request<T = any>(options: RequestOptions): Promise<Response<T>> 
         ...header
       },
       success: (res) => {
-        if (res.statusCode === 200) {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
           resolve(res.data as Response<T>)
         } else {
           Taro.showToast({

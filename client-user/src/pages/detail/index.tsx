@@ -214,7 +214,7 @@ export default function Detail() {
         <Text className='hotel-name-en'>{hotel.name_en}</Text>
         <View className='hotel-stars'>{renderStars()}</View>
         <Text className='hotel-address'>地址：{hotel.address}</Text>
-        <Text className='hotel-open-date'>开业时间：{hotel.open_date}</Text>
+        <Text className='hotel-open-date'>开业时间：{hotel.open_date ? String(hotel.open_date).slice(0, 10) : ''}</Text>
         {hotel.nearby && (
           <View className='hotel-nearby'>
             <Text className='nearby-title'>附近景点：</Text>
