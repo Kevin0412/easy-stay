@@ -85,6 +85,7 @@ ALTER TABLE hotels ADD COLUMN IF NOT EXISTS tags VARCHAR(500);
 ALTER TABLE hotels ADD COLUMN IF NOT EXISTS nearby VARCHAR(500);
 -- ALTER TABLE hotels ADD COLUMN facilities VARCHAR(500); -- run manually if column doesn't exist
 -- ALTER TABLE hotels ADD COLUMN views INT NOT NULL DEFAULT 0; -- run manually if column doesn't exist
+-- ALTER TABLE rooms ADD COLUMN image VARCHAR(500) DEFAULT NULL; -- run manually if column doesn't exist
 
 -- 收藏表
 CREATE TABLE IF NOT EXISTS favorites (

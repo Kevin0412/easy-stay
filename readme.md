@@ -915,6 +915,6 @@ distributionUrl=https\://mirrors.cloud.tencent.com/gradle/gradle-8.3-all.zip
 
 ### 剩余待办
 
-- [ ] **房型图片**（rooms 表无图片字段，详情页无法展示房型图）
+全部功能已完成。
 
 ---

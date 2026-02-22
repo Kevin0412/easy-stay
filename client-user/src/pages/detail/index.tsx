@@ -250,6 +250,7 @@ export default function Detail() {
                 className={`room-item ${selectedRoom?.id === room.id ? 'selected' : ''}`}
                 onClick={() => setSelectedRoom(room)}
               >
+                {room.image && <Image className='room-image' src={room.image} mode='aspectFill' />}
                 <View className='room-type'>{room.room_type}</View>
                 <View className='room-info'>
                   <Text className='room-price'>¥{room.price}/晚</Text>
