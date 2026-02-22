@@ -164,11 +164,11 @@ async function calculatePrice(req, res) {
       });
     }
 
-    const total_price = await priceModel.calculatePrice(room_id, start_date, end_date);
+    const result = await priceModel.calculatePrice(room_id, start_date, end_date);
 
     res.json({
       success: true,
-      data: { total_price },
+      data: result,
       message: ''
     });
   } catch (error) {

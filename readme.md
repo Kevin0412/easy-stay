@@ -849,15 +849,15 @@ distributionUrl=https\://mirrors.cloud.tencent.com/gradle/gradle-8.3-all.zip
 - [x] 响应式布局
 
 #### 详情页（15分）
-- [x] 图片横向轮播
-- [x] 酒店基础信息（名称/星级/地址/开业日期/附近景点）
+- [x] 顶部导航头（显示酒店名称 + 返回列表页）
+- [x] 图片横向轮播（大图 Banner，左右滚动）
+- [x] 酒店基础信息（名称/星级/设施/地址/开业日期/附近景点）
 - [x] 设施信息展示（facilities 字段，绿色标签）
-- [x] 房型列表（价格从低到高排序，含库存）
-- [x] 日期选择 + 间夜数展示（自定义 Calendar 组件）
+- [x] 房型列表（价格从低到高排序，含库存，含房型图片）
+- [x] 日历 + 间夜 Banner（自定义 Calendar 组件）
 - [x] 实时价格计算（含折扣策略）
 - [x] 立即预订跳转
 - [x] 收藏/取消收藏
-- [x] **房型图片**（rooms 表新增 image 字段，详情页展示，后台录入支持）
 
 #### 后台管理（25分，B 负责）
 - [x] 登录/注册（商户/管理员角色）
@@ -875,17 +875,16 @@ distributionUrl=https\://mirrors.cloud.tencent.com/gradle/gradle-8.3-all.zip
 
 ### 技术复杂度（10分）
 
-- [x] 实时价格更新机制（基础价 × 折扣 × 间夜数）
-- [x] 虚拟列表渲染优化（可视区域切片 + padding 撑高，列表页）
-- [x] 数据库事务（预订时库存锁）
-- [x] JWT 鉴权 + 角色权限中间件
+- [x] 实时价格更新机制（基础价 × 折扣 × 间夜数，2分）
+- [x] 页面交互流畅（虚拟列表、骨架加载、Toast 反馈，5分）
+- [x] 长列表渲染优化（可视区域切片 + paddingTop/Bottom 撑高，3分）
 
 ---
 
 ### 用户体验（10分）
 
-- [x] 响应式布局（H5/小程序）
-- [x] 多端兼容（H5 + 微信小程序 + React Native WebView）
+- [x] 页面视觉设计美感、布局合理（6分）
+- [x] 页面兼容性（H5 + 微信小程序 + React Native WebView，4分）
 - [x] 深色模式（CSS 变量 + `[data-theme="dark"]`，ThemeSwitcher 组件）
 - [x] 老年模式（`[data-font="elder"]` 根字体放大，一键切换）
 
@@ -893,23 +892,23 @@ distributionUrl=https\://mirrors.cloud.tencent.com/gradle/gradle-8.3-all.zip
 
 ### 代码质量（10分）
 
-- [x] 清晰的项目结构（controllers/models/routes/middleware 分层）
-- [x] 统一响应格式 `{ success, data, message }`
-- [x] snake_case 命名规范
-- [x] README 文档
-- [x] 组件复用（Calendar、FilterPanel、ThemeSwitcher、HotelCard）
+- [x] 项目结构清晰、表结构设计合理（controllers/models/routes/middleware 分层，4分）
+- [x] 编码规范（snake_case）+ 良好的 README 说明（3分）
+- [x] 代码复用（Calendar、FilterPanel、ThemeSwitcher、HotelCard 组件抽取，3分）
 
 ---
 
 ### 创新点（10分）
 
-- [x] 价格折扣策略引擎（price_strategies 表）
-- [x] 坐标自动识别城市（定位 API）
-- [x] 预订库存事务锁（防超卖）
-- [x] 自定义 Calendar 日历组件（日期范围选择，首页+详情页）
-- [x] 深色/老年模式切换（ThemeSwitcher）
-- [x] 酒店热度排序算法（views × 0.3 + star × 0.7，列表页"热度排序"切换）
-- [x] 用户偏好缓存（localStorage 存储上次搜索条件，首页自动恢复）
+- [x] 新技术提升研发效率（Taro 多端、Zustand 状态管理、虚拟列表、JWT 鉴权，5分）
+- [x] 自发设计有助于提升用户体验的功能点（5分）：
+  - 价格折扣策略引擎（price_strategies 表，节假日动态折扣）
+  - 坐标自动识别城市（定位 API）
+  - 预订库存事务锁（防超卖）
+  - 自定义 Calendar 日历组件（日期范围选择，首页+详情页）
+  - 深色/老年模式切换（ThemeSwitcher）
+  - 酒店热度排序算法（views × 0.3 + star × 0.7）
+  - 用户偏好缓存（localStorage 存储上次搜索条件，首页自动恢复）
 
 ---
 

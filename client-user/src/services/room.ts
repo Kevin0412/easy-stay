@@ -23,5 +23,5 @@ export function calculatePrice(params: {
   start_date: string
   end_date: string
 }) {
-  return get<{ total_price: number }>('/api/prices/calculate', params)
+  return get<{ total_price: number; original_price: number; discount: number; strategy_name: string | null }>('/api/prices/calculate', params)
 }

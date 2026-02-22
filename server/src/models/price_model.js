@@ -60,19 +60,30 @@ async function deleteById(id) {
  */
 async function calculatePrice(room_id, start_date, end_date) {
   const [room_rows] = await pool.query('SELECT price FROM rooms WHERE id = ?', [room_id]);
-  if (!room_rows.length) return 0;
+  if (!room_rows.length) return null;
 
   const base_price = parseFloat(room_rows[0].price);
+  const days = Math.ceil((new Date(end_date) - new Date(start_date)) / (1000 * 60 * 60 * 24));
 
   const [strategy_rows] = await pool.query(
-    'SELECT discount FROM price_strategies WHERE room_id = ? AND start_date <= ? AND end_date >= ?',
+    'SELECT strategy_name, discount FROM price_strategies WHERE (room_id = ? OR room_id IS NULL) AND start_date <= ? AND end_date >= ? ORDER BY discount ASC LIMIT 1',
     [room_id, end_date, start_date]
   );
 
-  const discount = strategy_rows.length > 0 ? parseFloat(strategy_rows[0].discount) : 1;
-  const days = Math.ceil((new Date(end_date) - new Date(start_date)) / (1000 * 60 * 60 * 24));
+  const original_price = parseFloat((base_price * days).toFixed(2));
 
-  return parseFloat((base_price * discount * days).toFixed(2));
+  if (strategy_rows.length > 0) {
+    const { strategy_name, discount } = strategy_rows[0];
+    const disc = parseFloat(discount);
+    return {
+      original_price,
+      discount: disc,
+      strategy_name,
+      total_price: parseFloat((original_price * disc).toFixed(2))
+    };
+  }
+
+  return { original_price, discount: 1, strategy_name: null, total_price: original_price };
 }
 
 module.exports = {

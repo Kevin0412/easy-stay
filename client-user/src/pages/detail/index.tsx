@@ -16,6 +16,9 @@ export default function Detail() {
   const [endDate, setEndDate] = useState('')
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null)
   const [totalPrice, setTotalPrice] = useState<number | null>(null)
+  const [originalPrice, setOriginalPrice] = useState<number | null>(null)
+  const [discount, setDiscount] = useState<number | null>(null)
+  const [strategyName, setStrategyName] = useState<string | null>(null)
   const [isFav, setIsFav] = useState(false)
   const [showCalendar, setShowCalendar] = useState(false)
   const { isLoggedIn } = useUserStore()
@@ -82,6 +85,9 @@ export default function Detail() {
       })
       if (res.success) {
         setTotalPrice(res.data.total_price)
+        setOriginalPrice(res.data.original_price)
+        setDiscount(res.data.discount)
+        setStrategyName(res.data.strategy_name)
       }
     } catch (error) {
       console.error('计算价格失败:', error)
@@ -160,11 +166,12 @@ export default function Detail() {
 
   return (
     <View className='detail-container'>
-      {/* 返回按钮 */}
+      {/* 顶部导航头：酒店名称 + 返回 + 收藏 */}
       <View className='top-bar'>
         <View className='back-btn' onClick={handleBack}>
           <Text className='back-text'>← 返回</Text>
         </View>
+        <Text className='top-bar-title' numberOfLines={1}>{hotel.name_cn}</Text>
         <View className='fav-btn' onClick={handleToggleFav}>
           <Text className={`fav-icon ${isFav ? 'active' : ''}`}>{isFav ? '♥' : '♡'}</Text>
         </View>
@@ -284,7 +291,7 @@ export default function Detail() {
           <Calendar
             startDate={startDate}
             endDate={endDate}
-            onChange={(s, e) => { setStartDate(s); setEndDate(e); setTotalPrice(null) }}
+            onChange={(s, e) => { setStartDate(s); setEndDate(e); setTotalPrice(null); setOriginalPrice(null); setDiscount(null); setStrategyName(null) }}
             onClose={() => setShowCalendar(false)}
           />
         )}
@@ -296,9 +303,23 @@ export default function Detail() {
           <Text className='calculate-btn-text'>计算总价</Text>
         </View>
         {totalPrice !== null && (
-          <View className='total-price'>
-            <Text className='price-label'>总价：</Text>
-            <Text className='price-value'>¥{totalPrice.toFixed(2)}</Text>
+          <View className='price-breakdown'>
+            {discount !== null && discount < 1 && (
+              <View className='price-row'>
+                <Text className='price-label'>原价：</Text>
+                <Text className='price-original'>¥{originalPrice!.toFixed(2)}</Text>
+              </View>
+            )}
+            {strategyName && discount !== null && discount < 1 && (
+              <View className='price-row'>
+                <Text className='price-label'>优惠：</Text>
+                <Text className='price-discount-tag'>{strategyName} {Math.round(discount * 10)}折</Text>
+              </View>
+            )}
+            <View className='price-row'>
+              <Text className='price-label'>{discount !== null && discount < 1 ? '优惠价：' : '总价：'}</Text>
+              <Text className='price-value'>¥{totalPrice.toFixed(2)}</Text>
+            </View>
           </View>
         )}
         {totalPrice !== null && (
