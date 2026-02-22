@@ -1,11 +1,64 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Form, Input, InputNumber, DatePicker, Button, Card, message, Space } from 'antd'
+import { Form, Input, InputNumber, DatePicker, Button, Card, message, Space, Checkbox } from 'antd'
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons'
 import dayjs from 'dayjs'
 import { getHotelById, createHotel, updateHotel, HotelFormData } from '@/services/hotel'
 import RoomManager from './components/room-manager'
 import styles from './index.module.scss'
+
+const HOTEL_TAGS = [
+  '豪华套房',
+  '免费停车',
+  '亲子设施',
+  '健身中心',
+  '商务中心',
+  '免费早餐',
+  '江景/湖景',
+  '无边泳池',
+]
+
+/** 图片 URL 输入框，带实时预览 */
+function ImageInput({
+  value,
+  onChange,
+  placeholder,
+}: {
+  value?: string
+  onChange?: (v: string) => void
+  placeholder?: string
+}) {
+  return (
+    <div>
+      <Input
+        value={value}
+        onChange={(e) => onChange?.(e.target.value)}
+        placeholder={placeholder}
+      />
+      {value && (
+        <img
+          src={value}
+          alt="预览"
+          style={{
+            display: 'block',
+            marginTop: 6,
+            maxHeight: 100,
+            maxWidth: 240,
+            objectFit: 'cover',
+            borderRadius: 4,
+            border: '1px solid #f0f0f0',
+          }}
+          onError={(e) => {
+            e.currentTarget.style.display = 'none'
+          }}
+          onLoad={(e) => {
+            e.currentTarget.style.display = 'block'
+          }}
+        />
+      )}
+    </div>
+  )
+}
 
 export default function HotelEdit() {
   const { id } = useParams<{ id: string }>()
@@ -25,7 +78,6 @@ export default function HotelEdit() {
       const res = await getHotelById(Number(id))
       const hotel = res.data.data
 
-      // images 是 JSON 字符串，解析为数组供 Form.List 使用
       let imageList: { url: string }[] = []
       if (hotel.images) {
         try {
@@ -33,6 +85,11 @@ export default function HotelEdit() {
           imageList = parsed.map((url: string) => ({ url }))
         } catch {}
       }
+
+      // tags 存为逗号分隔字符串，回填时转为数组供 Checkbox.Group 使用
+      const tagList = hotel.tags
+        ? hotel.tags.split(',').map((t) => t.trim()).filter(Boolean)
+        : []
 
       form.setFieldsValue({
         name_cn: hotel.name_cn,
@@ -42,7 +99,7 @@ export default function HotelEdit() {
         open_date: hotel.open_date ? dayjs(hotel.open_date) : null,
         cover_image: hotel.cover_image || '',
         images: imageList,
-        tags: hotel.tags || ''
+        tags: tagList,
       })
     } catch (error) {
       // 错误已在拦截器处理
@@ -52,10 +109,12 @@ export default function HotelEdit() {
   const handleSubmit = async (values: any) => {
     setLoading(true)
     try {
-      // 将图集数组序列化为 JSON 字符串
       const imageUrls = (values.images || [])
         .map((item: { url: string }) => item.url?.trim())
         .filter(Boolean)
+
+      // tags 数组转回逗号分隔字符串
+      const tagsStr = (values.tags || []).join(',') || undefined
 
       const formData: HotelFormData = {
         name_cn: values.name_cn,
@@ -65,7 +124,7 @@ export default function HotelEdit() {
         open_date: values.open_date ? dayjs(values.open_date).format('YYYY-MM-DD') : undefined,
         cover_image: values.cover_image?.trim() || undefined,
         images: imageUrls.length > 0 ? JSON.stringify(imageUrls) : undefined,
-        tags: values.tags?.trim() || undefined
+        tags: tagsStr,
       }
 
       if (isEdit) {
@@ -91,7 +150,7 @@ export default function HotelEdit() {
           form={form}
           layout="vertical"
           onFinish={handleSubmit}
-          initialValues={{ star: 3 }}
+          initialValues={{ star: 3, tags: [] }}
         >
           <Form.Item
             name="name_cn"
@@ -128,26 +187,36 @@ export default function HotelEdit() {
           <Form.Item
             name="cover_image"
             label="封面图片 URL"
-            extra="填写封面图的完整 URL，用于列表页展示"
+            extra="用于列表页展示，输入 URL 后实时预览"
           >
-            <Input placeholder="https://example.com/cover.jpg" />
+            <ImageInput placeholder="https://example.com/cover.jpg" />
           </Form.Item>
 
-          <Form.Item label="图集（最多10张）" extra="填写每张图片的完整 URL，用于详情页轮播展示">
+          <Form.Item
+            label="图集（最多10张）"
+            extra="用于详情页轮播展示，输入 URL 后实时预览"
+          >
             <Form.List name="images">
               {(fields, { add, remove }) => (
                 <>
                   {fields.map((field, index) => (
-                    <Space key={field.key} align="baseline" style={{ display: 'flex', marginBottom: 8 }}>
+                    <Space
+                      key={field.key}
+                      align="start"
+                      style={{ display: 'flex', marginBottom: 12 }}
+                    >
                       <Form.Item
                         {...field}
                         name={[field.name, 'url']}
                         rules={[{ required: true, message: '请输入图片 URL 或删除此行' }]}
-                        style={{ marginBottom: 0, flex: 1, minWidth: 400 }}
+                        style={{ marginBottom: 0, minWidth: 420 }}
                       >
-                        <Input placeholder={`图片 ${index + 1} URL`} />
+                        <ImageInput placeholder={`图片 ${index + 1} URL`} />
                       </Form.Item>
-                      <MinusCircleOutlined onClick={() => remove(field.name)} />
+                      <MinusCircleOutlined
+                        style={{ marginTop: 8, color: '#ff4d4f' }}
+                        onClick={() => remove(field.name)}
+                      />
                     </Space>
                   ))}
                   {fields.length < 10 && (
@@ -164,12 +233,16 @@ export default function HotelEdit() {
             </Form.List>
           </Form.Item>
 
-          <Form.Item
-            name="tags"
-            label="标签"
-            extra="多个标签用英文逗号分隔，例如：豪华套房,免费停车,亲子设施"
-          >
-            <Input placeholder="豪华套房,免费停车,亲子设施" />
+          <Form.Item name="tags" label="标签">
+            <Checkbox.Group>
+              <Space wrap>
+                {HOTEL_TAGS.map((tag) => (
+                  <Checkbox key={tag} value={tag}>
+                    {tag}
+                  </Checkbox>
+                ))}
+              </Space>
+            </Checkbox.Group>
           </Form.Item>
 
           <Form.Item>
