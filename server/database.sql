@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS rooms (
   room_type VARCHAR(50) NOT NULL,
   price DECIMAL(10, 2) NOT NULL,
   stock INT NOT NULL DEFAULT 0,
+  max_guests INT NOT NULL DEFAULT 2,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (hotel_id) REFERENCES hotels(id) ON DELETE CASCADE,
@@ -86,6 +87,7 @@ ALTER TABLE hotels ADD COLUMN IF NOT EXISTS nearby VARCHAR(500);
 -- ALTER TABLE hotels ADD COLUMN facilities VARCHAR(500); -- run manually if column doesn't exist
 -- ALTER TABLE hotels ADD COLUMN views INT NOT NULL DEFAULT 0; -- run manually if column doesn't exist
 -- ALTER TABLE rooms ADD COLUMN image VARCHAR(500) DEFAULT NULL; -- run manually if column doesn't exist
+-- ALTER TABLE rooms ADD COLUMN max_guests INT NOT NULL DEFAULT 2; -- run manually if column doesn't exist
 
 -- 收藏表
 CREATE TABLE IF NOT EXISTS favorites (

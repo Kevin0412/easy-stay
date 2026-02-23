@@ -4,10 +4,10 @@ const pool = require('../config/database');
  * 创建房型
  */
 async function create(room_data) {
-  const { hotel_id, room_type, price, stock, image } = room_data;
+  const { hotel_id, room_type, price, stock, image, max_guests } = room_data;
   const [result] = await pool.query(
-    'INSERT INTO rooms (hotel_id, room_type, price, stock, image) VALUES (?, ?, ?, ?, ?)',
-    [hotel_id, room_type, price, stock, image || null]
+    'INSERT INTO rooms (hotel_id, room_type, price, stock, image, max_guests) VALUES (?, ?, ?, ?, ?, ?)',
+    [hotel_id, room_type, price, stock, image || null, max_guests || 2]
   );
   return result;
 }
@@ -35,10 +35,10 @@ async function findById(id) {
  * 更新房型信息
  */
 async function update(id, room_data) {
-  const { room_type, price, stock, image } = room_data;
+  const { room_type, price, stock, image, max_guests } = room_data;
   const [result] = await pool.query(
-    'UPDATE rooms SET room_type = ?, price = ?, stock = ?, image = ? WHERE id = ?',
-    [room_type, price, stock, image !== undefined ? image : null, id]
+    'UPDATE rooms SET room_type = ?, price = ?, stock = ?, image = ?, max_guests = ? WHERE id = ?',
+    [room_type, price, stock, image !== undefined ? image : null, max_guests !== undefined ? max_guests : 2, id]
   );
   return result;
 }
