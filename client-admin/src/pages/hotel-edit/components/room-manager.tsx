@@ -48,6 +48,7 @@ export default function RoomManager({ hotelId }: RoomManagerProps) {
         room_type: values.room_type,
         price: values.price,
         stock: values.stock,
+        max_guests: values.max_guests,
         image: values.image?.trim() || undefined
       }
 
@@ -91,6 +92,10 @@ export default function RoomManager({ hotelId }: RoomManagerProps) {
     {
       title: '库存',
       dataIndex: 'stock'
+    },
+    {
+      title: '最多入住人数',
+      dataIndex: 'max_guests'
     },
     {
       title: '操作',
@@ -154,6 +159,15 @@ export default function RoomManager({ hotelId }: RoomManagerProps) {
             rules={[{ required: true, message: '请输入库存' }]}
           >
             <InputNumber min={0} style={{ width: '100%' }} />
+          </Form.Item>
+
+          <Form.Item
+            name="max_guests"
+            label="最多入住人数"
+            rules={[{ required: true, message: '请输入最多入住人数' }]}
+            initialValue={2}
+          >
+            <InputNumber min={1} style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item name="image" label="房型图片 URL（可选）">

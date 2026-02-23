@@ -22,6 +22,10 @@ export default function Order() {
     ? Math.round((new Date(params.checkOut).getTime() - new Date(params.checkIn).getTime()) / 86400000)
     : 0
 
+  const rooms: { id: number; type: string; count: number }[] = params.rooms
+    ? JSON.parse(decodeURIComponent(params.rooms))
+    : []
+
   const handleConfirm = async () => {
     if (!isLoggedIn()) {
       Taro.showToast({ title: '请先登录', icon: 'none' })
@@ -29,20 +33,31 @@ export default function Order() {
     }
     setSubmitting(true)
     try {
-      const res = await createOrder({
-        hotel_id: Number(params.hotelId),
-        room_id: Number(params.roomId),
-        check_in: params.checkIn,
-        check_out: params.checkOut,
-        nights,
-        total_price: Number(params.totalPrice)
-      })
-      if (res.success) {
-        Taro.showToast({ title: '预订成功', icon: 'success' })
-        setTimeout(() => Taro.navigateTo({ url: '/pages/profile/index' }), 1500)
-      } else if (res.message === 'room_out_of_stock') {
-        Taro.showToast({ title: '房间已售罄', icon: 'none' })
+      // 每个房型单独下单
+      for (const room of rooms) {
+        const res = await createOrder({
+          hotel_id: Number(params.hotelId),
+          room_id: room.id,
+          check_in: params.checkIn,
+          check_out: params.checkOut,
+          nights,
+          total_price: Number(params.totalPrice),
+          guests: Number(params.guests),
+          room_count: room.count
+        })
+        if (!res.success) {
+          if (res.message === 'room_out_of_stock') {
+            Taro.showToast({ title: `${room.type} 已售罄`, icon: 'none' })
+          } else if (res.message === 'guests_exceed_capacity') {
+            Taro.showToast({ title: '入住人数超过房型容纳上限', icon: 'none' })
+          } else {
+            Taro.showToast({ title: '预订失败', icon: 'none' })
+          }
+          return
+        }
       }
+      Taro.showToast({ title: '预订成功', icon: 'success' })
+      setTimeout(() => Taro.navigateTo({ url: '/pages/profile/index' }), 1500)
     } catch (e) {
       Taro.showToast({ title: '预订失败', icon: 'none' })
     } finally {
@@ -61,9 +76,15 @@ export default function Order() {
           <Text className='order-label'>酒店</Text>
           <Text className='order-value'>{decodeURIComponent(params.hotelName || '')}</Text>
         </View>
+        {rooms.map(room => (
+          <View className='order-row' key={room.id}>
+            <Text className='order-label'>{room.type}</Text>
+            <Text className='order-value'>{room.count} 间</Text>
+          </View>
+        ))}
         <View className='order-row'>
-          <Text className='order-label'>房型</Text>
-          <Text className='order-value'>{decodeURIComponent(params.roomType || '')}</Text>
+          <Text className='order-label'>入住人数</Text>
+          <Text className='order-value'>{params.guests} 人</Text>
         </View>
         <View className='order-row'>
           <Text className='order-label'>入住</Text>

@@ -21,6 +21,8 @@ export function createOrder(data: {
   check_out: string
   nights: number
   total_price: number
+  guests: number
+  room_count: number
 }) {
   return post<{ order_id: number }>('/api/orders', data)
 }

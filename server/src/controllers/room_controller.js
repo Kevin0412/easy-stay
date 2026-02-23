@@ -30,7 +30,7 @@ async function createRoom(req, res) {
       });
     }
 
-    const room_data = { hotel_id, room_type, price, stock: stock || 0, image: req.body.image || null };
+    const room_data = { hotel_id, room_type, price, stock: stock || 0, image: req.body.image || null, max_guests: req.body.max_guests || 2 };
     const result = await roomModel.create(room_data);
 
     res.status(201).json({
@@ -93,7 +93,7 @@ async function updateRoom(req, res) {
     }
 
     const { room_type, price, stock, image } = req.body;
-    const room_data = { room_type, price, stock, image };
+    const room_data = { room_type, price, stock, image, max_guests: req.body.max_guests };
 
     await roomModel.update(id, room_data);
 

@@ -73,6 +73,11 @@ INSERT INTO users (username, password, role) VALUES
 INSERT INTO users (username, password, email, phone, role) VALUES
 ('testuser', '$2a$10$i6mRBBF6b8hR1q9ex3ttIOsrCF3UlW1agdR1.8TlzS5YAaV8JM8z6', 'test@example.com', '13800138000', 'user');
 
+-- rooms 表迁移
+ALTER TABLE rooms ADD COLUMN IF NOT EXISTS max_guests INT NOT NULL DEFAULT 2;
+-- orders 表迁移
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS guests INT NOT NULL DEFAULT 1;
+
 -- 如果表已存在，添加新字段的迁移脚本
 ALTER TABLE users ADD COLUMN IF NOT EXISTS email VARCHAR(100);
 ALTER TABLE users ADD COLUMN IF NOT EXISTS phone VARCHAR(20);

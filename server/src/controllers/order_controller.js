@@ -2,19 +2,22 @@ const orderModel = require('../models/order_model');
 
 async function createOrder(req, res) {
   try {
-    const { hotel_id, room_id, check_in, check_out, nights, total_price } = req.body;
+    const { hotel_id, room_id, check_in, check_out, nights, total_price, guests, room_count } = req.body;
     if (!hotel_id || !room_id || !check_in || !check_out) {
       return res.status(400).json({ success: false, message: 'missing_required_fields' });
     }
     const result = await orderModel.create({
       user_id: req.user.user_id,
-      hotel_id, room_id, check_in, check_out, nights, total_price
+      hotel_id, room_id, check_in, check_out, nights, total_price, guests, room_count
     });
     res.status(201).json({ success: true, data: { order_id: result.insertId }, message: 'order_created' });
   } catch (error) {
     console.error('Create order error:', error);
     if (error.message === 'room_out_of_stock') {
       return res.status(400).json({ success: false, message: 'room_out_of_stock' });
+    }
+    if (error.message === 'guests_exceed_capacity') {
+      return res.status(400).json({ success: false, message: 'guests_exceed_capacity' });
     }
     res.status(500).json({ success: false, message: 'order_creation_failed' });
   }

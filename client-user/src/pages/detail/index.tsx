@@ -2,7 +2,7 @@ import { View, Text, Swiper, SwiperItem, Image } from '@tarojs/components'
 import React, { useState } from 'react'
 import Taro, { useLoad } from '@tarojs/taro'
 import { getHotelById, Hotel } from '../../services/hotel'
-import { getRoomsByHotelId, calculatePrice, Room } from '../../services/room'
+import { getRoomsByHotelId, Room } from '../../services/room'
 import { checkFavorite, addFavorite, removeFavorite } from '../../services/favorite'
 import { useUserStore } from '../../store/userStore'
 import { useThemeStore } from '../../store/themeStore'
@@ -63,59 +63,47 @@ export default function Detail() {
     }
   }
 
-  // 计算价格
-  const handleCalculatePrice = async () => {
+  // 计算所有已选房型的总人数上限
+  const calcMaxGuests = (counts: Record<number, number>) =>
+    rooms.reduce((sum, room) => sum + (counts[room.id] || 0) * (room.max_guests || 2), 0)
+
+  // 计算总房间数
+  const calcTotalRooms = (counts: Record<number, number>) =>
+    Object.values(counts).reduce((sum, c) => sum + c, 0)
+
+  // 计算价格（纯前端）
+  const handleCalculatePrice = () => {
     if (selectedRooms.size === 0 || !startDate || !endDate) {
-      Taro.showToast({
-        title: '请选择房型和日期',
-        icon: 'none'
-      })
+      Taro.showToast({ title: '请选择房型和日期', icon: 'none' })
       return
     }
-
     if (startDate >= endDate) {
-      Taro.showToast({
-        title: '结束日期必须晚于开始日期',
-        icon: 'none'
-      })
+      Taro.showToast({ title: '结束日期必须晚于开始日期', icon: 'none' })
       return
     }
-
-    const totalRooms = Object.values(roomCounts).reduce((sum, count) => sum + count, 0)
-    if (guests > totalRooms * 3) {
-      Taro.showToast({
-        title: '人数过多，请增加房间数量',
-        icon: 'none'
-      })
+    const totalRooms = calcTotalRooms(roomCounts)
+    if (totalRooms === 0) {
+      Taro.showToast({ title: '请选择房间数量', icon: 'none' })
       return
     }
-
-    try {
-      let total = 0
-      let original = 0
-      for (const roomId of selectedRooms) {
-        const res = await calculatePrice({
-          room_id: roomId,
-          start_date: startDate,
-          end_date: endDate
-        })
-        if (res.success) {
-          const count = roomCounts[roomId] || 1
-          total += res.data.total_price * count
-          original += res.data.original_price * count
-        }
-      }
-      setTotalPrice(total)
-      setOriginalPrice(original)
-      setDiscount(total < original ? total / original : null)
-      setStrategyName(total < original ? '综合优惠' : null)
-    } catch (error) {
-      console.error('计算价格失败:', error)
-      Taro.showToast({
-        title: '计算价格失败',
-        icon: 'none'
-      })
+    if (guests < totalRooms) {
+      Taro.showToast({ title: '入住人数不能少于房间数', icon: 'none' })
+      return
     }
+    if (guests > calcMaxGuests(roomCounts)) {
+      Taro.showToast({ title: '人数超过所选房型总容纳人数', icon: 'none' })
+      return
+    }
+    const nights = Math.round((new Date(endDate).getTime() - new Date(startDate).getTime()) / 86400000)
+    let total = 0
+    for (const roomId of selectedRooms) {
+      const room = rooms.find(r => r.id === roomId)
+      if (room) total += room.price * nights * (roomCounts[roomId] || 1)
+    }
+    setTotalPrice(total)
+    setOriginalPrice(total)
+    setDiscount(null)
+    setStrategyName(null)
   }
 
   // 页面加载时获取酒店ID
@@ -156,7 +144,7 @@ export default function Detail() {
       return { id, type: room?.room_type || '', count: roomCounts[id] || 1 }
     })
     Taro.navigateTo({
-      url: `/pages/order/index?hotelId=${hotel!.id}&hotelName=${encodeURIComponent(hotel!.name_cn)}&rooms=${encodeURIComponent(JSON.stringify(roomData))}&checkIn=${startDate}&checkOut=${endDate}&nights=${nights}&totalPrice=${totalPrice}`
+      url: `/pages/order/index?hotelId=${hotel!.id}&hotelName=${encodeURIComponent(hotel!.name_cn)}&rooms=${encodeURIComponent(JSON.stringify(roomData))}&checkIn=${startDate}&checkOut=${endDate}&nights=${nights}&totalPrice=${totalPrice}&guests=${guests}`
     })
   }
 
@@ -297,10 +285,9 @@ export default function Detail() {
               <Text className='guest-btn' onClick={() => setGuests(Math.max(1, guests - 1))}>-</Text>
               <Text className='guest-value'>{guests}人</Text>
               <Text className='guest-btn' onClick={() => {
-                const totalRooms = Object.values(roomCounts).reduce((sum, count) => sum + count, 0)
                 const newGuests = guests + 1
-                if (newGuests > totalRooms * 3) {
-                  Taro.showToast({ title: '人数过多，请先增加房间数', icon: 'none' })
+                if (newGuests > calcMaxGuests(roomCounts)) {
+                  Taro.showToast({ title: '人数超过所选房型总容纳人数', icon: 'none' })
                 } else {
                   setGuests(newGuests)
                 }
@@ -339,11 +326,14 @@ export default function Detail() {
                       e.stopPropagation()
                       const current = roomCounts[room.id] || 0
                       const newCount = Math.max(0, current - 1)
-                      const totalRooms = Object.values(roomCounts).reduce((sum, count) => sum + count, 0) - current + newCount
-                      if (guests > totalRooms * 3) {
-                        Taro.showToast({ title: '房间数不足，请先减少人数', icon: 'none' })
+                      const newCounts = { ...roomCounts, [room.id]: newCount }
+                      const newTotalRooms = calcTotalRooms(newCounts)
+                      if (guests > calcMaxGuests(newCounts)) {
+                        Taro.showToast({ title: '请先减少入住人数', icon: 'none' })
+                      } else if (newTotalRooms > 0 && guests < newTotalRooms) {
+                        Taro.showToast({ title: '入住人数不能少于房间数', icon: 'none' })
                       } else {
-                        setRoomCounts({ ...roomCounts, [room.id]: newCount })
+                        setRoomCounts(newCounts)
                       }
                     }}>-</Text>
                     <Text className='guest-value'>{roomCounts[room.id] || 0}间</Text>

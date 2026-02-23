@@ -1,19 +1,23 @@
 const pool = require('../config/database');
 
 async function create(order_data) {
-  const { user_id, hotel_id, room_id, check_in, check_out, nights, total_price } = order_data;
+  const { user_id, hotel_id, room_id, check_in, check_out, nights, total_price, guests, room_count } = order_data;
   const conn = await pool.getConnection();
   try {
     await conn.beginTransaction();
-    const [rooms] = await conn.query('SELECT stock FROM rooms WHERE id = ? FOR UPDATE', [room_id]);
-    if (!rooms.length || rooms[0].stock < 1) {
+    const [rooms] = await conn.query('SELECT stock, max_guests FROM rooms WHERE id = ? FOR UPDATE', [room_id]);
+    if (!rooms.length || rooms[0].stock < (room_count || 1)) {
       throw new Error('room_out_of_stock');
     }
+    const count = room_count || 1;
+    if (guests > rooms[0].max_guests * count) {
+      throw new Error('guests_exceed_capacity');
+    }
     const [result] = await conn.query(
-      'INSERT INTO orders (user_id, hotel_id, room_id, check_in, check_out, nights, total_price, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      [user_id, hotel_id, room_id, check_in, check_out, nights, total_price, 'confirmed']
+      'INSERT INTO orders (user_id, hotel_id, room_id, check_in, check_out, nights, total_price, guests, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [user_id, hotel_id, room_id, check_in, check_out, nights, total_price, guests || 1, 'confirmed']
     );
-    await conn.query('UPDATE rooms SET stock = stock - 1 WHERE id = ?', [room_id]);
+    await conn.query('UPDATE rooms SET stock = stock - ? WHERE id = ?', [count, room_id]);
     await conn.commit();
     return result;
   } catch (err) {
