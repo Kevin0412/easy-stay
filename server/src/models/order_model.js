@@ -14,8 +14,8 @@ async function create(order_data) {
       throw new Error('guests_exceed_capacity');
     }
     const [result] = await conn.query(
-      'INSERT INTO orders (user_id, hotel_id, room_id, check_in, check_out, nights, total_price, guests, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [user_id, hotel_id, room_id, check_in, check_out, nights, total_price, guests || 1, 'confirmed']
+      'INSERT INTO orders (user_id, hotel_id, room_id, check_in, check_out, nights, total_price, guests, room_count, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [user_id, hotel_id, room_id, check_in, check_out, nights, total_price, guests || 1, count, 'confirmed']
     );
     await conn.query('UPDATE rooms SET stock = stock - ? WHERE id = ?', [count, room_id]);
     await conn.commit();

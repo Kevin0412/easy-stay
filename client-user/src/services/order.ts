@@ -10,6 +10,8 @@ export interface Order {
   check_out: string
   nights: number
   total_price: number
+  guests: number
+  room_count: number
   status: string
   created_at: string
 }

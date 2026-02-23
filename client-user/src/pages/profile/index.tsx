@@ -106,7 +106,7 @@ export default function Profile() {
             orders.map(order => (
               <View key={order.id} className='order-item'>
                 <Text className='order-hotel'>{order.hotel_name}</Text>
-                <Text className='order-room'>{order.room_type}</Text>
+                <Text className='order-room'>{order.room_type} × {order.room_count || 1}间 | {order.guests || 1}人</Text>
                 <Text className='order-date'>{String(order.check_in).slice(0, 10)} 晚到 {String(order.check_out).slice(0, 10)} 早（{order.nights}晚）</Text>
                 <Text className='order-price'>¥{Number(order.total_price).toFixed(2)}</Text>
               </View>

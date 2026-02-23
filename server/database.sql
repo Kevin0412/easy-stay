@@ -92,6 +92,7 @@ CREATE TABLE IF NOT EXISTS orders (
   nights INT NOT NULL DEFAULT 1,
   total_price DECIMAL(10, 2) NOT NULL,
   guests INT NOT NULL DEFAULT 1,
+  room_count INT NOT NULL DEFAULT 1,
   status ENUM('confirmed', 'cancelled', 'completed') NOT NULL DEFAULT 'confirmed',
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,

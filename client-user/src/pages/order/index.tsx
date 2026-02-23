@@ -33,16 +33,18 @@ export default function Order() {
     }
     setSubmitting(true)
     try {
-      // 每个房型单独下单
+      const totalRooms = rooms.reduce((s, r) => s + r.count, 0)
       for (const room of rooms) {
+        const roomGuests = Math.max(room.count, Math.round(Number(params.guests) * room.count / totalRooms))
+        const roomPrice = Number(params.totalPrice) * room.count / totalRooms
         const res = await createOrder({
           hotel_id: Number(params.hotelId),
           room_id: room.id,
           check_in: params.checkIn,
           check_out: params.checkOut,
           nights,
-          total_price: Number(params.totalPrice),
-          guests: Number(params.guests),
+          total_price: parseFloat(roomPrice.toFixed(2)),
+          guests: roomGuests,
           room_count: room.count
         })
         if (!res.success) {
