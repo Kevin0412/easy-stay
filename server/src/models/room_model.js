@@ -38,7 +38,7 @@ async function update(id, room_data) {
   const { room_type, price, stock, image, max_guests } = room_data;
   const [result] = await pool.query(
     'UPDATE rooms SET room_type = ?, price = ?, stock = ?, image = ?, max_guests = ? WHERE id = ?',
-    [room_type, price, stock, image !== undefined ? image : null, max_guests || 2, id]
+    [room_type, price, stock, image !== undefined ? image : null, max_guests !== undefined ? max_guests : 2, id]
   );
   return result;
 }
