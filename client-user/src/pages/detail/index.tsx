@@ -244,12 +244,12 @@ export default function Detail() {
             ))}
           </View>
         )}
-        {hotel.facilities && (
-          <View className='hotel-facilities'>
-            <Text className='facilities-title'>设施服务：</Text>
-            <View className='facilities-list'>
-              {hotel.facilities.split(',').map((item, i) => (
-                <Text key={i} className='facility-item'>{item}</Text>
+        {hotel.tags && (
+          <View className='hotel-tags'>
+            <Text className='tags-title'>设施服务：</Text>
+            <View className='tags-list'>
+              {hotel.tags.split(',').map((tag, i) => (
+                <Text key={i} className='tag-item'>{tag.trim()}</Text>
               ))}
             </View>
           </View>

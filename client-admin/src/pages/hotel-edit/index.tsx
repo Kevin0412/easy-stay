@@ -11,11 +11,17 @@ const HOTEL_TAGS = [
   '豪华套房',
   '免费停车',
   '亲子设施',
-  '健身中心',
-  '商务中心',
   '免费早餐',
   '江景/湖景',
-  '无边泳池',
+  '停车场',
+  '游泳池',
+  '健身房',
+  '会议室',
+  'SPA',
+  '洗衣服务',
+  '24小时前台',
+  '机场接送',
+  '宠物友好',
 ]
 
 /** 图片 URL 输入框，带实时预览 */
@@ -86,10 +92,11 @@ export default function HotelEdit() {
         } catch {}
       }
 
-      // tags 存为逗号分隔字符串，回填时转为数组供 Checkbox.Group 使用
-      const tagList = hotel.tags
-        ? hotel.tags.split(',').map((t) => t.trim()).filter(Boolean)
-        : []
+      // tags / facilities 合并后回填，兼容旧数据
+      const tagList = [
+        ...(hotel.tags ? hotel.tags.split(',').map((t) => t.trim()).filter(Boolean) : []),
+        ...(hotel.facilities ? hotel.facilities.split(',').map((f) => f.trim()).filter(Boolean) : []),
+      ]
 
       form.setFieldsValue({
         name_cn: hotel.name_cn,
@@ -100,7 +107,6 @@ export default function HotelEdit() {
         cover_image: hotel.cover_image || '',
         images: imageList,
         tags: tagList,
-        facilities: hotel.facilities || '',
         nearby: hotel.nearby || '',
       })
     } catch (error) {
@@ -127,7 +133,7 @@ export default function HotelEdit() {
         cover_image: values.cover_image?.trim() || undefined,
         images: imageUrls.length > 0 ? JSON.stringify(imageUrls) : undefined,
         tags: tagsStr,
-        facilities: values.facilities?.trim() || undefined,
+        facilities: undefined,
         nearby: values.nearby?.trim() || undefined,
       }
 
@@ -237,7 +243,7 @@ export default function HotelEdit() {
             </Form.List>
           </Form.Item>
 
-          <Form.Item name="tags" label="标签">
+          <Form.Item name="tags" label="设施服务">
             <Checkbox.Group>
               <Space wrap>
                 {HOTEL_TAGS.map((tag) => (
@@ -247,10 +253,6 @@ export default function HotelEdit() {
                 ))}
               </Space>
             </Checkbox.Group>
-          </Form.Item>
-
-          <Form.Item name="facilities" label="设施服务" extra="逗号分隔，如：免费WiFi,停车场,游泳池">
-            <Input placeholder="免费WiFi,停车场,游泳池,健身房" />
           </Form.Item>
 
           <Form.Item name="nearby" label="附近景点" extra="逗号分隔，如：故宫,天安门,王府井">
