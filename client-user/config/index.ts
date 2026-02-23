@@ -62,6 +62,12 @@ export default {
         enable: true,
         config: {}
       },
+      pxtransform: {
+        enable: true,
+        config: {
+          maxRootSize: 100
+        }
+      },
       cssModules: {
         enable: false,
         config: {

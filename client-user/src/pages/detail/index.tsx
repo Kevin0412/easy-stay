@@ -282,16 +282,16 @@ export default function Detail() {
           <View className='guest-item'>
             <Text className='guest-label'>入住人数</Text>
             <View className='guest-control'>
-              <Text className='guest-btn' onClick={() => setGuests(Math.max(1, guests - 1))}>-</Text>
+              <View className='guest-btn' onClick={() => setGuests(Math.max(1, guests - 1))}><Text>-</Text></View>
               <Text className='guest-value'>{guests}人</Text>
-              <Text className='guest-btn' onClick={() => {
+              <View className='guest-btn' onClick={() => {
                 const newGuests = guests + 1
                 if (newGuests > calcMaxGuests(roomCounts)) {
                   Taro.showToast({ title: '人数超过所选房型总容纳人数', icon: 'none' })
                 } else {
                   setGuests(newGuests)
                 }
-              }}>+</Text>
+              }}><Text>+</Text></View>
             </View>
           </View>
         </View>
@@ -320,9 +320,9 @@ export default function Detail() {
                   <Text className='room-stock'>剩余：{room.stock}间</Text>
                 </View>
                 <View className='room-count-control'>
-                  <Text className='room-count-label'>房间数量</Text>
+                  <Text className='room-count-label'>房间数量（最多{room.max_guests}人/间）</Text>
                   <View className='guest-control'>
-                    <Text className='guest-btn' onClick={(e) => {
+                    <View className='guest-btn' onClick={(e) => {
                       e.stopPropagation()
                       const current = roomCounts[room.id] || 0
                       const newCount = Math.max(0, current - 1)
@@ -335,13 +335,13 @@ export default function Detail() {
                       } else {
                         setRoomCounts(newCounts)
                       }
-                    }}>-</Text>
+                    }}><Text>-</Text></View>
                     <Text className='guest-value'>{roomCounts[room.id] || 0}间</Text>
-                    <Text className='guest-btn' onClick={(e) => {
+                    <View className='guest-btn' onClick={(e) => {
                       e.stopPropagation()
                       const current = roomCounts[room.id] || 0
                       setRoomCounts({ ...roomCounts, [room.id]: current + 1 })
-                    }}>+</Text>
+                    }}><Text>+</Text></View>
                   </View>
                 </View>
               </View>
@@ -385,11 +385,13 @@ export default function Detail() {
       {/* 日历选择器 */}
       {showCalendar && (
         <Calendar
+          startDate={startDate}
+          endDate={endDate}
           onClose={() => setShowCalendar(false)}
-          onConfirm={(start, end) => {
+          onChange={(start, end) => {
             setStartDate(start)
             setEndDate(end)
-            setShowCalendar(false)
+            if (start && end) setShowCalendar(false)
           }}
         />
       )}

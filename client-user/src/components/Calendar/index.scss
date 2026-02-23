@@ -52,10 +52,10 @@
 
   @media (min-width: 768px) {
     max-width: 500px; margin: 0 auto; padding: 24px;
-    .cal-header { margin-bottom: 16px; .cal-nav { width: 40px; height: 40px; font-size: 20px; } .cal-title { font-size: 18px; } }
-    .cal-range-tip { gap: 12px; margin-bottom: 16px; padding: 10px; font-size: 14px; }
-    .cal-weekdays { margin-bottom: 8px; .cal-weekday { font-size: 13px; padding: 6px 0; } }
-    .cal-grid .cal-day { border-radius: 6px; .cal-day-text { font-size: 14px; } }
-    .cal-footer { margin-top: 16px; gap: 12px; .cal-clear, .cal-close { height: 44px; font-size: 15px; } }
+    .cal-header { margin-bottom: 16px; .cal-nav { width: 40px; height: 40px; font-size: 22px; } .cal-title { font-size: 20px; } }
+    .cal-range-tip { gap: 12px; margin-bottom: 16px; padding: 10px; font-size: 16px; }
+    .cal-weekdays { margin-bottom: 8px; .cal-weekday { font-size: 15px; padding: 6px 0; } }
+    .cal-grid .cal-day { border-radius: 6px; .cal-day-text { font-size: 16px; } }
+    .cal-footer { margin-top: 16px; gap: 12px; .cal-clear, .cal-close { height: 44px; font-size: 17px; } }
   }
 }

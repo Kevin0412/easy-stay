@@ -21,15 +21,15 @@
     .room-item {
       background: #2a2a2a;
       &.selected { border-color: #667eea; background: #333; }
+      .room-count-control { background: #1e1e3a; }
+      .guest-value { background: #2a2a2a; color: #fff; }
     }
 
-    .guest-selector {
-      background: #2a2a2a;
-    }
+    .guest-selector { background: #2a2a2a; }
+    .room-count-label, .room-capacity-tip { color: #aaa; }
   }
 
-  .loading-text,
-  .error-text {
+  .loading-text, .error-text {
     display: block;
     text-align: center;
     font-size: 32px;
@@ -46,10 +46,7 @@
     border-radius: 8px;
     padding: 20px;
 
-    .back-btn .back-text {
-      font-size: 28px;
-      color: #1890ff;
-    }
+    .back-btn .back-text { font-size: 28px; color: #1890ff; }
 
     .top-bar-title {
       flex: 1;
@@ -63,16 +60,12 @@
       padding: 0 16px;
     }
 
-    .fav-btn .fav-icon {
-      font-size: 48px;
-      color: #999;
-      &.active { color: #ff4d4f; }
-    }
+    .fav-btn .fav-icon { font-size: 48px; color: #999; &.active { color: #ff4d4f; } }
 
     @media (min-width: 768px) {
-      .back-btn .back-text { font-size: 16px; }
-      .top-bar-title { font-size: 20px; }
-      .fav-btn .fav-icon { font-size: 28px; }
+      .back-btn .back-text { font-size: 20px; }
+      .top-bar-title { font-size: 26px; }
+      .fav-btn .fav-icon { font-size: 30px; }
     }
   }
 
@@ -83,30 +76,12 @@
     border-radius: 8px;
     overflow: hidden;
 
-    @media (min-width: 600px) {
-      height: 500px;
-    }
+    @media (min-width: 600px) { height: 500px; }
+    @media (min-width: 768px) { height: 600px; max-width: 900px; margin-left: auto; margin-right: auto; }
+    @media (min-width: 1024px) { max-width: 1000px; }
 
-    @media (min-width: 768px) {
-      height: 600px;
-      max-width: 900px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    @media (min-width: 1024px) {
-      max-width: 1000px;
-    }
-
-    .images-swiper {
-      width: 100%;
-      height: 100%;
-    }
-
-    .hotel-image {
-      width: 100%;
-      height: 100%;
-    }
+    .images-swiper { width: 100%; height: 100%; }
+    .hotel-image { width: 100%; height: 100%; }
   }
 
   .hotel-info {
@@ -121,11 +96,11 @@
     .hotel-address, .hotel-open-date { display: block; font-size: 28px; color: #666; margin-bottom: 10px; }
 
     @media (min-width: 768px) {
-      padding: 20px;
-      .hotel-name { font-size: 22px; }
-      .hotel-name-en { font-size: 16px; }
-      .hotel-stars { font-size: 20px; }
-      .hotel-address, .hotel-open-date { font-size: 15px; }
+      padding: 24px;
+      .hotel-name { font-size: 30px; }
+      .hotel-name-en { font-size: 20px; }
+      .hotel-stars { font-size: 24px; }
+      .hotel-address, .hotel-open-date { font-size: 18px; }
     }
 
     .hotel-nearby {
@@ -134,13 +109,7 @@
       background: #f5f7ff;
       border-radius: 8px;
 
-      .nearby-title {
-        display: block;
-        font-size: 26px;
-        color: #666;
-        margin-bottom: 10px;
-      }
-
+      .nearby-title { display: block; font-size: 26px; color: #666; margin-bottom: 10px; }
       .nearby-item {
         display: inline-block;
         font-size: 24px;
@@ -150,13 +119,27 @@
         padding: 4px 12px;
         margin: 4px 8px 4px 0;
       }
+
+      @media (min-width: 768px) {
+        .nearby-title { font-size: 18px; }
+        .nearby-item { font-size: 17px; }
+      }
     }
 
     .hotel-facilities {
-      margin-top: 16px; padding: 16px; background: #f0fff4; border-radius: 8px;
+      margin-top: 16px;
+      padding: 16px;
+      background: #f0fff4;
+      border-radius: 8px;
+
       .facilities-title { display: block; font-size: 26px; color: #666; margin-bottom: 10px; }
       .facilities-list { display: flex; flex-wrap: wrap; gap: 8px; }
       .facility-item { font-size: 24px; color: #52c41a; background: #d9f7be; border-radius: 6px; padding: 4px 12px; }
+
+      @media (min-width: 768px) {
+        .facilities-title { font-size: 18px; }
+        .facility-item { font-size: 17px; }
+      }
     }
   }
 
@@ -168,47 +151,28 @@
     margin-bottom: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    cursor: pointer;
 
     .date-item {
       flex: 1;
       text-align: center;
 
-      .date-label {
-        display: block;
-        font-size: 24px;
-        color: #999;
-        margin-bottom: 8px;
-      }
-
-      .date-value {
-        display: block;
-        font-size: 28px;
-        color: #333;
-        font-weight: 500;
-      }
+      .date-label { display: block; font-size: 24px; color: #999; margin-bottom: 8px; }
+      .date-value { display: block; font-size: 28px; color: #333; font-weight: 500; }
     }
 
     .date-divider {
       width: 80px;
       text-align: center;
 
-      .date-arrow {
-        font-size: 28px;
-        color: #ccc;
-      }
-
-      .date-nights {
-        font-size: 24px;
-        color: #667eea;
-        font-weight: bold;
-      }
+      .date-arrow { font-size: 28px; color: #ccc; }
+      .date-nights { font-size: 24px; color: #667eea; font-weight: bold; }
     }
 
     @media (min-width: 768px) {
-      .date-item .date-label { font-size: 14px; }
-      .date-item .date-value { font-size: 17px; }
-      .date-divider .date-arrow { font-size: 17px; }
-      .date-divider .date-nights { font-size: 15px; }
+      .date-item .date-label { font-size: 17px; }
+      .date-item .date-value { font-size: 22px; }
+      .date-divider .date-arrow, .date-divider .date-nights { font-size: 20px; }
     }
   }
 
@@ -237,31 +201,52 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 16px;
+          gap: 0;
 
-          .guest-btn { width: 48px; height: 48px; background: #667eea; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; }
-          .guest-value { font-size: 28px; color: #333; font-weight: 500; min-width: 60px; text-align: center; }
+          .guest-btn {
+            width: 56px;
+            height: 56px;
+            background: #667eea;
+            color: #fff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+            &:first-child { border-radius: 8px 0 0 8px; }
+            &:last-child  { border-radius: 0 8px 8px 0; }
+          }
+
+          .guest-value {
+            min-width: 72px;
+            height: 56px;
+            line-height: 56px;
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            background: #fff;
+            border-top: 2px solid #667eea;
+            border-bottom: 2px solid #667eea;
+          }
         }
       }
     }
 
     @media (min-width: 768px) {
       padding: 20px;
-      .section-title { font-size: 20px; }
+      .section-title { font-size: 26px; }
       .guest-selector {
-        .guest-item .guest-label { font-size: 14px; }
-        .guest-item .guest-control .guest-btn { width: 32px; height: 32px; font-size: 20px; }
-        .guest-item .guest-control .guest-value { font-size: 17px; }
+        .guest-item .guest-label { font-size: 18px; }
+        .guest-item .guest-control {
+          .guest-btn { width: 40px; height: 40px; font-size: 22px; }
+          .guest-value { min-width: 52px; height: 40px; line-height: 40px; font-size: 20px; }
+        }
       }
     }
 
-    .empty-text {
-      display: block;
-      text-align: center;
-      font-size: 28px;
-      color: #999;
-      padding: 40px 0;
-    }
+    .empty-text { display: block; text-align: center; font-size: 28px; color: #999; padding: 40px 0; }
 
     .room-list {
       .room-item {
@@ -272,94 +257,85 @@
         cursor: pointer;
         transition: all 0.3s;
 
-        &.selected {
-          border-color: #1890ff;
-          background-color: #e6f7ff;
-        }
+        &.selected { border-color: #1890ff; background-color: #e6f7ff; }
 
-        .room-image {
-          width: 100%;
-          height: 200px;
-          border-radius: 6px;
-          margin-bottom: 10px;
-          display: block;
-        }
+        .room-image { width: 100%; height: 200px; border-radius: 6px; margin-bottom: 10px; display: block; }
 
-        .room-type {
-          font-size: 30px;
-          font-weight: bold;
-          color: #333;
-          margin-bottom: 10px;
-        }
+        .room-type { font-size: 30px; font-weight: bold; color: #333; margin-bottom: 10px; }
 
         .room-info {
           display: flex;
           justify-content: space-between;
           align-items: center;
+          margin-bottom: 16px;
 
-          .room-price {
-            font-size: 28px;
-            color: #ff4d4f;
-            font-weight: bold;
-          }
-
-          .room-stock {
-            font-size: 24px;
-            color: #666;
-          }
-        }
-      }
-    }
-  }
-
-  .date-section {
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-
-    .section-title {
-      display: block;
-      font-size: 32px;
-      font-weight: bold;
-      color: #333;
-      margin-bottom: 20px;
-    }
-
-    .date-picker-group {
-      .date-picker-item {
-        display: flex;
-        align-items: center;
-        margin-bottom: 20px;
-
-        .date-label {
-          font-size: 28px;
-          color: #333;
-          width: 120px;
+          .room-price { font-size: 28px; color: #ff4d4f; font-weight: bold; }
+          .room-stock { font-size: 24px; color: #666; }
         }
 
-        .date-value {
-          flex: 1;
-          padding: 15px 20px;
-          background-color: #f5f5f5;
+        .room-count-control {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 16px 20px;
+          background: #f5f7ff;
           border-radius: 8px;
-          font-size: 28px;
-          color: #333;
+
+          .room-count-label { font-size: 26px; color: #555; }
+
+          .guest-control {
+            display: flex;
+            align-items: center;
+            gap: 0;
+
+            .guest-btn {
+              width: 64px;
+              height: 64px;
+              background: #667eea;
+              color: #fff;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 36px;
+              font-weight: bold;
+              line-height: 1;
+              &:first-child { border-radius: 8px 0 0 8px; }
+              &:last-child  { border-radius: 0 8px 8px 0; }
+            }
+
+            .guest-value {
+              min-width: 80px;
+              height: 64px;
+              line-height: 64px;
+              text-align: center;
+              font-size: 28px;
+              font-weight: bold;
+              color: #333;
+              background: #fff;
+              border-top: 2px solid #667eea;
+              border-bottom: 2px solid #667eea;
+            }
+          }
         }
-      }
-    }
 
-    .nights-banner {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-radius: 12px;
-      padding: 20px;
-      text-align: center;
-      margin-top: 10px;
+        .room-capacity-tip { font-size: 22px; color: #999; margin-top: 8px; display: block; }
 
-      .nights-text {
-        font-size: 36px;
-        font-weight: bold;
-        color: #fff;
+        @media (min-width: 768px) {
+          .room-type { font-size: 24px; }
+          .room-info {
+            .room-price { font-size: 22px; }
+            .room-stock { font-size: 18px; }
+          }
+          .room-count-control {
+            padding: 12px 16px;
+            .room-count-label { font-size: 18px; }
+            .guest-control {
+              .guest-btn { width: 40px; height: 40px; font-size: 22px; }
+              .guest-value { min-width: 52px; height: 40px; line-height: 40px; font-size: 18px; }
+            }
+          }
+          .room-capacity-tip { font-size: 16px; }
+        }
       }
     }
   }
@@ -377,11 +353,7 @@
       cursor: pointer;
       margin-bottom: 20px;
 
-      .calculate-btn-text {
-        font-size: 32px;
-        color: #fff;
-        font-weight: bold;
-      }
+      .calculate-btn-text { font-size: 32px; color: #fff; font-weight: bold; }
     }
 
     .price-breakdown {
@@ -390,38 +362,11 @@
       border-radius: 8px;
       border: 2px solid #ffa500;
 
-      .price-row {
-        display: flex;
-        align-items: center;
-        margin-bottom: 8px;
-        &:last-child { margin-bottom: 0; }
-      }
-
-      .price-label {
-        font-size: 28px;
-        color: #666;
-        margin-right: 10px;
-      }
-
-      .price-original {
-        font-size: 28px;
-        color: #999;
-        text-decoration: line-through;
-      }
-
-      .price-discount-tag {
-        font-size: 26px;
-        color: #ff7a00;
-        background: #fff3e0;
-        padding: 2px 12px;
-        border-radius: 20px;
-      }
-
-      .price-value {
-        font-size: 40px;
-        color: #ff4d4f;
-        font-weight: bold;
-      }
+      .price-row { display: flex; align-items: center; margin-bottom: 8px; &:last-child { margin-bottom: 0; } }
+      .price-label { font-size: 28px; color: #666; margin-right: 10px; }
+      .price-original { font-size: 28px; color: #999; text-decoration: line-through; }
+      .price-discount-tag { font-size: 26px; color: #ff7a00; background: #fff3e0; padding: 2px 12px; border-radius: 20px; }
+      .price-value { font-size: 40px; color: #ff4d4f; font-weight: bold; }
     }
 
     .book-btn {
@@ -430,12 +375,21 @@
       background: linear-gradient(135deg, #667eea, #764ba2);
       border-radius: 8px;
       text-align: center;
+      cursor: pointer;
 
-      .book-btn-text {
-        font-size: 32px;
-        color: #fff;
-        font-weight: bold;
+      .book-btn-text { font-size: 32px; color: #fff; font-weight: bold; }
+    }
+
+    @media (min-width: 768px) {
+      padding: 24px;
+      .calculate-btn .calculate-btn-text { font-size: 22px; }
+      .price-breakdown {
+        .price-label { font-size: 20px; }
+        .price-original { font-size: 20px; }
+        .price-discount-tag { font-size: 18px; }
+        .price-value { font-size: 30px; }
       }
+      .book-btn .book-btn-text { font-size: 22px; }
     }
   }
 }
