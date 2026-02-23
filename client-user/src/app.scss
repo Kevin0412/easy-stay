@@ -48,6 +48,12 @@ page[data-theme="dark"] {
   padding: 20px;
 }
 
+// Fix Taro H5 Input vertical centering
+.weui-input {
+  height: 100% !important;
+  line-height: normal !important;
+}
+
 .card {
   background: #fff;
   border-radius: 8px;
