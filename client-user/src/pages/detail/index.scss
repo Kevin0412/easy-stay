@@ -19,9 +19,9 @@
     }
 
     .hotel-tags {
-      background: #2a2000;
+      background: #2a2a2a !important;
       .tags-title { color: #aaa; }
-      .tag-item { color: #ffa940; background: #2d1a00; border-color: #7a4a00; }
+      .tag-item { color: #ffa940; background: #333 !important; border-color: #555; }
     }
 
     .hotel-nearby { background: #2a2a2a !important; .nearby-title { color: #aaa; } .nearby-item { background: #333 !important; color: #aaa; } }
@@ -153,7 +153,6 @@
       }
     }
 
-    }
   }
 
   .date-banner {
