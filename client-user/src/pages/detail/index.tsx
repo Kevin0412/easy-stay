@@ -5,10 +5,12 @@ import { getHotelById, Hotel } from '../../services/hotel'
 import { getRoomsByHotelId, calculatePrice, Room } from '../../services/room'
 import { checkFavorite, addFavorite, removeFavorite } from '../../services/favorite'
 import { useUserStore } from '../../store/userStore'
+import { useThemeStore } from '../../store/themeStore'
 import Calendar from '../../components/Calendar'
 import './index.scss'
 
 export default function Detail() {
+  const { theme } = useThemeStore()
   const [hotel, setHotel] = useState<Hotel | null>(null)
   const [rooms, setRooms] = useState<Room[]>([])
   const [loading, setLoading] = useState(false)
@@ -21,6 +23,8 @@ export default function Detail() {
   const [strategyName, setStrategyName] = useState<string | null>(null)
   const [isFav, setIsFav] = useState(false)
   const [showCalendar, setShowCalendar] = useState(false)
+  const [guests, setGuests] = useState(1)
+  const [roomCount, setRoomCount] = useState(1)
   const { isLoggedIn } = useUserStore()
 
   // 加载酒店详情和房型列表
@@ -165,7 +169,7 @@ export default function Detail() {
   }
 
   return (
-    <View className='detail-container'>
+    <View className={`detail-container theme-${theme}`}>
       {/* 顶部导航头：酒店名称 + 返回 + 收藏 */}
       <View className='top-bar'>
         <View className='back-btn' onClick={handleBack}>
@@ -244,22 +248,42 @@ export default function Detail() {
         )}
       </View>
 
-      {/* 日历+入住间夜Banner */}
-      <View className='date-banner' onClick={() => setShowCalendar(true)}>
-        <View className='date-item'>
-          <Text className='date-label'>入住</Text>
-          <Text className='date-value'>{startDate || '选择日期'}</Text>
+      {/* 日历+入住间夜+人数房间Banner */}
+      <View className='date-banner'>
+        <View className='date-row' onClick={() => setShowCalendar(true)}>
+          <View className='date-item'>
+            <Text className='date-label'>入住</Text>
+            <Text className='date-value'>{startDate || '选择日期'}</Text>
+          </View>
+          <View className='date-divider'>
+            {startDate && endDate && startDate < endDate ? (
+              <Text className='date-nights'>{Math.round((new Date(endDate).getTime() - new Date(startDate).getTime()) / 86400000)}晚</Text>
+            ) : (
+              <Text className='date-arrow'>→</Text>
+            )}
+          </View>
+          <View className='date-item'>
+            <Text className='date-label'>离店</Text>
+            <Text className='date-value'>{endDate || '选择日期'}</Text>
+          </View>
         </View>
-        <View className='date-divider'>
-          {startDate && endDate && startDate < endDate ? (
-            <Text className='date-nights'>{Math.round((new Date(endDate).getTime() - new Date(startDate).getTime()) / 86400000)}晚</Text>
-          ) : (
-            <Text className='date-arrow'>→</Text>
-          )}
-        </View>
-        <View className='date-item'>
-          <Text className='date-label'>离店</Text>
-          <Text className='date-value'>{endDate || '选择日期'}</Text>
+        <View className='guest-row'>
+          <View className='guest-item'>
+            <Text className='guest-label'>入住人数</Text>
+            <View className='guest-control'>
+              <Text className='guest-btn' onClick={() => setGuests(Math.max(1, guests - 1))}>-</Text>
+              <Text className='guest-value'>{guests}人</Text>
+              <Text className='guest-btn' onClick={() => setGuests(guests + 1)}>+</Text>
+            </View>
+          </View>
+          <View className='guest-item'>
+            <Text className='guest-label'>房间数量</Text>
+            <View className='guest-control'>
+              <Text className='guest-btn' onClick={() => setRoomCount(Math.max(1, roomCount - 1))}>-</Text>
+              <Text className='guest-value'>{roomCount}间</Text>
+              <Text className='guest-btn' onClick={() => setRoomCount(roomCount + 1)}>+</Text>
+            </View>
+          </View>
         </View>
       </View>
 
@@ -285,34 +309,6 @@ export default function Detail() {
               </View>
             ))}
           </View>
-        )}
-      </View>
-
-      {/* 日期选择 + 间夜 */}
-      <View className='date-section'>
-        <Text className='section-title'>选择日期</Text>
-        <View className='date-picker-group' onClick={() => setShowCalendar(true)}>
-          <View className='date-picker-item'>
-            <Text className='date-label'>入住：</Text>
-            <View className='date-value'>{startDate || '请选择'}</View>
-          </View>
-          <View className='date-picker-item'>
-            <Text className='date-label'>离店：</Text>
-            <View className='date-value'>{endDate || '请选择'}</View>
-          </View>
-        </View>
-        {startDate && endDate && startDate < endDate && (
-          <View className='nights-banner'>
-            <Text className='nights-text'>共 {Math.round((new Date(endDate).getTime() - new Date(startDate).getTime()) / 86400000)} 晚</Text>
-          </View>
-        )}
-        {showCalendar && (
-          <Calendar
-            startDate={startDate}
-            endDate={endDate}
-            onChange={(s, e) => { setStartDate(s); setEndDate(e); setTotalPrice(null); setOriginalPrice(null); setDiscount(null); setStrategyName(null) }}
-            onClose={() => setShowCalendar(false)}
-          />
         )}
       </View>
 

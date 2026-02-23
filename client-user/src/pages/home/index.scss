@@ -2,6 +2,26 @@
   min-height: 100vh;
   background: #667eea;
 
+  &.theme-dark {
+    background: #000000;
+
+    .content-section {
+      background: #000000;
+    }
+
+    .star-filter, .hot-hotels-section {
+      background: #1a1a1a;
+    }
+
+    .section-title, .star-item, .hotel-name {
+      color: #ffffff;
+    }
+
+    .hotel-address {
+      color: #cccccc;
+    }
+  }
+
   .top-nav {
     display: flex;
     align-items: center;

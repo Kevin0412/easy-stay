@@ -35,7 +35,11 @@ page[data-theme="dark"] {
 
 // 老年模式（字体放大）
 [data-font="elder"] {
-  font-size: 18px;
+  font-size: 20px;
+}
+
+page[data-font="elder"] {
+  font-size: 20px;
 }
 
 // 通用样式

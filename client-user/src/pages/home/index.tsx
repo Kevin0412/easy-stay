@@ -4,6 +4,7 @@ import Taro from '@tarojs/taro'
 import { getApiBaseUrl } from '../../config'
 import Calendar from '../../components/Calendar'
 import ThemeSwitcher from '../../components/ThemeSwitcher'
+import { useThemeStore } from '../../store/themeStore'
 import './index.scss'
 
 interface Hotel {
@@ -16,6 +17,7 @@ interface Hotel {
 }
 
 export default function Home() {
+  const { theme } = useThemeStore()
   const [keyword, setKeyword] = useState('')
   const [selectedStar, setSelectedStar] = useState<number | undefined>(undefined)
   const [carouselHotels, setCarouselHotels] = useState<Hotel[]>([])
@@ -142,7 +144,7 @@ export default function Home() {
   }
 
   return (
-    <View className='home-container'>
+    <View className={`home-container theme-${theme}`}>
       {/* 顶部导航 */}
       <View className='top-nav'>
         <Text className='nav-title'>易宿</Text>
