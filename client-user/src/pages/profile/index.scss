@@ -5,12 +5,20 @@
 
   &.theme-dark {
     background: #121212;
-    .user-info, .tabs, .content-section, .order-item, .fav-item, .not-login { background: #1e1e1e; }
-    .username, .tab, .order-id, .hotel-name, .not-login-text, .order-hotel, .order-room, .fav-name { color: #ffffff; }
-    .user-email, .order-date, .hotel-address, .order-status, .fav-addr, .fav-star { color: #cccccc; }
-    .tab-bar { background: #1e1e1e; border-color: #333; .tab-item { color: #888; &.active { color: #667eea; } } }
-    .order-item { background: #1e1e1e; }
-    .fav-item { background: #1e1e1e; }
+    .user-info, .tabs, .content-section, .not-login { background: #1e1e1e; }
+    .username, .not-login-text { color: #ffffff !important; }
+    .tab-bar { background: #1e1e1e; border-color: #333; .tab-item { color: #888 !important; &.active { color: #667eea !important; } } }
+    .order-item {
+      background: #1e1e1e;
+      .order-hotel { color: #fff !important; }
+      .order-room { color: #ccc !important; }
+      .order-date { color: #999 !important; }
+    }
+    .fav-item {
+      background: #1e1e1e;
+      .fav-name { color: #fff !important; }
+      .fav-addr { color: #ccc !important; }
+    }
     .logout-btn { background: #1e1e1e; border-color: #ff4d4f; }
     .logout-bar { background: #121212; }
     .back-home-btn { background: #1e1e1e; }

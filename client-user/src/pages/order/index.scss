@@ -4,9 +4,13 @@
 
   &.theme-dark {
     background: #121212;
-    .order-card { background: #1e1e1e; .order-row { border-color: #333; } }
-    .order-value { color: #fff; }
-    .order-label { color: #aaa; }
+    .order-card {
+      background: #1e1e1e;
+      .order-row { border-color: #333; }
+      .order-label { color: #aaa !important; }
+      .order-value { color: #fff !important; }
+      .order-price { color: #ff6b35 !important; }
+    }
   }
 
   .order-header {

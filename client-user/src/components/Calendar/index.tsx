@@ -1,5 +1,6 @@
 import { View, Text } from '@tarojs/components'
 import React, { useState } from 'react'
+import { useThemeStore } from '../../store/themeStore'
 import './index.scss'
 
 interface CalendarProps {
@@ -27,6 +28,7 @@ function firstDayOfMonth(y: number, m: number) {
 }
 
 export default function Calendar({ startDate, endDate, onChange, onClose }: CalendarProps) {
+  const { theme } = useThemeStore()
   const today = new Date()
   const [viewYear, setViewYear] = useState(today.getFullYear())
   const [viewMonth, setViewMonth] = useState(today.getMonth() + 1)
@@ -76,7 +78,7 @@ export default function Calendar({ startDate, endDate, onChange, onClose }: Cale
 
   return (
     <View className='calendar-overlay' onClick={onClose}>
-      <View className='calendar-panel' onClick={e => e.stopPropagation()}>
+      <View className={`calendar-panel ${theme === 'dark' ? 'theme-dark' : ''}`} onClick={e => e.stopPropagation()}>
         <View className='cal-header'>
           <View className='cal-nav' onClick={prevMonth}>&lt;</View>
           <Text className='cal-title'>{viewYear}年{viewMonth}月</Text>

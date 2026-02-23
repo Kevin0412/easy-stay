@@ -7,6 +7,19 @@
 .calendar-panel {
   width: 100%; background: var(--bg-card, #fff); border-radius: 24px 24px 0 0; padding: 32px;
 
+  &.theme-dark {
+    background: #1e1e1e !important;
+    .cal-header {
+      .cal-nav, .cal-title { color: #fff !important; }
+    }
+    .cal-range-tip { background: #2a2a2a !important; color: #fff !important; }
+    .cal-weekdays .cal-weekday { color: #999 !important; }
+    .cal-grid .cal-day .cal-day-text { color: #e0e0e0 !important; }
+    .cal-grid .cal-day.selected .cal-day-text { color: #fff !important; }
+    .cal-grid .cal-day.in-range .cal-day-text { color: #667eea !important; }
+    .cal-footer .cal-clear { background: #2a2a2a !important; color: #ccc !important; }
+  }
+
   .cal-header {
     display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;
     .cal-nav { width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; font-size: 32px; color: var(--text-primary, #333); }
