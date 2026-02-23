@@ -152,6 +152,51 @@
     }
   }
 
+  .date-banner {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    padding: 24px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+    .date-item {
+      flex: 1;
+      text-align: center;
+
+      .date-label {
+        display: block;
+        font-size: 24px;
+        color: #999;
+        margin-bottom: 8px;
+      }
+
+      .date-value {
+        display: block;
+        font-size: 28px;
+        color: #333;
+        font-weight: 500;
+      }
+    }
+
+    .date-divider {
+      width: 80px;
+      text-align: center;
+
+      .date-arrow {
+        font-size: 28px;
+        color: #ccc;
+      }
+
+      .date-nights {
+        font-size: 24px;
+        color: #667eea;
+        font-weight: bold;
+      }
+    }
+  }
+
   .room-section {
     background-color: #fff;
     padding: 30px;

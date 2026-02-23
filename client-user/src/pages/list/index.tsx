@@ -5,9 +5,11 @@ import { getHotels, Hotel } from '../../services/hotel'
 import HotelCard from '../../components/HotelCard'
 import FilterPanel from '../../components/FilterPanel'
 import Calendar from '../../components/Calendar'
+import { useThemeStore } from '../../store/themeStore'
 import './index.scss'
 
 export default function List() {
+  const { theme } = useThemeStore()
   const [allHotels, setAllHotels] = useState<Hotel[]>([])
   const [loading, setLoading] = useState(false)
   const [filterStar, setFilterStar] = useState<number | undefined>(undefined)
@@ -75,7 +77,7 @@ export default function List() {
   })
 
   return (
-    <View className='list-container'>
+    <View className={`list-container theme-${theme}`}>
       <View className='search-bar'>
         <Input className='search-input' placeholder='搜索城市/酒店' value={city} onInput={e => setCity(e.detail.value)} />
         <View className='search-btn' onClick={() => { setPage(1); loadHotels(keyword, city, sortMode === 'hot' ? 'hot' : undefined, 1) }}>搜索</View>
