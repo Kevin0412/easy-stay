@@ -5,29 +5,73 @@
   &.theme-dark {
     background: #000000;
 
-    .header-section, .search-section, .content-section {
-      background: #000000;
+    .search-section {
+      background: #1a1a1a !important;
+    }
+
+    .location-row {
+      background: #2a2a2a !important;
+      .location-text { color: #ffffff !important; }
+      .location-locate { color: #1890ff !important; border-color: #1890ff !important; }
     }
 
     .search-input {
-      background: #2a2a2a;
-      color: #ffffff;
+      background: #2a2a2a !important;
+      color: #ffffff !important;
+      border-color: #444 !important;
     }
 
-    .star-filter, .hot-hotels-section {
-      background: #1a1a1a;
+    .date-row {
+      background: #2a2a2a !important;
+      .date-item-label { color: #999 !important; }
+      .date-item-value { color: #ffffff !important; }
+      .date-item-placeholder { color: #666 !important; }
     }
 
-    .section-title, .star-item, .hotel-name, .search-label {
-      color: #ffffff;
+    .filter-label {
+      color: #ffffff !important;
     }
 
-    .hotel-address, .hotel-price {
-      color: #cccccc;
+    .star-item {
+      background: #2a2a2a !important;
+      color: #e0e0e0 !important;
+      border-color: #444 !important;
+      &.active {
+        background: #667eea !important;
+        color: #fff !important;
+        border-color: #667eea !important;
+      }
     }
 
-    .hotel-card {
-      background: #2a2a2a;
+    .advanced-toggle {
+      background: #2a2a2a !important;
+      .toggle-text { color: #667eea !important; }
+    }
+
+    .advanced-filter {
+      background: #2a2a2a !important;
+      .filter-label { color: #ffffff !important; }
+      .price-input {
+        background: #333 !important;
+        color: #ffffff !important;
+        border-color: #444 !important;
+      }
+      .price-separator { color: #999 !important; }
+      .date-picker {
+        background: #333 !important;
+        border-color: #444 !important;
+        .date-text { color: #ffffff !important; }
+        .date-placeholder { color: #666 !important; }
+      }
+    }
+
+    .section-title {
+      color: #ffffff !important;
+    }
+
+    .quick-tags .tag-item {
+      background: #2a2a2a !important;
+      color: #667eea !important;
     }
   }
 

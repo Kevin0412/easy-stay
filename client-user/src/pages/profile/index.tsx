@@ -66,7 +66,7 @@ export default function Profile() {
 
   if (!isLoggedIn()) {
     return (
-      <View className='profile-container'>
+      <View className={`profile-container theme-${theme}`}>
         <View className='not-login'>
           <Text className='not-login-text'>您还未登录</Text>
           <Button className='login-btn' onClick={handleLogin}>去登录</Button>

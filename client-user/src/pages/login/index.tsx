@@ -68,12 +68,14 @@ export default function Login() {
           <Input
             className='input'
             placeholder='用户名'
+            placeholderStyle={theme === 'dark' ? 'color: #666' : ''}
             value={username}
             onInput={(e) => setUsername(e.detail.value)}
           />
           <Input
             className='input'
             placeholder='密码'
+            placeholderStyle={theme === 'dark' ? 'color: #666' : ''}
             password
             value={password}
             onInput={(e) => setPassword(e.detail.value)}
@@ -83,12 +85,14 @@ export default function Login() {
               <Input
                 className='input'
                 placeholder='邮箱'
+                placeholderStyle={theme === 'dark' ? 'color: #666' : ''}
                 value={email}
                 onInput={(e) => setEmail(e.detail.value)}
               />
               <Input
                 className='input'
                 placeholder='手机号（可选）'
+                placeholderStyle={theme === 'dark' ? 'color: #666' : ''}
                 value={phone}
                 onInput={(e) => setPhone(e.detail.value)}
               />

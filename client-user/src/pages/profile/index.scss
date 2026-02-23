@@ -4,8 +4,8 @@
 
   &.theme-dark {
     background: #000000;
-    .user-info, .tabs, .content-section, .order-item, .fav-item { background: #1a1a1a; }
-    .username, .tab, .order-id, .hotel-name { color: #ffffff; }
+    .user-info, .tabs, .content-section, .order-item, .fav-item, .not-login { background: #1a1a1a; }
+    .username, .tab, .order-id, .hotel-name, .not-login-text { color: #ffffff; }
     .user-email, .order-date, .hotel-address, .order-status { color: #cccccc; }
   }
 

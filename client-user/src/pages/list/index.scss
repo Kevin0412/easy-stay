@@ -9,25 +9,36 @@
       background: #1a1a1a;
     }
 
+    .back-home-btn {
+      background: #1a1a1a;
+      .back-home-text { color: #1890ff; }
+    }
+
     .search-input {
       background: #2a2a2a;
       color: #ffffff;
     }
 
-    .sort-item, .top-filter-label, .top-filter-value, .summary-title, .filter-title, .summary-tag {
+    .sort-item, .top-filter-value, .summary-title, .filter-title, .summary-tag {
       color: #ffffff;
     }
 
+    .top-filter-label {
+      color: #e0e0e0;
+    }
+
     .sort-item {
-      border-color: #555;
+      background: #2a2a2a;
+      border-color: #444;
       &.active {
-        background: rgba(102, 126, 234, 0.3);
+        background: #667eea;
+        border-color: #667eea;
       }
     }
 
     .filter-item {
       background: #2a2a2a;
-      color: #cccccc;
+      color: #e0e0e0;
       &.active {
         background: #1890ff;
         color: #fff;

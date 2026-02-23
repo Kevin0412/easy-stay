@@ -209,6 +209,7 @@ export default function Home() {
           <Input
             className='search-input'
             placeholder='搜索酒店名称或地址'
+            placeholderStyle={theme === 'dark' ? 'color: #666' : ''}
             value={keyword}
             onInput={(e) => setKeyword(e.detail.value)}
           />
@@ -279,6 +280,7 @@ export default function Home() {
                   className='price-input'
                   type='number'
                   placeholder='最低价'
+                  placeholderStyle={theme === 'dark' ? 'color: #666' : ''}
                   value={minPrice}
                   onInput={(e) => setMinPrice(e.detail.value)}
                 />
@@ -287,6 +289,7 @@ export default function Home() {
                   className='price-input'
                   type='number'
                   placeholder='最高价'
+                  placeholderStyle={theme === 'dark' ? 'color: #666' : ''}
                   value={maxPrice}
                   onInput={(e) => setMaxPrice(e.detail.value)}
                 />

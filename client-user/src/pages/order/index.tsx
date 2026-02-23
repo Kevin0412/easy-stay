@@ -3,9 +3,11 @@ import React, { useState } from 'react'
 import Taro, { useLoad } from '@tarojs/taro'
 import { createOrder } from '../../services/order'
 import { useUserStore } from '../../store/userStore'
+import { useThemeStore } from '../../store/themeStore'
 import './index.scss'
 
 export default function Order() {
+  const { theme } = useThemeStore()
   const [params, setParams] = useState<any>({})
   const [submitting, setSubmitting] = useState(false)
   const { isLoggedIn } = useUserStore()
@@ -49,7 +51,7 @@ export default function Order() {
   }
 
   return (
-    <View className='order-container'>
+    <View className={`order-container theme-${theme}`}>
       <View className='order-header'>
         <Text className='order-title'>确认预订</Text>
       </View>
