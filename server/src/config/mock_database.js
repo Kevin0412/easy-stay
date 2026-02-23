@@ -37,7 +37,7 @@ const mock_data = {
       address: '北京市朝阳区建国路88号',
       star: 5,
       open_date: '2020-01-01',
-      tags: '豪华套房,免费停车,健身中心',
+      tags: '豪华套房,免费停车',
       nearby: '国贸商城(0.5km),三里屯(2km),天安门广场(8km)',
       cover_image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800',
       images: JSON.stringify([

@@ -18,6 +18,12 @@
       color: #cccccc;
     }
 
+    .hotel-tags {
+      background: #2a2000;
+      .tags-title { color: #aaa; }
+      .tag-item { color: #ffa940; background: #2d1a00; border-color: #7a4a00; }
+    }
+
     .hotel-nearby { background: #2a2a2a !important; .nearby-title { color: #aaa; } .nearby-item { background: #333 !important; color: #aaa; } }
     .hotel-facilities { background: #2a2a2a !important; .facilities-title { color: #aaa; } .facility-item { background: #333 !important; color: #aaa; } }
 
@@ -131,20 +137,22 @@
       }
     }
 
-    .hotel-facilities {
+    .hotel-tags {
       margin-top: 16px;
       padding: 16px;
-      background: #f0fff4;
+      background: #fff7e6;
       border-radius: 8px;
 
-      .facilities-title { display: block; font-size: 26px; color: #666; margin-bottom: 10px; }
-      .facilities-list { display: flex; flex-wrap: wrap; gap: 8px; }
-      .facility-item { font-size: 24px; color: #52c41a; background: #d9f7be; border-radius: 6px; padding: 4px 12px; }
+      .tags-title { display: block; font-size: 26px; color: #666; margin-bottom: 10px; }
+      .tags-list { display: flex; flex-wrap: wrap; gap: 8px; }
+      .tag-item { font-size: 24px; color: #fa8c16; background: #fff3e0; border: 1px solid #ffd591; border-radius: 20px; padding: 4px 16px; }
 
       @media (min-width: 768px) {
-        .facilities-title { font-size: 18px; }
-        .facility-item { font-size: 17px; }
+        .tags-title { font-size: 18px; }
+        .tag-item { font-size: 17px; }
       }
+    }
+
     }
   }
 

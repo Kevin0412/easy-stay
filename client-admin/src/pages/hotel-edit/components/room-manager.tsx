@@ -3,6 +3,44 @@ import { Card, Table, Button, Space, Modal, Form, Input, InputNumber, message } 
 import { PlusOutlined } from '@ant-design/icons'
 import { getRoomsByHotelId, createRoom, updateRoom, deleteRoom, Room, RoomFormData } from '@/services/room'
 
+/** 图片 URL 输入框，带实时预览 */
+function ImageInput({
+  value,
+  onChange,
+  placeholder,
+}: {
+  value?: string
+  onChange?: (v: string) => void
+  placeholder?: string
+}) {
+  return (
+    <div>
+      <Input
+        value={value}
+        onChange={(e) => onChange?.(e.target.value)}
+        placeholder={placeholder}
+      />
+      {value && (
+        <img
+          src={value}
+          alt="预览"
+          style={{
+            display: 'block',
+            marginTop: 6,
+            maxHeight: 100,
+            maxWidth: 240,
+            objectFit: 'cover',
+            borderRadius: 4,
+            border: '1px solid #f0f0f0',
+          }}
+          onError={(e) => { e.currentTarget.style.display = 'none' }}
+          onLoad={(e) => { e.currentTarget.style.display = 'block' }}
+        />
+      )}
+    </div>
+  )
+}
+
 interface RoomManagerProps {
   hotelId: number
 }
@@ -81,6 +119,22 @@ export default function RoomManager({ hotelId }: RoomManagerProps) {
   }
 
   const columns = [
+    {
+      title: '图片',
+      dataIndex: 'image',
+      width: 90,
+      render: (image: string) =>
+        image ? (
+          <img
+            src={image}
+            alt="房型图片"
+            style={{ width: 64, height: 48, objectFit: 'cover', borderRadius: 4, border: '1px solid #f0f0f0' }}
+            onError={(e) => { e.currentTarget.style.display = 'none' }}
+          />
+        ) : (
+          <span style={{ color: '#ccc', fontSize: 12 }}>无图片</span>
+        )
+    },
     {
       title: '房型名称',
       dataIndex: 'room_type'
@@ -171,7 +225,7 @@ export default function RoomManager({ hotelId }: RoomManagerProps) {
           </Form.Item>
 
           <Form.Item name="image" label="房型图片 URL（可选）">
-            <Input placeholder="https://example.com/room.jpg" />
+            <ImageInput placeholder="https://example.com/room.jpg" />
           </Form.Item>
 
           <Form.Item>
