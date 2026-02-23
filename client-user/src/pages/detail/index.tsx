@@ -2,7 +2,7 @@ import { View, Text, Swiper, SwiperItem, Image } from '@tarojs/components'
 import React, { useState } from 'react'
 import Taro, { useLoad } from '@tarojs/taro'
 import { getHotelById, Hotel } from '../../services/hotel'
-import { getRoomsByHotelId, Room } from '../../services/room'
+import { getRoomsByHotelId, Room, calculatePrice } from '../../services/room'
 import { checkFavorite, addFavorite, removeFavorite } from '../../services/favorite'
 import { useUserStore } from '../../store/userStore'
 import { useThemeStore } from '../../store/themeStore'
@@ -71,8 +71,8 @@ export default function Detail() {
   const calcTotalRooms = (counts: Record<number, number>) =>
     Object.values(counts).reduce((sum, c) => sum + c, 0)
 
-  // 计算价格（纯前端）
-  const handleCalculatePrice = () => {
+  // 计算价格（调用后端接口，支持价格策略折扣）
+  const handleCalculatePrice = async () => {
     if (selectedRooms.size === 0 || !startDate || !endDate) {
       Taro.showToast({ title: '请选择房型和日期', icon: 'none' })
       return
@@ -94,16 +94,31 @@ export default function Detail() {
       Taro.showToast({ title: '人数超过所选房型总容纳人数', icon: 'none' })
       return
     }
-    const nights = Math.round((new Date(endDate).getTime() - new Date(startDate).getTime()) / 86400000)
-    let total = 0
-    for (const roomId of selectedRooms) {
-      const room = rooms.find(r => r.id === roomId)
-      if (room) total += room.price * nights * (roomCounts[roomId] || 1)
+    try {
+      let sumTotal = 0
+      let sumOriginal = 0
+      let bestDiscount: number | null = null
+      let bestStrategyName: string | null = null
+
+      for (const roomId of selectedRooms) {
+        const count = roomCounts[roomId] || 1
+        const res = await calculatePrice({ room_id: roomId, start_date: startDate, end_date: endDate })
+        const { total_price, original_price, discount, strategy_name } = res.data
+        sumTotal += total_price * count
+        sumOriginal += original_price * count
+        if (discount < 1 && (bestDiscount === null || discount < bestDiscount)) {
+          bestDiscount = discount
+          bestStrategyName = strategy_name
+        }
+      }
+
+      setTotalPrice(parseFloat(sumTotal.toFixed(2)))
+      setOriginalPrice(parseFloat(sumOriginal.toFixed(2)))
+      setDiscount(bestDiscount)
+      setStrategyName(bestStrategyName)
+    } catch {
+      Taro.showToast({ title: '价格计算失败，请重试', icon: 'none' })
     }
-    setTotalPrice(total)
-    setOriginalPrice(total)
-    setDiscount(null)
-    setStrategyName(null)
   }
 
   // 页面加载时获取酒店ID

@@ -28,6 +28,9 @@ CREATE TABLE IF NOT EXISTS hotels (
   status ENUM('draft', 'pending', 'published', 'rejected', 'offline') NOT NULL DEFAULT 'draft',
   reject_reason VARCHAR(500),
   tags VARCHAR(500),
+  facilities VARCHAR(500),
+  nearby VARCHAR(500),
+  views INT NOT NULL DEFAULT 0,
   created_by INT NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -44,6 +47,7 @@ CREATE TABLE IF NOT EXISTS rooms (
   price DECIMAL(10, 2) NOT NULL,
   stock INT NOT NULL DEFAULT 0,
   max_guests INT NOT NULL DEFAULT 2,
+  image VARCHAR(500),
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (hotel_id) REFERENCES hotels(id) ON DELETE CASCADE,
@@ -66,34 +70,6 @@ CREATE TABLE IF NOT EXISTS price_strategies (
   INDEX idx_date_range (start_date, end_date)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 插入默认管理员账户（密码: admin123）
-INSERT INTO users (username, password, role) VALUES
-('admin', '$2a$10$i6mRBBF6b8hR1q9ex3ttIOsrCF3UlW1agdR1.8TlzS5YAaV8JM8z6', 'admin');
-
--- 插入测试用户账户（密码: user123）
-INSERT INTO users (username, password, email, phone, role) VALUES
-('testuser', '$2a$10$i6mRBBF6b8hR1q9ex3ttIOsrCF3UlW1agdR1.8TlzS5YAaV8JM8z6', 'test@example.com', '13800138000', 'user');
-
--- rooms 表迁移
-ALTER TABLE rooms ADD COLUMN IF NOT EXISTS max_guests INT NOT NULL DEFAULT 2;
--- orders 表迁移
-ALTER TABLE orders ADD COLUMN IF NOT EXISTS guests INT NOT NULL DEFAULT 1;
-
--- 如果表已存在，添加新字段的迁移脚本
-ALTER TABLE users ADD COLUMN IF NOT EXISTS email VARCHAR(100);
-ALTER TABLE users ADD COLUMN IF NOT EXISTS phone VARCHAR(20);
-ALTER TABLE users MODIFY COLUMN role ENUM('admin', 'merchant', 'user') NOT NULL DEFAULT 'user';
-
--- hotels 表迁移
-ALTER TABLE hotels MODIFY COLUMN status ENUM('draft', 'pending', 'published', 'rejected', 'offline') NOT NULL DEFAULT 'draft';
-ALTER TABLE hotels ADD COLUMN IF NOT EXISTS reject_reason VARCHAR(500);
-ALTER TABLE hotels ADD COLUMN IF NOT EXISTS tags VARCHAR(500);
-ALTER TABLE hotels ADD COLUMN IF NOT EXISTS nearby VARCHAR(500);
--- ALTER TABLE hotels ADD COLUMN facilities VARCHAR(500); -- run manually if column doesn't exist
--- ALTER TABLE hotels ADD COLUMN views INT NOT NULL DEFAULT 0; -- run manually if column doesn't exist
--- ALTER TABLE rooms ADD COLUMN image VARCHAR(500) DEFAULT NULL; -- run manually if column doesn't exist
--- ALTER TABLE rooms ADD COLUMN max_guests INT NOT NULL DEFAULT 2; -- run manually if column doesn't exist
-
 -- 收藏表
 CREATE TABLE IF NOT EXISTS favorites (
   id INT PRIMARY KEY AUTO_INCREMENT,
@@ -115,6 +91,7 @@ CREATE TABLE IF NOT EXISTS orders (
   check_out DATE NOT NULL,
   nights INT NOT NULL DEFAULT 1,
   total_price DECIMAL(10, 2) NOT NULL,
+  guests INT NOT NULL DEFAULT 1,
   status ENUM('confirmed', 'cancelled', 'completed') NOT NULL DEFAULT 'confirmed',
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
@@ -122,3 +99,11 @@ CREATE TABLE IF NOT EXISTS orders (
   FOREIGN KEY (room_id) REFERENCES rooms(id) ON DELETE CASCADE,
   INDEX idx_user_id (user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 默认管理员账户（密码: admin123）
+INSERT INTO users (username, password, role) VALUES
+('admin', '$2a$10$i6mRBBF6b8hR1q9ex3ttIOsrCF3UlW1agdR1.8TlzS5YAaV8JM8z6', 'admin');
+
+-- 测试用户账户（密码: user123）
+INSERT INTO users (username, password, email, phone, role) VALUES
+('testuser', '$2a$10$i6mRBBF6b8hR1q9ex3ttIOsrCF3UlW1agdR1.8TlzS5YAaV8JM8z6', 'test@example.com', '13800138000', 'user');

@@ -5,6 +5,7 @@ import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons'
 import dayjs from 'dayjs'
 import { getHotelById, createHotel, updateHotel, HotelFormData } from '@/services/hotel'
 import RoomManager from './components/room-manager'
+import PriceStrategyManager from './components/price-strategy-manager'
 import styles from './index.module.scss'
 
 const HOTEL_TAGS = [
@@ -271,6 +272,7 @@ export default function HotelEdit() {
       </Card>
 
       {isEdit && <RoomManager hotelId={Number(id)} />}
+      {isEdit && <PriceStrategyManager hotelId={Number(id)} />}
     </div>
   )
 }
