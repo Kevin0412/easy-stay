@@ -44,6 +44,11 @@
         color: #fff;
       }
     }
+
+    .tag-filter {
+      background: #1e1e1e;
+      .tag-chip { background: #2a2a2a; color: #e0e0e0; border-color: #444; &.active { background: #667eea; color: #fff; border-color: #667eea; } }
+    }
   }
 
   .search-bar {
@@ -79,6 +84,24 @@
       padding: 12px 32px;
       .search-input { height: 48px; font-size: 20px; padding: 0 16px; }
       .search-btn { height: 48px; line-height: 48px; font-size: 20px; padding: 0 28px; }
+    }
+  }
+
+  .tag-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px 24px;
+    background: var(--bg-card, #fff);
+    margin-bottom: 8px;
+
+    .tag-chip {
+      font-size: 24px;
+      padding: 8px 20px;
+      border-radius: 20px;
+      border: 1px solid #e8e8e8;
+      color: #666;
+      &.active { background: #667eea; color: #fff; border-color: #667eea; }
     }
   }
 

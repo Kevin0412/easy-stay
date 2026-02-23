@@ -1,17 +1,24 @@
 .login-container {
   min-height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
 
   &.theme-dark {
     background: #121212;
     .login-box { background: #1e1e1e; }
     .title { color: #ffffff; }
     .input { background: #2a2a2a !important; color: #ffffff !important; border-color: #444 !important; }
+    .back-home-btn { background: transparent; }
   }
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 80px;
+
+  .back-home-btn {
+    margin-bottom: 40px;
+    .back-home-text { font-size: 28px; color: #fff; font-weight: 500; }
+  }
+
+  .login-box { margin: auto; }
 }
 
 .login-box {

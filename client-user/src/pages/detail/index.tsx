@@ -135,6 +135,8 @@ export default function Detail() {
         icon: 'none'
       })
     }
+    if (params.checkIn) setStartDate(params.checkIn)
+    if (params.checkOut) setEndDate(params.checkOut)
   })
 
   // 渲染星级

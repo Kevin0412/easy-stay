@@ -67,6 +67,9 @@ export default function Profile() {
   if (!isLoggedIn()) {
     return (
       <View className={`profile-container theme-${theme}`}>
+        <View className='back-home-btn' onClick={() => Taro.switchTab({ url: '/pages/home/index' })}>
+          <Text className='back-home-text'>← 返回首页</Text>
+        </View>
         <View className='not-login'>
           <Text className='not-login-text'>您还未登录</Text>
           <Button className='login-btn' onClick={handleLogin}>去登录</Button>

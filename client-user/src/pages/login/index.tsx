@@ -61,6 +61,9 @@ export default function Login() {
 
   return (
     <View className={`login-container theme-${theme}`}>
+      <View className='back-home-btn' onClick={() => Taro.switchTab({ url: '/pages/home/index' })}>
+        <Text className='back-home-text'>← 返回首页</Text>
+      </View>
       <View className='login-box'>
         <Text className='title'>{isLogin ? '登录' : '注册'}</Text>
 

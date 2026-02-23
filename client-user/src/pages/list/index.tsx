@@ -24,6 +24,9 @@ export default function List() {
   const [hasMore, setHasMore] = useState(true)
   const [showCalendar, setShowCalendar] = useState(false)
 
+  const TAG_OPTIONS = ['豪华套房', '免费停车', '亲子设施', '免费早餐', '江景/湖景', '健身中心', '商务中心', '无边泳池']
+  const [filterTags, setFilterTags] = useState<string[]>([])
+
   const loadHotels = async (kw?: string, ct?: string, sort?: string, p = 1) => {
     if (loading) return
     setLoading(true)
@@ -50,6 +53,7 @@ export default function List() {
     if (keyword && !hotel.name_cn.includes(keyword) && !hotel.address.includes(keyword) && !(hotel.tags || '').includes(keyword)) return false
     if (minPrice !== undefined && hotel.min_price !== undefined && hotel.min_price < minPrice) return false
     if (maxPrice !== undefined && hotel.min_price !== undefined && hotel.min_price > maxPrice) return false
+    if (filterTags.length > 0 && !filterTags.every(tag => (hotel.tags || '').includes(tag))) return false
     return true
   })
 
@@ -124,6 +128,16 @@ export default function List() {
         onMaxPriceChange={setMaxPrice}
       />
 
+      <View className='tag-filter'>
+        {TAG_OPTIONS.map(tag => (
+          <Text
+            key={tag}
+            className={`tag-chip ${filterTags.includes(tag) ? 'active' : ''}`}
+            onClick={() => setFilterTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag])}
+          >{tag}</Text>
+        ))}
+      </View>
+
       <View className='sort-bar'>
         <Text
           className={`sort-item ${sortMode === 'default' ? 'active' : ''}`}
@@ -140,7 +154,7 @@ export default function List() {
           <View className='empty-state'><Text className='empty-text'>暂无酒店数据</Text></View>
         )}
         {filteredHotels.map(hotel => (
-          <HotelCard key={hotel.id} hotel={hotel} />
+          <HotelCard key={hotel.id} hotel={hotel} checkIn={checkInDate} checkOut={checkOutDate} />
         ))}
         {loading && <View className='loading-state'><Text className='loading-text'>加载中...</Text></View>}
         {!loading && !hasMore && filteredHotels.length > 0 && (

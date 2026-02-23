@@ -5,13 +5,16 @@ import './index.scss'
 
 interface HotelCardProps {
   hotel: Hotel
+  checkIn?: string
+  checkOut?: string
 }
 
-export default function HotelCard({ hotel }: HotelCardProps) {
+export default function HotelCard({ hotel, checkIn, checkOut }: HotelCardProps) {
   const handleClick = () => {
-    Taro.navigateTo({
-      url: `/pages/detail/index?id=${hotel.id}`
-    })
+    let url = `/pages/detail/index?id=${hotel.id}`
+    if (checkIn) url += `&checkIn=${checkIn}`
+    if (checkOut) url += `&checkOut=${checkOut}`
+    Taro.navigateTo({ url })
   }
 
   // 渲染星级
