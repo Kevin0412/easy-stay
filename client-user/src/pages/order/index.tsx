@@ -68,6 +68,9 @@ export default function Order() {
   return (
     <View className={`order-container theme-${theme}`}>
       <View className='order-header'>
+        <View className='back-btn' onClick={() => Taro.navigateBack()}>
+          <Text className='back-text'>← 返回</Text>
+        </View>
         <Text className='order-title'>确认预订</Text>
       </View>
 

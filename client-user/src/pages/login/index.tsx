@@ -39,7 +39,7 @@ export default function Login() {
           setToken(res.data.token)
           setUser(res.data.user)
           Taro.showToast({ title: '登录成功', icon: 'success' })
-          setTimeout(() => Taro.navigateTo({ url: '/pages/home/index' }), 1500)
+          setTimeout(() => Taro.reLaunch({ url: '/pages/home/index' }), 1500)
         } else {
           // 注册成功后自动登录
           const loginRes = await login({ username, password })
@@ -47,7 +47,7 @@ export default function Login() {
             setToken(loginRes.data.token)
             setUser(loginRes.data.user)
             Taro.showToast({ title: '注册成功', icon: 'success' })
-            setTimeout(() => Taro.navigateTo({ url: '/pages/home/index' }), 1500)
+            setTimeout(() => Taro.reLaunch({ url: '/pages/home/index' }), 1500)
           }
         }
       }
@@ -61,7 +61,7 @@ export default function Login() {
 
   return (
     <View className={`login-container theme-${theme}`}>
-      <View className='back-home-btn' onClick={() => Taro.switchTab({ url: '/pages/home/index' })}>
+      <View className='back-home-btn' onClick={() => Taro.reLaunch({ url: '/pages/home/index' })}>
         <Text className='back-home-text'>← 返回首页</Text>
       </View>
       <View className='login-box'>

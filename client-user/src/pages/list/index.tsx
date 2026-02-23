@@ -82,7 +82,7 @@ export default function List() {
 
   return (
     <View className={`list-container theme-${theme}`}>
-      <View className='back-home-btn' onClick={() => Taro.switchTab({ url: '/pages/home/index' })}>
+      <View className='back-home-btn' onClick={() => Taro.reLaunch({ url: '/pages/home/index' })}>
         <Text className='back-home-text'>← 返回首页</Text>
       </View>
       <View className='search-bar'>
@@ -164,12 +164,11 @@ export default function List() {
 
       {showCalendar && (
         <Calendar
-          checkIn={checkInDate}
-          checkOut={checkOutDate}
-          onConfirm={(start, end) => {
+          startDate={checkInDate}
+          endDate={checkOutDate}
+          onChange={(start, end) => {
             setCheckInDate(start)
             setCheckOutDate(end)
-            setShowCalendar(false)
           }}
           onClose={() => setShowCalendar(false)}
         />

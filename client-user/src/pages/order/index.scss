@@ -13,6 +13,15 @@
     background: #667eea;
     padding: 60px 40px 40px;
     text-align: center;
+    position: relative;
+
+    .back-btn {
+      position: absolute;
+      left: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      .back-text { font-size: 28px; color: #fff; }
+    }
 
     .order-title {
       font-size: 36px;
