@@ -4,10 +4,10 @@
   min-height: 100vh;
 
   &.theme-dark {
-    background-color: #000000;
+    background-color: #121212;
 
     .top-bar, .hotel-info, .date-banner, .room-section, .price-section {
-      background-color: #1a1a1a;
+      background-color: #1e1e1e;
     }
 
     .top-bar-title, .hotel-name, .date-value, .guest-value, .section-title, .room-type, .room-price {
@@ -18,15 +18,20 @@
       color: #cccccc;
     }
 
+    .hotel-nearby { background: #2a2a2a !important; .nearby-title { color: #aaa; } .nearby-item { background: #333 !important; color: #aaa; } }
+    .hotel-facilities { background: #2a2a2a !important; .facilities-title { color: #aaa; } .facility-item { background: #333 !important; color: #aaa; } }
+
     .room-item {
       background: #2a2a2a;
+      border-color: #444;
       &.selected { border-color: #667eea; background: #333; }
-      .room-count-control { background: #1e1e3a; }
+      .room-count-control { background: #252525 !important; }
       .guest-value { background: #2a2a2a; color: #fff; }
     }
 
-    .guest-selector { background: #2a2a2a; }
+    .guest-selector { background: #252525 !important; }
     .room-count-label, .room-capacity-tip { color: #aaa; }
+    .price-breakdown { background-color: #2a2a2a; border-color: #555; .price-label { color: #aaa; } .price-discount-tag { background: #333; } }
   }
 
   .loading-text, .error-text {

@@ -78,6 +78,9 @@ export default function List() {
 
   return (
     <View className={`list-container theme-${theme}`}>
+      <View className='back-home-btn' onClick={() => Taro.switchTab({ url: '/pages/home/index' })}>
+        <Text className='back-home-text'>← 返回首页</Text>
+      </View>
       <View className='search-bar'>
         <Input className='search-input' placeholder='搜索城市/酒店' value={city} onInput={e => setCity(e.detail.value)} />
         <View className='search-btn' onClick={() => { setPage(1); loadHotels(keyword, city, sortMode === 'hot' ? 'hot' : undefined, 1) }}>搜索</View>

@@ -148,16 +148,13 @@ export default function Detail() {
     })
   }
 
-  // 返回列表页
   const handleBack = () => {
-    Taro.navigateBack({
-      delta: 1
-    }).catch(() => {
-      // 如果返回失败，跳转到列表页
-      Taro.redirectTo({
-        url: '/pages/list/index'
-      })
-    })
+    const pages = Taro.getCurrentPages()
+    if (pages.length > 1) {
+      Taro.navigateBack()
+    } else {
+      Taro.redirectTo({ url: '/pages/list/index' })
+    }
   }
 
   if (loading) {

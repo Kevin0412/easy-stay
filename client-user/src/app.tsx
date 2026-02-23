@@ -10,6 +10,7 @@ function App({ children }: PropsWithChildren<any>) {
     if (typeof document !== 'undefined') {
       document.documentElement.setAttribute('data-theme', theme)
       document.documentElement.setAttribute('data-font', fontMode)
+      document.body.style.backgroundColor = theme === 'dark' ? '#121212' : ''
     }
   })
 
@@ -17,6 +18,7 @@ function App({ children }: PropsWithChildren<any>) {
     if (typeof document !== 'undefined') {
       document.documentElement.setAttribute('data-theme', theme)
       document.documentElement.setAttribute('data-font', fontMode)
+      document.body.style.backgroundColor = theme === 'dark' ? '#121212' : ''
     }
   }, [theme, fontMode])
 

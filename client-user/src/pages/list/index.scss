@@ -3,14 +3,14 @@
   background: var(--bg-page, #f5f5f5);
 
   &.theme-dark {
-    background: #000000;
+    background: #121212;
 
     .search-bar, .sort-bar, .top-filter, .filter-summary, .filter-bar {
-      background: #1a1a1a;
+      background: #1e1e1e;
     }
 
     .back-home-btn {
-      background: #1a1a1a;
+      background: #1e1e1e;
       .back-home-text { color: #1890ff; }
     }
 

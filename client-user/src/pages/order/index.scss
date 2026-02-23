@@ -3,10 +3,10 @@
   background: #f5f5f5;
 
   &.theme-dark {
-    background: #000000;
-    .order-header, .order-info, .price-info { background: #1a1a1a; }
-    .header-title, .info-label, .info-value, .price-label, .total-price { color: #ffffff; }
-    .info-text { color: #cccccc; }
+    background: #121212;
+    .order-card { background: #1e1e1e; .order-row { border-color: #333; } }
+    .order-value { color: #fff; }
+    .order-label { color: #aaa; }
   }
 
   .order-header {

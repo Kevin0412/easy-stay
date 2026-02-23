@@ -135,7 +135,9 @@ export default function Profile() {
         </View>
       )}
 
-      <Button className='logout-btn' onClick={handleLogout}>退出登录</Button>
+      <View className='logout-bar'>
+        <View className='logout-btn' onClick={handleLogout}><Text>退出登录</Text></View>
+      </View>
     </View>
   )
 }
