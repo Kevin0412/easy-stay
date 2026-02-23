@@ -19,6 +19,8 @@ export interface Hotel {
   tags?: string
   nearby?: string
   facilities?: string
+  rating?: number
+  discount?: string
 }
 
 // 房型数据类型

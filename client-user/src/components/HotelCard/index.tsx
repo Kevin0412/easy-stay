@@ -32,6 +32,7 @@ export default function HotelCard({ hotel }: HotelCardProps) {
         <View className='hotel-name'>{hotel.name_cn}</View>
         <View className='hotel-name-en'>{hotel.name_en}</View>
         <View className='hotel-stars'>{renderStars()}</View>
+        {hotel.rating && <View className='hotel-rating'>⭐ {hotel.rating.toFixed(1)}分</View>}
         <View className='hotel-address'>{hotel.address}</View>
         {hotel.discount && <View className='hotel-discount'>🎉 {hotel.discount}</View>}
         {hotel.min_price && (

@@ -22,6 +22,13 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
     if (typeof document !== 'undefined') {
       document.documentElement.setAttribute('data-theme', next)
     }
+    if (process.env.TARO_ENV === 'weapp') {
+      Taro.setTabBarStyle({
+        backgroundColor: next === 'dark' ? '#2a2a2a' : '#ffffff',
+        color: next === 'dark' ? '#aaa' : '#666',
+        selectedColor: '#667eea'
+      })
+    }
   },
 
   toggleFontMode: () => {

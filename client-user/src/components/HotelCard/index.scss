@@ -48,6 +48,13 @@
       margin-bottom: 12px;
     }
 
+    .hotel-rating {
+      font-size: 26px;
+      color: #ff9800;
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+
     .hotel-address {
       font-size: 28px;
       color: var(--text-secondary, #666);
@@ -81,6 +88,17 @@
         font-weight: normal;
         color: #999;
       }
+    }
+
+    @media (min-width: 768px) {
+      padding: 16px;
+      .hotel-name { font-size: 18px; }
+      .hotel-name-en { font-size: 14px; }
+      .hotel-stars { font-size: 16px; }
+      .hotel-rating { font-size: 13px; }
+      .hotel-address { font-size: 14px; }
+      .hotel-discount { font-size: 12px; }
+      .hotel-price { font-size: 20px; .price-unit { font-size: 13px; } }
     }
   }
 }
