@@ -248,26 +248,29 @@ export default function Detail() {
         )}
       </View>
 
-      {/* 日历+入住间夜+人数房间Banner */}
-      <View className='date-banner'>
-        <View className='date-row' onClick={() => setShowCalendar(true)}>
-          <View className='date-item'>
-            <Text className='date-label'>入住</Text>
-            <Text className='date-value'>{startDate || '选择日期'}</Text>
-          </View>
-          <View className='date-divider'>
-            {startDate && endDate && startDate < endDate ? (
-              <Text className='date-nights'>{Math.round((new Date(endDate).getTime() - new Date(startDate).getTime()) / 86400000)}晚</Text>
-            ) : (
-              <Text className='date-arrow'>→</Text>
-            )}
-          </View>
-          <View className='date-item'>
-            <Text className='date-label'>离店</Text>
-            <Text className='date-value'>{endDate || '选择日期'}</Text>
-          </View>
+      {/* 日历+入住间夜Banner */}
+      <View className='date-banner' onClick={() => setShowCalendar(true)}>
+        <View className='date-item'>
+          <Text className='date-label'>入住</Text>
+          <Text className='date-value'>{startDate || '选择日期'}</Text>
         </View>
-        <View className='guest-row'>
+        <View className='date-divider'>
+          {startDate && endDate && startDate < endDate ? (
+            <Text className='date-nights'>{Math.round((new Date(endDate).getTime() - new Date(startDate).getTime()) / 86400000)}晚</Text>
+          ) : (
+            <Text className='date-arrow'>→</Text>
+          )}
+        </View>
+        <View className='date-item'>
+          <Text className='date-label'>离店</Text>
+          <Text className='date-value'>{endDate || '选择日期'}</Text>
+        </View>
+      </View>
+
+      {/* 房型列表 */}
+      <View className='room-section'>
+        <Text className='section-title'>房型列表</Text>
+        <View className='guest-selector'>
           <View className='guest-item'>
             <Text className='guest-label'>入住人数</Text>
             <View className='guest-control'>
@@ -285,11 +288,6 @@ export default function Detail() {
             </View>
           </View>
         </View>
-      </View>
-
-      {/* 房型列表 */}
-      <View className='room-section'>
-        <Text className='section-title'>房型列表</Text>
         {rooms.length === 0 ? (
           <Text className='empty-text'>暂无房型信息</Text>
         ) : (

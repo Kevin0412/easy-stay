@@ -14,7 +14,7 @@
       color: #ffffff;
     }
 
-    .sort-item, .top-filter-label, .top-filter-value, .summary-title, .filter-title {
+    .sort-item, .top-filter-label, .top-filter-value, .summary-title, .filter-title, .summary-tag {
       color: #ffffff;
     }
 
@@ -22,6 +22,15 @@
       border-color: #555;
       &.active {
         background: rgba(102, 126, 234, 0.3);
+      }
+    }
+
+    .filter-item {
+      background: #2a2a2a;
+      color: #cccccc;
+      &.active {
+        background: #1890ff;
+        color: #fff;
       }
     }
   }

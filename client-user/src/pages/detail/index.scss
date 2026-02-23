@@ -10,17 +10,21 @@
       background-color: #1a1a1a;
     }
 
-    .top-bar-title, .hotel-name, .hotel-address, .hotel-open-date, .date-value, .guest-value, .section-title, .room-type, .room-price {
+    .top-bar-title, .hotel-name, .date-value, .guest-value, .section-title, .room-type, .room-price {
       color: #ffffff;
     }
 
-    .hotel-name-en, .date-label, .guest-label, .room-stock {
+    .hotel-name-en, .hotel-address, .hotel-open-date, .date-label, .guest-label, .room-stock {
       color: #cccccc;
     }
 
     .room-item {
       background: #2a2a2a;
-      &.selected { border-color: #667eea; }
+      &.selected { border-color: #667eea; background: #333; }
+    }
+
+    .guest-selector {
+      background: #2a2a2a;
     }
   }
 
@@ -66,9 +70,9 @@
     }
 
     @media (min-width: 768px) {
-      .back-btn .back-text { font-size: 15px; }
-      .top-bar-title { font-size: 18px; }
-      .fav-btn .fav-icon { font-size: 24px; }
+      .back-btn .back-text { font-size: 16px; }
+      .top-bar-title { font-size: 20px; }
+      .fav-btn .fav-icon { font-size: 28px; }
     }
   }
 
@@ -118,10 +122,10 @@
 
     @media (min-width: 768px) {
       padding: 20px;
-      .hotel-name { font-size: 20px; }
-      .hotel-name-en { font-size: 15px; }
-      .hotel-stars { font-size: 18px; }
-      .hotel-address, .hotel-open-date { font-size: 14px; }
+      .hotel-name { font-size: 22px; }
+      .hotel-name-en { font-size: 16px; }
+      .hotel-stars { font-size: 20px; }
+      .hotel-address, .hotel-open-date { font-size: 15px; }
     }
 
     .hotel-nearby {
@@ -157,106 +161,54 @@
   }
 
   .date-banner {
+    display: flex;
+    align-items: center;
     background: #fff;
     padding: 24px;
     margin-bottom: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 
-    .date-row {
-      display: flex;
-      align-items: center;
-      padding-bottom: 20px;
-      border-bottom: 1px solid #f0f0f0;
-      margin-bottom: 20px;
+    .date-item {
+      flex: 1;
+      text-align: center;
 
-      .date-item {
-        flex: 1;
-        text-align: center;
-
-        .date-label {
-          display: block;
-          font-size: 24px;
-          color: #999;
-          margin-bottom: 8px;
-        }
-
-        .date-value {
-          display: block;
-          font-size: 28px;
-          color: #333;
-          font-weight: 500;
-        }
+      .date-label {
+        display: block;
+        font-size: 24px;
+        color: #999;
+        margin-bottom: 8px;
       }
 
-      .date-divider {
-        width: 80px;
-        text-align: center;
-
-        .date-arrow {
-          font-size: 28px;
-          color: #ccc;
-        }
-
-        .date-nights {
-          font-size: 24px;
-          color: #667eea;
-          font-weight: bold;
-        }
+      .date-value {
+        display: block;
+        font-size: 28px;
+        color: #333;
+        font-weight: 500;
       }
     }
 
-    .guest-row {
-      display: flex;
-      gap: 20px;
+    .date-divider {
+      width: 80px;
+      text-align: center;
 
-      .guest-item {
-        flex: 1;
+      .date-arrow {
+        font-size: 28px;
+        color: #ccc;
+      }
 
-        .guest-label {
-          display: block;
-          font-size: 24px;
-          color: #999;
-          margin-bottom: 12px;
-        }
-
-        .guest-control {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 16px;
-
-          .guest-btn {
-            width: 48px;
-            height: 48px;
-            background: #667eea;
-            color: #fff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-          }
-
-          .guest-value {
-            font-size: 28px;
-            color: #333;
-            font-weight: 500;
-            min-width: 60px;
-            text-align: center;
-          }
-        }
+      .date-nights {
+        font-size: 24px;
+        color: #667eea;
+        font-weight: bold;
       }
     }
 
     @media (min-width: 768px) {
-      .date-row .date-item .date-label { font-size: 13px; }
-      .date-row .date-item .date-value { font-size: 16px; }
-      .date-row .date-divider .date-arrow { font-size: 16px; }
-      .date-row .date-divider .date-nights { font-size: 14px; }
-      .guest-row .guest-item .guest-label { font-size: 13px; }
-      .guest-row .guest-item .guest-control .guest-btn { width: 32px; height: 32px; font-size: 20px; }
-      .guest-row .guest-item .guest-control .guest-value { font-size: 16px; }
+      .date-item .date-label { font-size: 14px; }
+      .date-item .date-value { font-size: 17px; }
+      .date-divider .date-arrow { font-size: 17px; }
+      .date-divider .date-nights { font-size: 15px; }
     }
   }
 
@@ -266,12 +218,41 @@
     border-radius: 8px;
     margin-bottom: 20px;
 
-    .section-title {
-      display: block;
-      font-size: 32px;
-      font-weight: bold;
-      color: #333;
+    .section-title { display: block; font-size: 32px; font-weight: bold; color: #333; margin-bottom: 20px; }
+
+    .guest-selector {
+      display: flex;
+      gap: 20px;
+      padding: 20px;
+      background: #f5f7ff;
+      border-radius: 8px;
       margin-bottom: 20px;
+
+      .guest-item {
+        flex: 1;
+
+        .guest-label { display: block; font-size: 24px; color: #999; margin-bottom: 12px; }
+
+        .guest-control {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 16px;
+
+          .guest-btn { width: 48px; height: 48px; background: #667eea; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; }
+          .guest-value { font-size: 28px; color: #333; font-weight: 500; min-width: 60px; text-align: center; }
+        }
+      }
+    }
+
+    @media (min-width: 768px) {
+      padding: 20px;
+      .section-title { font-size: 20px; }
+      .guest-selector {
+        .guest-item .guest-label { font-size: 14px; }
+        .guest-item .guest-control .guest-btn { width: 32px; height: 32px; font-size: 20px; }
+        .guest-item .guest-control .guest-value { font-size: 17px; }
+      }
     }
 
     .empty-text {

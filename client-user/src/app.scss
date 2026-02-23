@@ -33,13 +33,14 @@ page[data-theme="dark"] {
   background-color: #000000;
 }
 
-// 老年模式（字体放大）
-[data-font="elder"] {
-  font-size: 20px;
-}
+// 老年模式（字体和元素放大）
+[data-font="elder"], page[data-font="elder"] {
+  font-size: 120%;
 
-page[data-font="elder"] {
-  font-size: 20px;
+  * {
+    transform: scale(1.2);
+    transform-origin: top left;
+  }
 }
 
 // 通用样式

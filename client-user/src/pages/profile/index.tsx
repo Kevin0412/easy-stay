@@ -2,12 +2,14 @@ import { View, Text, Button } from '@tarojs/components'
 import React, { useState } from 'react'
 import Taro, { useDidShow } from '@tarojs/taro'
 import { useUserStore } from '../../store/userStore'
+import { useThemeStore } from '../../store/themeStore'
 import { getUserInfo } from '../../services/user'
 import { getFavorites, removeFavorite } from '../../services/favorite'
 import { getMyOrders, Order } from '../../services/order'
 import './index.scss'
 
 export default function Profile() {
+  const { theme } = useThemeStore()
   const { user, setUser, logout, isLoggedIn } = useUserStore()
   const [favorites, setFavorites] = useState<any[]>([])
   const [orders, setOrders] = useState<Order[]>([])
@@ -74,7 +76,7 @@ export default function Profile() {
   }
 
   return (
-    <View className='profile-container'>
+    <View className={`profile-container theme-${theme}`}>
       <View className='back-home-btn' onClick={() => Taro.navigateTo({ url: '/pages/home/index' })}>
         <Text className='back-home-text'>← 返回首页</Text>
       </View>

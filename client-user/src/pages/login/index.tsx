@@ -3,9 +3,11 @@ import React, { useState } from 'react'
 import Taro from '@tarojs/taro'
 import { login, register } from '../../services/user'
 import { useUserStore } from '../../store/userStore'
+import { useThemeStore } from '../../store/themeStore'
 import './index.scss'
 
 export default function Login() {
+  const { theme } = useThemeStore()
   const [isLogin, setIsLogin] = useState(true)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -58,7 +60,7 @@ export default function Login() {
   }
 
   return (
-    <View className='login-container'>
+    <View className={`login-container theme-${theme}`}>
       <View className='login-box'>
         <Text className='title'>{isLogin ? '登录' : '注册'}</Text>
 
