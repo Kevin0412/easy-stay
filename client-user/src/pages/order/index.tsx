@@ -35,7 +35,6 @@ export default function Order() {
     try {
       const totalRooms = rooms.reduce((s, r) => s + r.count, 0)
       for (const room of rooms) {
-        const roomGuests = Math.max(room.count, Math.round(Number(params.guests) * room.count / totalRooms))
         const roomPrice = Number(params.totalPrice) * room.count / totalRooms
         const res = await createOrder({
           hotel_id: Number(params.hotelId),
@@ -44,7 +43,7 @@ export default function Order() {
           check_out: params.checkOut,
           nights,
           total_price: parseFloat(roomPrice.toFixed(2)),
-          guests: roomGuests,
+          guests: room.count,
           room_count: room.count
         })
         if (!res.success) {
