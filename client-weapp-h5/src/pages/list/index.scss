@@ -1,0 +1,336 @@
+.list-container {
+  min-height: 100vh;
+  background: var(--bg-page, #f5f5f5);
+
+  &.theme-dark {
+    background: #121212 !important;
+
+    .search-bar, .sort-bar, .top-filter, .filter-summary, .filter-bar {
+      background: #1e1e1e !important;
+    }
+
+    .back-home-btn {
+      background: #1e1e1e !important;
+      .back-home-text { color: #1890ff !important; }
+    }
+
+    .search-input {
+      background: #2a2a2a !important;
+      color: #ffffff !important;
+    }
+
+    .sort-item, .top-filter-value, .summary-title, .filter-title {
+      color: #ffffff !important;
+    }
+
+    .summary-tag {
+      color: #1890ff !important;
+      background: #1a2a3a !important;
+    }
+
+    .top-filter-label {
+      color: #e0e0e0 !important;
+    }
+
+    .sort-item {
+      background: #2a2a2a !important;
+      border-color: #444 !important;
+      &.active {
+        background: #667eea !important;
+        border-color: #667eea !important;
+      }
+    }
+
+    .filter-item {
+      background: #2a2a2a !important;
+      color: #e0e0e0 !important;
+      &.active {
+        background: #1890ff !important;
+        color: #fff !important;
+      }
+    }
+
+    .tag-filter {
+      background: #1e1e1e !important;
+      .tag-chip { background: #2a2a2a !important; color: #e0e0e0 !important; border-color: #444 !important; &.active { background: #667eea !important; color: #fff !important; border-color: #667eea !important; } }
+    }
+
+    .filter-panel {
+      background: #1e1e1e !important;
+      .fp-label { color: #e0e0e0 !important; }
+      .fp-item { background: #2a2a2a !important; color: #e0e0e0 !important; &.active { background: #667eea !important; color: #fff !important; } }
+      .fp-price-input { background: #2a2a2a !important; color: #fff !important; border-color: #444 !important; }
+      .fp-sep { color: #999 !important; }
+    }
+
+    .hotel-card {
+      background: #1e1e1e !important;
+      .hotel-card-content {
+        .hotel-name { color: #fff !important; }
+        .hotel-name-en { color: #999 !important; }
+        .hotel-address { color: #ccc !important; }
+        .hotel-price { color: #ff6b35 !important; }
+      }
+    }
+  }
+
+  .search-bar {
+    display: flex;
+    gap: 12px;
+    padding: 16px 24px;
+    background: var(--bg-card, #fff);
+    margin-bottom: 8px;
+
+    .search-input {
+      flex: 1;
+      height: 80px;
+      padding: 0 16px;
+      background: var(--bg-secondary, #f5f5f5);
+      border-radius: 8px;
+      font-size: 28px;
+      color: var(--text-primary, #333);
+    }
+
+    .search-btn {
+      padding: 0 32px;
+      height: 80px;
+      background: #667eea;
+      color: #fff;
+      border-radius: 8px;
+      font-size: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @media (min-width: 768px) {
+      padding: 12px 32px;
+      .search-input { height: 48px; font-size: 20px; padding: 0 16px; }
+      .search-btn { height: 48px; line-height: 48px; font-size: 20px; padding: 0 28px; }
+    }
+  }
+
+  .tag-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px 24px;
+    background: var(--bg-card, #fff);
+    margin-bottom: 8px;
+
+    .tag-chip {
+      font-size: 24px;
+      padding: 8px 20px;
+      border-radius: 20px;
+      border: 1px solid #e8e8e8;
+      color: #666;
+      &.active { background: #667eea; color: #fff; border-color: #667eea; }
+    }
+  }
+
+  .sort-bar {
+    display: flex;
+    gap: 16px;
+    padding: 16px 24px;
+    background: var(--bg-card, #fff);
+    margin-bottom: 8px;
+
+    .sort-item {
+      font-size: 26px;
+      color: var(--text-secondary, #666);
+      padding: 8px 20px;
+      border-radius: 20px;
+      border: 1px solid var(--border-color, #e8e8e8);
+
+      &.active {
+        color: #667eea;
+        border-color: #667eea;
+        background: #f0f2ff;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .sort-item { font-size: 18px; padding: 8px 20px; }
+    }
+  }
+
+  // 返回首页按钮
+  .back-home-btn {
+    background: var(--bg-card, #fff);
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    display: flex;
+    align-items: center;
+
+    .back-home-text {
+      font-size: 28px;
+      color: #1890ff;
+      font-weight: 500;
+    }
+  }
+
+  // 顶部核心条件筛选
+  .top-filter {
+    display: flex;
+    align-items: center;
+    background: var(--bg-card, #fff);
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+    .top-filter-item {
+      flex: 1;
+      padding: 20px 24px;
+      text-align: center;
+
+      .top-filter-label {
+        display: block;
+        font-size: 22px;
+        color: var(--text-disabled, #999);
+        margin-bottom: 6px;
+      }
+
+      .top-filter-value {
+        display: block;
+        font-size: 28px;
+        color: var(--text-primary, #333);
+        font-weight: 500;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .top-filter-item {
+        padding: 16px 24px;
+        .top-filter-label { font-size: 16px; }
+        .top-filter-value { font-size: 20px; }
+      }
+    }
+
+    .top-filter-divider {
+      width: 80px;
+      text-align: center;
+
+      .top-filter-arrow {
+        font-size: 28px;
+        color: #ccc;
+      }
+
+      .top-filter-nights {
+        font-size: 24px;
+        color: #667eea;
+        font-weight: bold;
+      }
+    }
+  }
+
+  // 筛选条件展示
+  .filter-summary {
+    background: var(--bg-card, #fff);
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+    .summary-title {
+      font-size: 26px;
+      color: var(--text-secondary, #666);
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .summary-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+
+      .summary-tag {
+        padding: 8px 16px;
+        background: #e6f7ff;
+        color: #1890ff;
+        border-radius: 6px;
+        font-size: 24px;
+      }
+    }
+  }
+
+  // 筛选栏
+  .filter-bar {
+    background: var(--bg-card, #fff);
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+    .filter-title {
+      font-size: 28px;
+      color: var(--text-primary, #333);
+      margin-bottom: 16px;
+      font-weight: bold;
+    }
+
+    .filter-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+
+      .filter-item {
+        padding: 12px 24px;
+        background: var(--bg-secondary, #f5f5f5);
+        border-radius: 8px;
+        font-size: 28px;
+        color: var(--text-secondary, #666);
+        transition: all 0.3s;
+
+        &.active {
+          background: #1890ff;
+          color: #fff;
+        }
+      }
+    }
+  }
+
+  // 酒店列表
+  .hotel-list {
+    padding: 0 24px 24px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+      padding: 0 40px 40px;
+    }
+
+    @media (min-width: 1200px) {
+      grid-template-columns: repeat(3, 1fr);
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .empty-state,
+    .loading-state,
+    .no-more-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 80px 0;
+
+      .empty-text,
+      .loading-text,
+      .no-more-text {
+        font-size: 28px;
+        color: var(--text-disabled, #999);
+      }
+    }
+
+    .load-more,
+    .no-more {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 40px 0;
+
+      .load-more-text,
+      .no-more-text {
+        font-size: 26px;
+        color: #ccc;
+      }
+    }
+  }
+}

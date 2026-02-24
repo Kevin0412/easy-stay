@@ -1,0 +1,104 @@
+.hotel-card {
+  background: var(--bg-card, #fff);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  }
+
+  .hotel-card-image {
+    width: 100%;
+    height: 0;
+    padding-bottom: 66.67%;
+    position: relative;
+    overflow: hidden;
+
+    .image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .hotel-card-content {
+    padding: 24px;
+
+    .hotel-name {
+      font-size: 36px;
+      font-weight: bold;
+      color: var(--text-primary, #333);
+      margin-bottom: 8px;
+    }
+
+    .hotel-name-en {
+      font-size: 28px;
+      color: var(--text-disabled, #999);
+      margin-bottom: 12px;
+    }
+
+    .hotel-stars {
+      font-size: 32px;
+      color: #ffa500;
+      margin-bottom: 12px;
+    }
+
+    .hotel-rating {
+      font-size: 26px;
+      color: #ff9800;
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+
+    .hotel-address {
+      font-size: 28px;
+      color: var(--text-secondary, #666);
+      display: flex;
+      align-items: center;
+
+      &::before {
+        content: '📍';
+        margin-right: 8px;
+      }
+    }
+
+    .hotel-discount {
+      font-size: 24px;
+      color: #ff4d4f;
+      margin-top: 8px;
+      background: #fff1f0;
+      padding: 4px 12px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+
+    .hotel-price {
+      margin-top: 16px;
+      font-size: 36px;
+      font-weight: bold;
+      color: #ff6b35;
+
+      .price-unit {
+        font-size: 24px;
+        font-weight: normal;
+        color: #999;
+      }
+    }
+
+    @media (min-width: 768px) {
+      padding: 16px;
+      .hotel-name { font-size: 22px; }
+      .hotel-name-en { font-size: 16px; }
+      .hotel-stars { font-size: 18px; }
+      .hotel-rating { font-size: 16px; }
+      .hotel-address { font-size: 16px; }
+      .hotel-discount { font-size: 15px; }
+      .hotel-price { font-size: 24px; .price-unit { font-size: 16px; } }
+    }
+  }
+}
