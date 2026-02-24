@@ -296,7 +296,7 @@ easy-stay/
 │   │   └── app.js              # 应用入口
 │   └── package.json
 │
-├── client-user/                  # 用户端（Taro）
+├── client-weapp-h5/              # 用户端（Taro：微信小程序 / H5）
 │   ├── src/
 │   │   ├── pages/
 │   │   │   ├── home/           # 首页
@@ -327,7 +327,10 @@ easy-stay/
 │   │   └── App.tsx            # 应用入口
 │   └── package.json
 │
-└── README.md
+├── client-android/               # Android 客户端（Taro RN）🚧 开发中
+│   └── ...
+│
+└── readme.md
 ```
 
 ---
@@ -572,7 +575,7 @@ npm run dev
 #### 1. 安装依赖
 
 ```bash
-cd client-user
+cd client-weapp-h5
 npm install --legacy-peer-deps
 ```
 
@@ -625,12 +628,11 @@ npm run build:weapp
 
 ---
 
-### 📲 React Native (Android/iOS App)
+### 📲 Android App（Taro RN）🚧 开发中
 
-本项目使用 **WebView + Taro H5** 方案实现原生 APP，具有以下优势：
-- ✅ 开发效率高，一套代码多端运行
-- ✅ 支持热更新，无需重新编译 APK
-- ✅ 体验接近原生 APP
+本项目使用 **Taro 4.x** 构建 React Native 输出，与用户端共享业务代码。
+
+> ⚠️ client-android 目前仍在开发中，以下指南可能会随开发进度更新。
 
 #### 前置准备
 
@@ -665,14 +667,14 @@ npm start
 **步骤 2：启动 Taro H5 开发服务器**
 
 ```bash
-cd client-user
+cd client-weapp-h5
 npm run dev:h5
 # H5 运行在 http://localhost:10086
 ```
 
 **步骤 3：配置本机 IP 地址**
 
-编辑 `client-user/src/config/index.ts`，修改 `DEV_HOST` 为你的局域网 IP：
+编辑 `client-weapp-h5/src/config/index.ts`，修改 `DEV_HOST` 为你的局域网 IP：
 
 ```typescript
 // 查看本机 IP：ip addr 或 ifconfig
@@ -682,7 +684,7 @@ export const DEV_HOST = '192.168.x.x'  // 修改为你的 IP
 **步骤 4：编译并安装 APP**
 
 ```bash
-cd ../EasyStayNative
+cd ../client-android
 
 # 首次运行需要安装依赖
 npm install
@@ -698,16 +700,16 @@ npx react-native run-android
 
 **步骤 5：在手机上打开 APP**
 
-- APP 名称：**EasyStayNative**
+- APP 名称：**EasyStay**
 - APP 会自动加载 Taro H5 页面
 - 支持热更新：修改代码后 H5 自动刷新
 
 #### 快速重新部署
 
-如果修改了 APP 代码（EasyStayNative/App.tsx），需要重新编译：
+如果修改了 APP 代码（client-android/App.tsx），需要重新编译：
 
 ```bash
-cd EasyStayNative
+cd client-android
 
 # 卸载旧版本（可选）
 adb uninstall com.easystaynative
@@ -716,12 +718,12 @@ adb uninstall com.easystaynative
 npx react-native run-android
 ```
 
-如果只修改了 Taro 项目代码（client-user/src），**无需重新编译 APP**，H5 会自动热更新。
+如果只修改了 Taro 项目代码（client-weapp-h5/src），**无需重新编译 APP**，H5 会自动热更新。
 
 #### 生成 Release APK
 
 ```bash
-cd EasyStayNative/android
+cd client-android/android
 
 # 生成签名的 release APK
 ./gradlew assembleRelease
@@ -912,8 +914,13 @@ distributionUrl=https\://mirrors.cloud.tencent.com/gradle/gradle-8.3-all.zip
 
 ---
 
-### 剩余待办
+### 各子项目状态
 
-全部功能已完成。
+| 子项目 | 说明 | 状态 |
+| --- | --- | --- |
+| server | Node.js 后端服务 | ✅ 稳定 |
+| client-admin | 后台管理系统（React + AntD） | ✅ 稳定 |
+| client-weapp-h5 | 用户端（微信小程序 / H5） | ✅ 稳定 |
+| client-android | Android 客户端（Taro RN） | 🚧 开发中 |
 
 ---
