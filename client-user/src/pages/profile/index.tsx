@@ -2,6 +2,7 @@ import { View, Text, Button } from '@tarojs/components'
 import React, { useState } from 'react'
 import Taro, { useDidShow } from '@tarojs/taro'
 import { useUserStore } from '../../store/userStore'
+import { parseDate } from '../../utils/date'
 import { useThemeStore } from '../../store/themeStore'
 import { getUserInfo } from '../../services/user'
 import { getFavorites, removeFavorite } from '../../services/favorite'
@@ -107,7 +108,7 @@ export default function Profile() {
               <View key={order.id} className='order-item'>
                 <Text className='order-hotel'>{order.hotel_name}</Text>
                 <Text className='order-room'>{order.room_type} × {order.room_count || 1}间 | {order.guests || 1}人</Text>
-                <Text className='order-date'>{String(order.check_in).slice(0, 10)} 晚到 {String(order.check_out).slice(0, 10)} 早（{order.nights}晚）</Text>
+                <Text className='order-date'>{parseDate(order.check_in)} 晚到 {parseDate(order.check_out)} 早（{order.nights}晚）</Text>
                 <Text className='order-price'>¥{Number(order.total_price).toFixed(2)}</Text>
               </View>
             ))

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Card, Table, Button, Space, Modal, Form, Input, InputNumber, DatePicker, Select, message, Tag } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import dayjs from 'dayjs'
+import { parseDate } from '@/utils/date'
 import {
   getPriceStrategiesByHotelId,
   createPriceStrategy,
@@ -48,7 +49,7 @@ export default function PriceStrategyManager({ hotelId }: PriceStrategyManagerPr
         strategy_name: strategy.strategy_name,
         room_id: strategy.room_id ?? 'all',
         discount: strategy.discount,
-        date_range: [dayjs(strategy.start_date), dayjs(strategy.end_date)],
+        date_range: [parseDate(strategy.start_date), parseDate(strategy.end_date)],
       })
     } else {
       form.resetFields()
@@ -105,7 +106,7 @@ export default function PriceStrategyManager({ hotelId }: PriceStrategyManagerPr
     return <Tag color="default">{room ? room.room_type : `房型 #${room_id}`}</Tag>
   }
 
-  const isExpired = (end_date: string) => dayjs(end_date).isBefore(dayjs(), 'day')
+  const isExpired = (end_date: string) => parseDate(end_date).isBefore(dayjs(), 'day')
 
   const columns = [
     {

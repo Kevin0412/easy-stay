@@ -2,6 +2,7 @@ import { View, Text, Swiper, SwiperItem, Image } from '@tarojs/components'
 import React, { useState } from 'react'
 import Taro, { useLoad } from '@tarojs/taro'
 import { getHotelById, Hotel } from '../../services/hotel'
+import { parseDate } from '../../utils/date'
 import { getRoomsByHotelId, Room, calculatePrice } from '../../services/room'
 import { checkFavorite, addFavorite, removeFavorite } from '../../services/favorite'
 import { useUserStore } from '../../store/userStore'
@@ -249,7 +250,7 @@ export default function Detail() {
         <Text className='hotel-name-en'>{hotel.name_en}</Text>
         <View className='hotel-stars'>{renderStars()}</View>
         <Text className='hotel-address'>地址：{hotel.address}</Text>
-        <Text className='hotel-open-date'>开业时间：{hotel.open_date ? String(hotel.open_date).slice(0, 10) : ''}</Text>
+        <Text className='hotel-open-date'>开业时间：{hotel.open_date ? parseDate(hotel.open_date) : ''}</Text>
         {hotel.nearby && (
           <View className='hotel-nearby'>
             <Text className='nearby-title'>附近景点：</Text>

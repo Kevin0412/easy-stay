@@ -4,6 +4,7 @@ import { Form, Input, InputNumber, DatePicker, Button, Card, message, Space, Che
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons'
 import dayjs from 'dayjs'
 import { getHotelById, createHotel, updateHotel, HotelFormData } from '@/services/hotel'
+import { parseDate } from '@/utils/date'
 import RoomManager from './components/room-manager'
 import PriceStrategyManager from './components/price-strategy-manager'
 import styles from './index.module.scss'
@@ -104,7 +105,7 @@ export default function HotelEdit() {
         name_en: hotel.name_en,
         address: hotel.address,
         star: hotel.star,
-        open_date: hotel.open_date ? dayjs(hotel.open_date) : null,
+        open_date: hotel.open_date ? parseDate(hotel.open_date) : null,
         cover_image: hotel.cover_image || '',
         images: imageList,
         tags: tagList,
