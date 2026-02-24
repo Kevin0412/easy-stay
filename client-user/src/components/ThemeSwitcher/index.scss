@@ -1,14 +1,23 @@
 .theme-switcher {
   display: flex;
-  gap: 16px;
+  flex-direction: row;
   align-items: center;
+}
 
-  .ts-btn {
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-size: 24px;
-    background: var(--bg-secondary, #f5f5f5);
-    color: var(--text-primary, #333);
-    &.active { background: #667eea; color: #fff; }
-  }
+.ts-btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 24px;
+  background-color: #f5f5f5;
+  color: #333;
+  margin-right: 16px;
+}
+
+.ts-btn-active {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 24px;
+  margin-right: 16px;
+  background-color: #667eea;
+  color: #fff;
 }

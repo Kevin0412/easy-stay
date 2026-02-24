@@ -11,6 +11,7 @@ import './index.scss'
 
 export default function Profile() {
   const { theme } = useThemeStore()
+  const d = theme === 'dark'
   const { user, setUser, logout, isLoggedIn } = useUserStore()
   const [favorites, setFavorites] = useState<any[]>([])
   const [orders, setOrders] = useState<Order[]>([])
@@ -67,12 +68,12 @@ export default function Profile() {
 
   if (!isLoggedIn()) {
     return (
-      <View className={`profile-container theme-${theme}`}>
-        <View className='back-home-btn' onClick={() => Taro.reLaunch({ url: '/pages/home/index' })}>
-          <Text className='back-home-text'>← 返回首页</Text>
+      <View className={d ? 'profile-container-dark' : 'profile-container'}>
+        <View className={d ? 'back-home-btn-dark' : 'back-home-btn'} onClick={() => Taro.reLaunch({ url: '/pages/home/index' })}>
+          <Text className={d ? 'back-home-text-dark' : 'back-home-text'}>← 返回首页</Text>
         </View>
         <View className='not-login'>
-          <Text className='not-login-text'>您还未登录</Text>
+          <Text className={d ? 'not-login-text-dark' : 'not-login-text'}>您还未登录</Text>
           <Button className='login-btn' onClick={handleLogin}>去登录</Button>
         </View>
       </View>
@@ -80,22 +81,22 @@ export default function Profile() {
   }
 
   return (
-    <View className={`profile-container theme-${theme}`}>
-      <View className='back-home-btn' onClick={() => Taro.reLaunch({ url: '/pages/home/index' })}>
-        <Text className='back-home-text'>← 返回首页</Text>
+    <View className={d ? 'profile-container-dark' : 'profile-container'}>
+      <View className={d ? 'back-home-btn-dark' : 'back-home-btn'} onClick={() => Taro.reLaunch({ url: '/pages/home/index' })}>
+        <Text className={d ? 'back-home-text-dark' : 'back-home-text'}>← 返回首页</Text>
       </View>
       <View className='user-info'>
-        <View className='avatar'>{user?.username?.charAt(0).toUpperCase()}</View>
+        <View className='avatar'><Text className='avatar-text'>{user?.username?.charAt(0).toUpperCase()}</Text></View>
         <Text className='username'>{user?.username}</Text>
         <Text className='email'>{user?.email}</Text>
       </View>
 
-      <View className='tab-bar'>
-        <View className={`tab-item ${tab === 'orders' ? 'active' : ''}`} onClick={() => setTab('orders')}>
-          <Text>我的订单</Text>
+      <View className={d ? 'tab-bar-dark' : 'tab-bar'}>
+        <View className={tab === 'orders' ? 'tab-item-active' : (d ? 'tab-item-dark' : 'tab-item')} onClick={() => setTab('orders')}>
+          <Text className={tab === 'orders' ? 'tab-text-active' : (d ? 'tab-text-dark' : 'tab-text-dark')}>我的订单</Text>
         </View>
-        <View className={`tab-item ${tab === 'favorites' ? 'active' : ''}`} onClick={() => setTab('favorites')}>
-          <Text>收藏的酒店</Text>
+        <View className={tab === 'favorites' ? 'tab-item-active' : (d ? 'tab-item-dark' : 'tab-item')} onClick={() => setTab('favorites')}>
+          <Text className={tab === 'favorites' ? 'tab-text-active' : (d ? 'tab-text-dark' : 'tab-text-dark')}>收藏的酒店</Text>
         </View>
       </View>
 
@@ -105,10 +106,10 @@ export default function Profile() {
             <View className='empty-tip'><Text className='empty-text'>暂无订单</Text></View>
           ) : (
             orders.map(order => (
-              <View key={order.id} className='order-item'>
-                <Text className='order-hotel'>{order.hotel_name}</Text>
-                <Text className='order-room'>{order.room_type} × {order.room_count || 1}间 | {order.guests || 1}人</Text>
-                <Text className='order-date'>{parseDate(order.check_in)} 晚到 {parseDate(order.check_out)} 早（{order.nights}晚）</Text>
+              <View key={order.id} className={d ? 'order-item-dark' : 'order-item'}>
+                <Text className={d ? 'order-hotel-dark' : 'order-hotel'}>{order.hotel_name}</Text>
+                <Text className={d ? 'order-room-dark' : 'order-room'}>{order.room_type} × {order.room_count || 1}间 | {order.guests || 1}人</Text>
+                <Text className={d ? 'order-date-dark' : 'order-date'}>{String(order.check_in).slice(0, 10)} 晚到 {String(order.check_out).slice(0, 10)} 早（{order.nights}晚）</Text>
                 <Text className='order-price'>¥{Number(order.total_price).toFixed(2)}</Text>
               </View>
             ))
@@ -124,13 +125,13 @@ export default function Profile() {
             </View>
           ) : (
             favorites.map(hotel => (
-              <View key={hotel.id} className='fav-item' onClick={() => Taro.navigateTo({ url: `/pages/detail/index?id=${hotel.id}` })}>
+              <View key={hotel.id} className={d ? 'fav-item-dark' : 'fav-item'} onClick={() => Taro.navigateTo({ url: `/pages/detail/index?id=${hotel.id}` })}>
                 <View className='fav-info'>
-                  <Text className='fav-name'>{hotel.name_cn}</Text>
-                  <Text className='fav-addr'>{hotel.address}</Text>
+                  <Text className={d ? 'fav-name-dark' : 'fav-name'}>{hotel.name_cn}</Text>
+                  <Text className={d ? 'fav-addr-dark' : 'fav-addr'}>{hotel.address}</Text>
                   <Text className='fav-star'>{'★'.repeat(hotel.star)}</Text>
                 </View>
-                <View className='fav-remove' onClick={(e) => { e.stopPropagation(); handleUnfavorite(hotel.id) }}>
+                <View className='fav-remove' onClick={() => { handleUnfavorite(hotel.id) }}>
                   <Text className='fav-remove-text'>取消</Text>
                 </View>
               </View>
@@ -139,8 +140,8 @@ export default function Profile() {
         </View>
       )}
 
-      <View className='logout-bar'>
-        <View className='logout-btn' onClick={handleLogout}><Text>退出登录</Text></View>
+      <View className={d ? 'logout-bar-dark' : 'logout-bar'}>
+        <View className={d ? 'logout-btn-dark' : 'logout-btn'} onClick={handleLogout}><Text className={d ? 'logout-text-dark' : 'logout-btn-text'}>退出登录</Text></View>
       </View>
     </View>
   )

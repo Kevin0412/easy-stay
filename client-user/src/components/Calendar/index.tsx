@@ -3,6 +3,11 @@ import React, { useState } from 'react'
 import { useThemeStore } from '../../store/themeStore'
 import './index.scss'
 
+let RNModal: any = null
+if (process.env.TARO_ENV === 'rn') {
+  RNModal = require('react-native').Modal
+}
+
 interface CalendarProps {
   startDate: string
   endDate: string
@@ -29,6 +34,7 @@ function firstDayOfMonth(y: number, m: number) {
 
 export default function Calendar({ startDate, endDate, onChange, onClose }: CalendarProps) {
   const { theme } = useThemeStore()
+  const d = theme === 'dark'
   const today = new Date()
   const [viewYear, setViewYear] = useState(today.getFullYear())
   const [viewMonth, setViewMonth] = useState(today.getMonth() + 1)
@@ -59,37 +65,42 @@ export default function Calendar({ startDate, endDate, onChange, onClose }: Cale
   }
 
   const getDayClass = (dateStr: string) => {
-    const classes = ['cal-day']
-    if (dateStr < todayStr) classes.push('disabled')
-    if (dateStr === startDate || dateStr === endDate) classes.push('selected')
-    if (startDate && endDate && dateStr > startDate && dateStr < endDate) classes.push('in-range')
-    if (dateStr === todayStr) classes.push('today')
-    return classes.join(' ')
+    if (dateStr === startDate || dateStr === endDate) return 'cal-day-selected'
+    if (startDate && endDate && dateStr > startDate && dateStr < endDate) return 'cal-day-in-range'
+    return 'cal-day'
+  }
+
+  const getDayTextClass = (dateStr: string) => {
+    if (dateStr === startDate || dateStr === endDate) return 'cal-day-text-selected'
+    if (startDate && endDate && dateStr > startDate && dateStr < endDate) return 'cal-day-text-in-range'
+    if (dateStr < todayStr) return d ? 'cal-day-text-disabled-dark' : 'cal-day-text-disabled'
+    if (dateStr === todayStr) return 'cal-day-text-today'
+    return d ? 'cal-day-text-dark' : 'cal-day-text'
   }
 
   const days = daysInMonth(viewYear, viewMonth)
   const firstDay = firstDayOfMonth(viewYear, viewMonth)
   const cells: (string | null)[] = Array(firstDay).fill(null)
-  for (let d = 1; d <= days; d++) cells.push(formatDate(viewYear, viewMonth, d))
+  for (let i = 1; i <= days; i++) cells.push(formatDate(viewYear, viewMonth, i))
 
   const nights = startDate && endDate
     ? Math.round((new Date(endDate).getTime() - new Date(startDate).getTime()) / 86400000)
     : 0
 
-  return (
+  const calendarContent = (
     <View className='calendar-overlay' onClick={onClose}>
-      <View className={`calendar-panel ${theme === 'dark' ? 'theme-dark' : ''}`} onClick={e => e.stopPropagation()}>
+      <View className={d ? 'calendar-panel-dark' : 'calendar-panel'} onClick={() => {}}>
         <View className='cal-header'>
-          <View className='cal-nav' onClick={prevMonth}>&lt;</View>
-          <Text className='cal-title'>{viewYear}年{viewMonth}月</Text>
-          <View className='cal-nav' onClick={nextMonth}>&gt;</View>
+          <View className='cal-nav' onClick={prevMonth}><Text className={d ? 'cal-nav-text-dark' : 'cal-nav-text'}>&lt;</Text></View>
+          <Text className={d ? 'cal-title-dark' : 'cal-title'}>{viewYear}年{viewMonth}月</Text>
+          <View className='cal-nav' onClick={nextMonth}><Text className={d ? 'cal-nav-text-dark' : 'cal-nav-text'}>&gt;</Text></View>
         </View>
 
         {startDate && (
-          <View className='cal-range-tip'>
-            <Text>{startDate || '入住'}</Text>
+          <View className={d ? 'cal-range-tip-dark' : 'cal-range-tip'}>
+            <Text className={d ? 'cal-range-text-dark' : 'cal-range-text'}>{startDate || '入住'}</Text>
             {nights > 0 && <Text className='cal-nights'>{nights}晚</Text>}
-            <Text>{endDate || '离店'}</Text>
+            <Text className={d ? 'cal-range-text-dark' : 'cal-range-text'}>{endDate || '离店'}</Text>
           </View>
         )}
 
@@ -99,17 +110,27 @@ export default function Calendar({ startDate, endDate, onChange, onClose }: Cale
 
         <View className='cal-grid'>
           {cells.map((dateStr, i) => (
-            <View key={i} className={dateStr ? getDayClass(dateStr) : 'cal-day empty'} onClick={() => dateStr && handleDayClick(dateStr)}>
-              {dateStr && <Text className='cal-day-text'>{parseInt(dateStr.split('-')[2])}</Text>}
+            <View key={i} className={dateStr ? getDayClass(dateStr) : 'cal-day-empty'} onClick={() => dateStr && handleDayClick(dateStr)}>
+              {dateStr && <Text className={getDayTextClass(dateStr)}>{parseInt(dateStr.split('-')[2])}</Text>}
             </View>
           ))}
         </View>
 
         <View className='cal-footer'>
-          <View className='cal-clear' onClick={() => onChange('', '')}>清除</View>
-          <View className='cal-close' onClick={onClose}>关闭</View>
+          <View className={d ? 'cal-clear-dark' : 'cal-clear'} onClick={() => onChange('', '')}><Text className={d ? 'cal-clear-text-dark' : 'cal-clear-text'}>清除</Text></View>
+          <View className='cal-close' onClick={onClose}><Text className='cal-close-text'>关闭</Text></View>
         </View>
       </View>
     </View>
   )
+
+  if (RNModal) {
+    return (
+      <RNModal visible transparent animationType='slide' onRequestClose={onClose}>
+        {calendarContent}
+      </RNModal>
+    )
+  }
+
+  return calendarContent
 }

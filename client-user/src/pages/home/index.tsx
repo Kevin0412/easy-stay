@@ -1,4 +1,4 @@
-import { View, Text, Input, Swiper, SwiperItem, Picker } from '@tarojs/components'
+import { View, Text, Input, Swiper, SwiperItem, Picker, Image } from '@tarojs/components'
 import React, { useState, useEffect } from 'react'
 import Taro from '@tarojs/taro'
 import { getApiBaseUrl } from '../../config'
@@ -18,6 +18,7 @@ interface Hotel {
 
 export default function Home() {
   const { theme } = useThemeStore()
+  const d = theme === 'dark'
   const [keyword, setKeyword] = useState('')
   const [selectedStar, setSelectedStar] = useState<number | undefined>(undefined)
   const [carouselHotels, setCarouselHotels] = useState<Hotel[]>([])
@@ -33,10 +34,9 @@ export default function Home() {
 
   // 恢复上次搜索偏好 + 初始化
   useEffect(() => {
-    try {
-      const saved = Taro.getStorageSync('last_search')
-      if (saved) {
-        const pref = JSON.parse(saved)
+    Taro.getStorage({ key: 'last_search' }).then(res => {
+      if (res.data) {
+        const pref = JSON.parse(res.data as string)
         if (pref.keyword) setKeyword(pref.keyword)
         if (pref.selectedStar) setSelectedStar(pref.selectedStar)
         if (pref.minPrice) setMinPrice(pref.minPrice)
@@ -44,7 +44,7 @@ export default function Home() {
         if (pref.checkInDate) setCheckInDate(pref.checkInDate)
         if (pref.checkOutDate) setCheckOutDate(pref.checkOutDate)
       }
-    } catch (e) {}
+    }).catch(() => {})
     fetchCarouselHotels()
     getLocation()
   }, [])
@@ -124,7 +124,7 @@ export default function Home() {
 
     // 缓存用户搜索偏好
     try {
-      Taro.setStorageSync('last_search', JSON.stringify({ keyword: keyword.trim(), selectedStar, minPrice, maxPrice, checkInDate, checkOutDate }))
+      Taro.setStorage({ key: 'last_search', data: JSON.stringify({ keyword: keyword.trim(), selectedStar, minPrice, maxPrice, checkInDate, checkOutDate }) })
     } catch (e) {}
 
     const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : ''
@@ -144,7 +144,7 @@ export default function Home() {
   }
 
   return (
-    <View className={`home-container theme-${theme}`}>
+    <View className={d ? 'home-container-dark' : 'home-container'}>
       {/* 顶部导航 */}
       <View className='top-nav'>
         <Text className='nav-title'>易宿</Text>
@@ -170,11 +170,12 @@ export default function Home() {
           >
             {carouselHotels.map(hotel => (
               <SwiperItem key={hotel.id} onClick={() => handleCarouselClick(hotel.id)}>
-                <View className='carousel-item' style={{ backgroundImage: `url(${hotel.cover_image})` }}>
+                <View className='carousel-item'>
+                  <Image className='carousel-image' src={hotel.cover_image || ''} mode='aspectFill' />
                   <View className='carousel-content'>
                     <Text className='carousel-title'>{hotel.name_cn}</Text>
                     <Text className='carousel-subtitle'>{hotel.address}</Text>
-                    <View className='carousel-star'>{'★'.repeat(hotel.star)}</View>
+                    <Text className='carousel-star'>{'★'.repeat(hotel.star)}</Text>
                   </View>
                 </View>
               </SwiperItem>
@@ -190,9 +191,9 @@ export default function Home() {
       </View>
 
       {/* 搜索区域 */}
-      <View className='search-section'>
+      <View className={d ? 'search-section-dark' : 'search-section'}>
         {/* 当前地点 */}
-        <View className='location-row'>
+        <View className={d ? 'location-row-dark' : 'location-row'}>
           <Text className='location-icon'>📍</Text>
           <Picker
             mode='selector'
@@ -200,96 +201,87 @@ export default function Home() {
             value={CITIES.indexOf(city)}
             onChange={(e) => setCity(CITIES[Number(e.detail.value)])}
           >
-            <Text className='location-text'>{city || '选择城市'}</Text>
+            <Text className={d ? 'location-text-dark' : 'location-text'}>{city || '选择城市'}</Text>
           </Picker>
-          <Text className='location-locate' onClick={getLocation}>定位</Text>
+          <Text className={d ? 'location-locate-dark' : 'location-locate'} onClick={getLocation}>定位</Text>
         </View>
 
         <View className='search-box'>
           <Input
-            className='search-input'
+            className={d ? 'search-input-dark' : 'search-input'}
             placeholder='搜索酒店名称或地址'
-            placeholderStyle={theme === 'dark' ? 'color: #666' : ''}
+            placeholderStyle={d ? 'color: #666' : ''}
             value={keyword}
             onInput={(e) => setKeyword(e.detail.value)}
           />
         </View>
 
         {/* 日期选择 */}
-        <View className='date-row' onClick={() => setShowCalendar(true)}>
+        <View className={d ? 'date-row-dark' : 'date-row'} onClick={() => setShowCalendar(true)}>
           <View className='date-item'>
-            <Text className='date-item-label'>入住</Text>
-            <Text className={checkInDate ? 'date-item-value' : 'date-item-placeholder'}>{checkInDate || '选择日期'}</Text>
+            <Text className={d ? 'date-item-label-dark' : 'date-item-label'}>入住</Text>
+            <Text className={checkInDate ? (d ? 'date-item-value-dark' : 'date-item-value') : 'date-item-placeholder'}>{checkInDate || '选择日期'}</Text>
           </View>
           <View className='date-divider'>
             {checkInDate && checkOutDate && checkInDate < checkOutDate
               ? <Text className='nights-count'>{Math.round((new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) / 86400000)}晚</Text>
-              : <Text className='date-arrow'>→</Text>}
+              : <Text className={d ? 'date-arrow-dark' : 'date-arrow'}>→</Text>}
           </View>
           <View className='date-item'>
-            <Text className='date-item-label'>离店</Text>
-            <Text className={checkOutDate ? 'date-item-value' : 'date-item-placeholder'}>{checkOutDate || '选择日期'}</Text>
+            <Text className={d ? 'date-item-label-dark' : 'date-item-label'}>离店</Text>
+            <Text className={checkOutDate ? (d ? 'date-item-value-dark' : 'date-item-value') : 'date-item-placeholder'}>{checkOutDate || '选择日期'}</Text>
           </View>
         </View>
 
-        {showCalendar && (
-          <Calendar
-            startDate={checkInDate}
-            endDate={checkOutDate}
-            onChange={(s, e) => { setCheckInDate(s); setCheckOutDate(e) }}
-            onClose={() => setShowCalendar(false)}
-          />
-        )}
-
         {/* 星级筛选 */}
         <View className='filter-section'>
-          <Text className='filter-label'>星级筛选：</Text>
+          <Text className={d ? 'filter-label-dark' : 'filter-label'}>星级筛选：</Text>
           <View className='star-options'>
             <View
-              className={`star-item ${selectedStar === undefined ? 'active' : ''}`}
+              className={selectedStar === undefined ? 'star-item-active' : (d ? 'star-item-dark' : 'star-item')}
               onClick={() => handleSelectStar(undefined)}
             >
-              全部
+              <Text className={d ? 'star-text-dark' : 'star-text'}>全部</Text>
             </View>
             {[5, 4, 3, 2, 1].map(star => (
               <View
                 key={star}
-                className={`star-item ${selectedStar === star ? 'active' : ''}`}
+                className={selectedStar === star ? 'star-item-active' : (d ? 'star-item-dark' : 'star-item')}
                 onClick={() => handleSelectStar(star)}
               >
-                {star}星
+                <Text className={d ? 'star-text-dark' : 'star-text'}>{star}星</Text>
               </View>
             ))}
           </View>
         </View>
 
         {/* 高级筛选切换 */}
-        <View className='advanced-toggle' onClick={() => setShowAdvancedFilter(!showAdvancedFilter)}>
-          <Text className='toggle-text'>
+        <View className={d ? 'advanced-toggle-dark' : 'advanced-toggle'} onClick={() => setShowAdvancedFilter(!showAdvancedFilter)}>
+          <Text className={d ? 'toggle-text-dark' : 'toggle-text'}>
             {showAdvancedFilter ? '收起价格筛选 ▲' : '展开价格筛选 ▼'}
           </Text>
         </View>
 
         {/* 高级筛选面板 */}
         {showAdvancedFilter && (
-          <View className='advanced-filter'>
+          <View className={d ? 'advanced-filter-dark' : 'advanced-filter'}>
             <View className='filter-row'>
-              <Text className='filter-label'>价格范围：</Text>
+              <Text className={d ? 'filter-label-dark' : 'filter-label'}>价格范围：</Text>
               <View className='price-inputs'>
                 <Input
-                  className='price-input'
+                  className={d ? 'price-input-dark' : 'price-input'}
                   type='number'
                   placeholder='最低价'
-                  placeholderStyle={theme === 'dark' ? 'color: #666' : ''}
+                  placeholderStyle={d ? 'color: #666' : ''}
                   value={minPrice}
                   onInput={(e) => setMinPrice(e.detail.value)}
                 />
-                <Text className='price-separator'>-</Text>
+                <Text className={d ? 'price-separator-dark' : 'price-separator'}>-</Text>
                 <Input
-                  className='price-input'
+                  className={d ? 'price-input-dark' : 'price-input'}
                   type='number'
                   placeholder='最高价'
-                  placeholderStyle={theme === 'dark' ? 'color: #666' : ''}
+                  placeholderStyle={d ? 'color: #666' : ''}
                   value={maxPrice}
                   onInput={(e) => setMaxPrice(e.detail.value)}
                 />
@@ -305,8 +297,8 @@ export default function Home() {
       </View>
 
       {/* 快捷标签 */}
-      <View className='quick-section'>
-        <Text className='section-title'>快捷标签</Text>
+      <View className={d ? 'quick-section-dark' : 'quick-section'}>
+        <Text className={d ? 'section-title-dark' : 'section-title'}>快捷标签</Text>
         <View className='quick-tags'>
           {[
             { label: '五星酒店', params: 'star=5' },
@@ -319,13 +311,22 @@ export default function Home() {
             const cityParam = city && city !== '全国' ? `city=${encodeURIComponent(city.replace('市', ''))}` : ''
             const query = [tag.params, cityParam].filter(Boolean).join('&')
             return (
-              <View key={tag.label} className='tag-item' onClick={() => Taro.navigateTo({ url: `/pages/list/index${query ? '?' + query : ''}` })}>
-                {tag.label}
+              <View key={tag.label} className={d ? 'tag-item-dark' : 'tag-item'} onClick={() => Taro.navigateTo({ url: `/pages/list/index${query ? '?' + query : ''}` })}>
+                <Text className={d ? 'tag-text-dark' : 'tag-text'}>{tag.label}</Text>
               </View>
             )
           })}
         </View>
       </View>
+
+      {showCalendar && (
+        <Calendar
+          startDate={checkInDate}
+          endDate={checkOutDate}
+          onChange={(s, e) => { setCheckInDate(s); setCheckOutDate(e) }}
+          onClose={() => setShowCalendar(false)}
+        />
+      )}
     </View>
   )
 }

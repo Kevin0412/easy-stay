@@ -7,7 +7,7 @@ export default function ThemeSwitcher() {
   const { theme, toggleTheme } = useThemeStore()
   return (
     <View className='theme-switcher'>
-      <View className={`ts-btn ${theme === 'dark' ? 'active' : ''}`} onClick={toggleTheme}>
+      <View className={theme === 'dark' ? 'ts-btn-active' : 'ts-btn'} onClick={toggleTheme}>
         <Text>{theme === 'dark' ? '🌙 深色' : '☀️ 浅色'}</Text>
       </View>
     </View>

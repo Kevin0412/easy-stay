@@ -12,6 +12,7 @@ import './index.scss'
 
 export default function Detail() {
   const { theme } = useThemeStore()
+  const d = theme === 'dark'
   const [hotel, setHotel] = useState<Hotel | null>(null)
   const [rooms, setRooms] = useState<Room[]>([])
   const [loading, setLoading] = useState(false)
@@ -177,30 +178,30 @@ export default function Detail() {
 
   if (loading) {
     return (
-      <View className='detail-container'>
-        <Text className='loading-text'>加载中...</Text>
+      <View className={d ? 'detail-container-dark' : 'detail-container'}>
+        <Text className={d ? 'loading-text-dark' : 'loading-text'}>加载中...</Text>
       </View>
     )
   }
 
   if (!hotel) {
     return (
-      <View className='detail-container'>
-        <Text className='error-text'>酒店信息不存在</Text>
+      <View className={d ? 'detail-container-dark' : 'detail-container'}>
+        <Text className={d ? 'error-text-dark' : 'error-text'}>酒店信息不存在</Text>
       </View>
     )
   }
 
   return (
-    <View className={`detail-container theme-${theme}`}>
+    <View className={d ? 'detail-container-dark' : 'detail-container'}>
       {/* 顶部导航头：酒店名称 + 返回 + 收藏 */}
-      <View className='top-bar'>
+      <View className={d ? 'top-bar-dark' : 'top-bar'}>
         <View className='back-btn' onClick={handleBack}>
-          <Text className='back-text'>← 返回</Text>
+          <Text className={d ? 'back-text-dark' : 'back-text'}>← 返回</Text>
         </View>
-        <Text className='top-bar-title' numberOfLines={1}>{hotel.name_cn}</Text>
+        <Text className={d ? 'top-bar-title-dark' : 'top-bar-title'} numberOfLines={1}>{hotel.name_cn}</Text>
         <View className='fav-btn' onClick={handleToggleFav}>
-          <Text className={`fav-icon ${isFav ? 'active' : ''}`}>{isFav ? '♥' : '♡'}</Text>
+          <Text className={isFav ? 'fav-icon-active' : (d ? 'fav-icon-dark' : 'fav-icon')}>{isFav ? '♥' : '♡'}</Text>
         </View>
       </View>
 
@@ -245,26 +246,26 @@ export default function Detail() {
       )}
 
       {/* 酒店信息 */}
-      <View className='hotel-info'>
-        <Text className='hotel-name'>{hotel.name_cn}</Text>
-        <Text className='hotel-name-en'>{hotel.name_en}</Text>
-        <View className='hotel-stars'>{renderStars()}</View>
-        <Text className='hotel-address'>地址：{hotel.address}</Text>
-        <Text className='hotel-open-date'>开业时间：{hotel.open_date ? parseDate(hotel.open_date) : ''}</Text>
+      <View className={d ? 'hotel-info-dark' : 'hotel-info'}>
+        <Text className={d ? 'hotel-name-dark' : 'hotel-name'}>{hotel.name_cn}</Text>
+        <Text className={d ? 'hotel-name-en-dark' : 'hotel-name-en'}>{hotel.name_en}</Text>
+        <Text className='hotel-stars'>{renderStars()}</Text>
+        <Text className={d ? 'hotel-address-dark' : 'hotel-address'}>地址：{hotel.address}</Text>
+        <Text className={d ? 'hotel-open-date-dark' : 'hotel-open-date'}>开业时间：{hotel.open_date ? String(hotel.open_date).slice(0, 10) : ''}</Text>
         {hotel.nearby && (
-          <View className='hotel-nearby'>
-            <Text className='nearby-title'>附近景点：</Text>
+          <View className={d ? 'hotel-nearby-dark' : 'hotel-nearby'}>
+            <Text className={d ? 'nearby-title-dark' : 'nearby-title'}>附近景点：</Text>
             {hotel.nearby.split(',').map((item, i) => (
-              <Text key={i} className='nearby-item'>{item}</Text>
+              <Text key={i} className={d ? 'nearby-item-dark' : 'nearby-item'}>{item}</Text>
             ))}
           </View>
         )}
         {hotel.tags && (
-          <View className='hotel-tags'>
-            <Text className='tags-title'>设施服务：</Text>
+          <View className={d ? 'hotel-tags-dark' : 'hotel-tags'}>
+            <Text className={d ? 'tags-title-dark' : 'tags-title'}>设施服务：</Text>
             <View className='tags-list'>
               {hotel.tags.split(',').map((tag, i) => (
-                <Text key={i} className='tag-item'>{tag.trim()}</Text>
+                <Text key={i} className={d ? 'tag-item-dark' : 'tag-item'}>{tag.trim()}</Text>
               ))}
             </View>
           </View>
@@ -272,33 +273,33 @@ export default function Detail() {
       </View>
 
       {/* 日历+入住间夜Banner */}
-      <View className='date-banner' onClick={() => setShowCalendar(true)}>
+      <View className={d ? 'date-banner-dark' : 'date-banner'} onClick={() => setShowCalendar(true)}>
         <View className='date-item'>
-          <Text className='date-label'>入住</Text>
-          <Text className='date-value'>{startDate || '选择日期'}</Text>
+          <Text className={d ? 'date-label-dark' : 'date-label'}>入住</Text>
+          <Text className={d ? 'date-value-dark' : 'date-value'}>{startDate || '选择日期'}</Text>
         </View>
         <View className='date-divider'>
           {startDate && endDate && startDate < endDate ? (
             <Text className='date-nights'>{Math.round((new Date(endDate).getTime() - new Date(startDate).getTime()) / 86400000)}晚</Text>
           ) : (
-            <Text className='date-arrow'>→</Text>
+            <Text className={d ? 'date-arrow-dark' : 'date-arrow'}>→</Text>
           )}
         </View>
         <View className='date-item'>
-          <Text className='date-label'>离店</Text>
-          <Text className='date-value'>{endDate || '选择日期'}</Text>
+          <Text className={d ? 'date-label-dark' : 'date-label'}>离店</Text>
+          <Text className={d ? 'date-value-dark' : 'date-value'}>{endDate || '选择日期'}</Text>
         </View>
       </View>
 
       {/* 房型列表 */}
-      <View className='room-section'>
-        <Text className='section-title'>房型列表</Text>
-        <View className='guest-selector'>
+      <View className={d ? 'room-section-dark' : 'room-section'}>
+        <Text className={d ? 'section-title-dark' : 'section-title'}>房型列表</Text>
+        <View className={d ? 'guest-selector-dark' : 'guest-selector'}>
           <View className='guest-item'>
-            <Text className='guest-label'>入住人数</Text>
+            <Text className={d ? 'guest-label-dark' : 'guest-label'}>入住人数</Text>
             <View className='guest-control'>
-              <View className='guest-btn' onClick={() => setGuests(Math.max(1, guests - 1))}><Text>-</Text></View>
-              <Text className='guest-value'>{guests}人</Text>
+              <View className='guest-btn' onClick={() => setGuests(Math.max(1, guests - 1))}><Text className={d ? 'guest-btn-text-dark' : 'guest-btn-text'}>-</Text></View>
+              <Text className={d ? 'guest-value-dark' : 'guest-value'}>{guests}人</Text>
               <View className='guest-btn' onClick={() => {
                 const newGuests = guests + 1
                 if (newGuests > calcMaxGuests(roomCounts)) {
@@ -306,18 +307,18 @@ export default function Detail() {
                 } else {
                   setGuests(newGuests)
                 }
-              }}><Text>+</Text></View>
+              }}><Text className={d ? 'guest-btn-text-dark' : 'guest-btn-text'}>+</Text></View>
             </View>
           </View>
         </View>
         {rooms.length === 0 ? (
-          <Text className='empty-text'>暂无房型信息</Text>
+          <Text className={d ? 'empty-text-dark' : 'empty-text'}>暂无房型信息</Text>
         ) : (
           <View className='room-list'>
             {rooms.map(room => (
               <View
                 key={room.id}
-                className={`room-item ${selectedRooms.has(room.id) ? 'selected' : ''}`}
+                className={selectedRooms.has(room.id) ? (d ? 'room-item-selected-dark' : 'room-item-selected') : (d ? 'room-item-dark' : 'room-item')}
                 onClick={() => {
                   const newSelected = new Set(selectedRooms)
                   if (newSelected.has(room.id)) {
@@ -329,16 +330,15 @@ export default function Detail() {
                 }}
               >
                 {room.image && <Image className='room-image' src={room.image} mode='aspectFill' />}
-                <View className='room-type'>{room.room_type}</View>
+                <Text className={d ? 'room-type-dark' : 'room-type'}>{room.room_type}</Text>
                 <View className='room-info'>
                   <Text className='room-price'>¥{room.price}/晚</Text>
-                  <Text className='room-stock'>剩余：{room.stock}间</Text>
+                  <Text className={d ? 'room-stock-dark' : 'room-stock'}>剩余：{room.stock}间</Text>
                 </View>
-                <View className='room-count-control'>
-                  <Text className='room-count-label'>房间数量（最多{room.max_guests}人/间）</Text>
+                <View className={d ? 'room-count-control-dark' : 'room-count-control'}>
+                  <Text className={d ? 'room-count-label-dark' : 'room-count-label'}>房间数量（最多{room.max_guests}人/间）</Text>
                   <View className='guest-control'>
-                    <View className='guest-btn' onClick={(e) => {
-                      e.stopPropagation()
+                    <View className='guest-btn' onClick={() => {
                       const current = roomCounts[room.id] || 0
                       const newCount = Math.max(0, current - 1)
                       const newCounts = { ...roomCounts, [room.id]: newCount }
@@ -350,13 +350,12 @@ export default function Detail() {
                       } else {
                         setRoomCounts(newCounts)
                       }
-                    }}><Text>-</Text></View>
-                    <Text className='guest-value'>{roomCounts[room.id] || 0}间</Text>
-                    <View className='guest-btn' onClick={(e) => {
-                      e.stopPropagation()
+                    }}><Text className={d ? 'guest-btn-text-dark' : 'guest-btn-text'}>-</Text></View>
+                    <Text className={d ? 'guest-value-dark' : 'guest-value'}>{roomCounts[room.id] || 0}间</Text>
+                    <View className='guest-btn' onClick={() => {
                       const current = roomCounts[room.id] || 0
                       setRoomCounts({ ...roomCounts, [room.id]: current + 1 })
-                    }}><Text>+</Text></View>
+                    }}><Text className={d ? 'guest-btn-text-dark' : 'guest-btn-text'}>+</Text></View>
                   </View>
                 </View>
               </View>
@@ -366,26 +365,26 @@ export default function Detail() {
       </View>
 
       {/* 价格计算 + 预订 */}
-      <View className='price-section'>
+      <View className={d ? 'price-section-dark' : 'price-section'}>
         <View className='calculate-btn' onClick={handleCalculatePrice}>
           <Text className='calculate-btn-text'>计算总价</Text>
         </View>
         {totalPrice !== null && (
-          <View className='price-breakdown'>
+          <View className={d ? 'price-breakdown-dark' : 'price-breakdown'}>
             {discount !== null && discount < 1 && (
               <View className='price-row'>
-                <Text className='price-label'>原价：</Text>
+                <Text className={d ? 'price-label-dark' : 'price-label'}>原价：</Text>
                 <Text className='price-original'>¥{originalPrice!.toFixed(2)}</Text>
               </View>
             )}
             {strategyName && discount !== null && discount < 1 && (
               <View className='price-row'>
-                <Text className='price-label'>优惠：</Text>
+                <Text className={d ? 'price-label-dark' : 'price-label'}>优惠：</Text>
                 <Text className='price-discount-tag'>{strategyName} {Math.round(discount * 10)}折</Text>
               </View>
             )}
             <View className='price-row'>
-              <Text className='price-label'>{discount !== null && discount < 1 ? '优惠价：' : '总价：'}</Text>
+              <Text className={d ? 'price-label-dark' : 'price-label'}>{discount !== null && discount < 1 ? '优惠价：' : '总价：'}</Text>
               <Text className='price-value'>¥{totalPrice.toFixed(2)}</Text>
             </View>
           </View>

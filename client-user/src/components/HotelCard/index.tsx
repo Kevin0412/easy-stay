@@ -1,6 +1,7 @@
 import { View, Text, Image } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { Hotel } from '../../services/hotel'
+import { useThemeStore } from '../../store/themeStore'
 import './index.scss'
 
 interface HotelCardProps {
@@ -10,6 +11,8 @@ interface HotelCardProps {
 }
 
 export default function HotelCard({ hotel, checkIn, checkOut }: HotelCardProps) {
+  const { theme } = useThemeStore()
+  const d = theme === 'dark'
   const handleClick = () => {
     let url = `/pages/detail/index?id=${hotel.id}`
     if (checkIn) url += `&checkIn=${checkIn}`
@@ -23,7 +26,7 @@ export default function HotelCard({ hotel, checkIn, checkOut }: HotelCardProps) 
   }
 
   return (
-    <View className='hotel-card' onClick={handleClick}>
+    <View className={d ? 'hotel-card-dark' : 'hotel-card'} onClick={handleClick}>
       <View className='hotel-card-image'>
         <Image
           className='image'
@@ -32,14 +35,14 @@ export default function HotelCard({ hotel, checkIn, checkOut }: HotelCardProps) 
         />
       </View>
       <View className='hotel-card-content'>
-        <View className='hotel-name'>{hotel.name_cn}</View>
-        <View className='hotel-name-en'>{hotel.name_en}</View>
-        <View className='hotel-stars'>{renderStars()}</View>
-        {hotel.rating && <View className='hotel-rating'>⭐ {hotel.rating.toFixed(1)}分</View>}
-        <View className='hotel-address'>{hotel.address}</View>
-        {hotel.discount && <View className='hotel-discount'>🎉 {hotel.discount}</View>}
+        <Text className={d ? 'hotel-name-dark' : 'hotel-name'}>{hotel.name_cn}</Text>
+        <Text className={d ? 'hotel-name-en-dark' : 'hotel-name-en'}>{hotel.name_en}</Text>
+        <Text className='hotel-stars'>{renderStars()}</Text>
+        {hotel.rating && <Text className='hotel-rating'>⭐ {hotel.rating.toFixed(1)}分</Text>}
+        <Text className={d ? 'hotel-address-dark' : 'hotel-address'}>{hotel.address}</Text>
+        {hotel.discount && <Text className={d ? 'hotel-discount-dark' : 'hotel-discount'}>🎉 {hotel.discount}</Text>}
         {hotel.min_price && (
-          <View className='hotel-price'>¥{hotel.min_price} <Text className='price-unit'>起/晚</Text></View>
+          <Text className='hotel-price'>¥{hotel.min_price} <Text className='price-unit'>起/晚</Text></Text>
         )}
       </View>
     </View>

@@ -1,225 +1,331 @@
 .profile-container {
-  min-height: 100vh;
-  background: #f5f5f5;
+  background-color: #f5f5f5;
   padding-bottom: 160px;
+}
 
-  &.theme-dark {
-    background: #121212;
-    .user-info, .tabs, .content-section, .not-login { background: #1e1e1e; }
-    .username, .not-login-text { color: #ffffff !important; }
-    .tab-bar { background: #1e1e1e; border-color: #333; .tab-item { color: #888 !important; &.active { color: #667eea !important; } } }
-    .order-item {
-      background: #1e1e1e;
-      .order-hotel { color: #fff !important; }
-      .order-room { color: #ccc !important; }
-      .order-date { color: #999 !important; }
-    }
-    .fav-item {
-      background: #1e1e1e;
-      .fav-name { color: #fff !important; }
-      .fav-addr { color: #ccc !important; }
-    }
-    .logout-btn { background: #1e1e1e; border-color: #ff4d4f; }
-    .logout-bar { background: #121212; }
-    .back-home-btn { background: #1e1e1e; }
-  }
+.back-home-btn {
+  background-color: #fff;
+  padding: 24px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
 
-  .back-home-btn {
-    background: #fff;
-    padding: 24px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    display: flex;
-    align-items: center;
-
-    .back-home-text {
-      font-size: 28px;
-      color: #1890ff;
-      font-weight: 500;
-    }
-  }
+.back-home-text {
+  font-size: 28px;
+  color: #1890ff;
+  font-weight: 500;
 }
 
 .not-login {
   padding: 200px 80px;
-  text-align: center;
+  align-items: center;
+}
 
-  .not-login-text {
-    display: block;
-    font-size: 36px;
-    color: #666;
-    margin-bottom: 60px;
-  }
+.not-login-text {
+  font-size: 36px;
+  color: #666;
+  margin-bottom: 60px;
+}
 
-  .login-btn {
-    width: 400px;
-    height: 100px;
-    background: #667eea;
-    color: white;
-    border-radius: 16px;
-    font-size: 32px;
-  }
+.login-btn {
+  width: 400px;
+  height: 100px;
+  background-color: #667eea;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .user-info {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-color: #667eea;
   padding: 80px 40px 60px;
-  text-align: center;
+  align-items: center;
+}
 
-  .avatar {
-    width: 160px;
-    height: 160px;
-    background: rgba(255,255,255,0.3);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 64px;
-    margin: 0 auto 30px;
-    font-weight: bold;
-  }
+.avatar {
+  width: 160px;
+  height: 160px;
+  background-color: #ffffff4d;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+}
 
-  .username {
-    display: block;
-    font-size: 44px;
-    font-weight: bold;
-    color: #fff;
-    margin-bottom: 16px;
-  }
+.avatar-text {
+  font-size: 64px;
+  font-weight: bold;
+  color: #fff;
+}
 
-  .email {
-    display: block;
-    font-size: 26px;
-    color: rgba(255,255,255,0.8);
-  }
+.username {
+  font-size: 44px;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+.email {
+  font-size: 26px;
+  color: #ffffffcc;
 }
 
 .tab-bar {
   display: flex;
-  background: #fff;
-  border-bottom: 2px solid #f0f0f0;
+  flex-direction: row;
+  background-color: #fff;
+  border-bottom-width: 2px;
+  border-bottom-color: #f0f0f0;
+}
 
-  .tab-item {
-    flex: 1;
-    padding: 30px 0;
-    text-align: center;
-    font-size: 28px;
-    color: #999;
+.tab-item {
+  flex: 1;
+  padding: 30px 0;
+  align-items: center;
+  font-size: 28px;
+  color: #999;
+}
 
-    &.active {
-      color: #667eea;
-      border-bottom: 4px solid #667eea;
-    }
-  }
+.tab-item-active {
+  flex: 1;
+  padding: 30px 0;
+  align-items: center;
+  font-size: 28px;
+  color: #667eea;
+  border-bottom-width: 4px;
+  border-bottom-color: #667eea;
 }
 
 .order-list {
   padding: 20px;
+}
 
-  .order-item {
-    background: #fff;
-    border-radius: 16px;
-    padding: 28px 32px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+.order-item {
+  background-color: #fff;
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 20px;
+}
 
-    .order-hotel {
-      display: block;
-      font-size: 30px;
-      color: #333;
-      font-weight: bold;
-      margin-bottom: 8px;
-    }
+.order-hotel {
+  font-size: 30px;
+  color: #333;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
 
-    .order-room {
-      display: block;
-      font-size: 26px;
-      color: #666;
-      margin-bottom: 8px;
-    }
+.order-room {
+  font-size: 26px;
+  color: #666;
+  margin-bottom: 8px;
+}
 
-    .order-date {
-      display: block;
-      font-size: 24px;
-      color: #999;
-      margin-bottom: 8px;
-    }
+.order-date {
+  font-size: 24px;
+  color: #999;
+  margin-bottom: 8px;
+}
 
-    .order-price {
-      display: block;
-      font-size: 32px;
-      color: #ff6b35;
-      font-weight: bold;
-    }
-  }
+.order-price {
+  font-size: 32px;
+  color: #ff6b35;
+  font-weight: bold;
 }
 
 .empty-tip {
   padding: 100px 0;
-  text-align: center;
+  align-items: center;
+}
 
-  .empty-text {
-    font-size: 28px;
-    color: #ccc;
-  }
+.empty-text {
+  font-size: 28px;
+  color: #ccc;
 }
 
 .fav-list {
   padding: 20px;
-
-  .fav-item {
-    display: flex;
-    align-items: center;
-    background: #fff;
-    border-radius: 16px;
-    padding: 30px;
-    margin-bottom: 20px;
-
-    .fav-info {
-      flex: 1;
-
-      .fav-name {
-        display: block;
-        font-size: 32px;
-        font-weight: 500;
-        color: #333;
-        margin-bottom: 12px;
-      }
-
-      .fav-addr {
-        display: block;
-        font-size: 24px;
-        color: #999;
-        margin-bottom: 10px;
-      }
-
-      .fav-star {
-        font-size: 24px;
-        color: #ffd700;
-      }
-    }
-
-    .fav-remove {
-      padding: 16px 24px;
-      border: 2px solid #ff4d4f;
-      border-radius: 12px;
-
-      .fav-remove-text {
-        font-size: 24px;
-        color: #ff4d4f;
-      }
-    }
-  }
 }
 
-.logout-bar {
-  position: fixed;
+.fav-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 16px;
+  padding: 30px;
+  margin-bottom: 20px;
+}
+
+.fav-info {
+  flex: 1;
+}
+
+.fav-name {
+  font-size: 32px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.fav-addr {
+  font-size: 24px;
+  color: #999;
+  margin-bottom: 10px;
+}
+
+.fav-star {
+  font-size: 24px;
+  color: #ffd700;
+}
+
+.fav-remove {
+  padding: 16px 24px;
+  border-width: 2px;
+
+  border-color: #ff4d4f;
+  border-radius: 12px;
+}
+
+.fav-remove-text {
+  font-size: 24px;
+  color: #ff4d4f;
+}
+
+.profile-container-dark {
+  background-color: #1a1a2e;
+  padding-bottom: 160px;
+  flex: 1;
+}
+.tab-text-dark {
+  font-size: 28px;
+  color: #aaa;
+}
+.tab-text-active {
+  font-size: 28px;
+  color: #667eea;
+}
+.order-date-dark {
+  font-size: 24px;
+  color: #666;
+  margin-bottom: 8px;
+}
+.empty-text-dark {
+  font-size: 28px;
+  color: #555;
+}
+.fav-addr-dark {
+  font-size: 24px;
+  color: #666;
+  margin-bottom: 10px;
+}
+.logout-text-dark {
+  font-size: 32px;
+  color: #ff4d4f;
+}
+
+.back-home-btn-dark {
+  background-color: #16213e;
+  padding: 24px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.back-home-text-dark {
+  font-size: 28px;
+  color: #7b93f5;
+  font-weight: 500;
+}
+
+.not-login-text-dark {
+  font-size: 36px;
+  color: #aaa;
+  margin-bottom: 60px;
+}
+
+.tab-bar-dark {
+  display: flex;
+  flex-direction: row;
+  background-color: #16213e;
+  border-bottom-width: 2px;
+  border-bottom-color: #2a2a4a;
+}
+
+.tab-item-dark {
+  flex: 1;
+  padding: 30px 0;
+  align-items: center;
+  font-size: 28px;
+  color: #aaa;
+}
+
+.order-item-dark {
+  background-color: #16213e;
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 20px;
+}
+
+.order-hotel-dark {
+  font-size: 30px;
+  color: #e0e0e0;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.order-room-dark {
+  font-size: 26px;
+  color: #aaa;
+  margin-bottom: 8px;
+}
+
+.fav-item-dark {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: #16213e;
+  border-radius: 16px;
+  padding: 30px;
+  margin-bottom: 20px;
+}
+
+.fav-name-dark {
+  font-size: 32px;
+  font-weight: 500;
+  color: #e0e0e0;
+  margin-bottom: 12px;
+}
+
+.logout-bar-dark {
+  position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  background: #f5f5f5;
-  padding: 20px 40px;
-  padding-bottom: calc(20px + env(safe-area-inset-bottom));
+  background-color: #1a1a2e;
+  padding: 20px 40px 40px;
+}
+
+.logout-btn-dark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100px;
+  background-color: #16213e;
+  border-width: 2px;
+  border-color: #ff4d4f;
+  border-radius: 16px;
+}
+
+.logout-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #f5f5f5;
+  padding: 20px 40px 40px;
 }
 
 .logout-btn {
@@ -227,9 +333,14 @@
   align-items: center;
   justify-content: center;
   height: 100px;
-  background: white;
-  color: #ff4d4f;
-  border: 2px solid #ff4d4f;
+  background-color: #ffffff;
+  border-width: 2px;
+
+  border-color: #ff4d4f;
   border-radius: 16px;
+}
+
+.logout-btn-text {
   font-size: 32px;
+  color: #ff4d4f;
 }
