@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Table, Button, Space, Modal, Input, message, Typography, Select, Alert } from 'antd'
-import { CheckOutlined, CloseOutlined, StopOutlined, RedoOutlined, BellOutlined } from '@ant-design/icons'
+import { Table, Button, Space, Modal, Input, message, Typography, Select, Alert, Drawer, Descriptions, Image, Tag } from 'antd'
+import { CheckOutlined, CloseOutlined, StopOutlined, RedoOutlined, BellOutlined, EyeOutlined } from '@ant-design/icons'
 import { getHotels, approveHotel, rejectHotel, offlineHotel, restoreHotel, Hotel, HotelStatus } from '@/services/hotel'
 import HotelStatusTag from '@/components/hotel-status-tag'
 import styles from './index.module.scss'
@@ -8,16 +8,105 @@ import styles from './index.module.scss'
 const { TextArea } = Input
 const { Text } = Typography
 
+function HotelDetail({ hotel }: { hotel: Hotel }) {
+  let imageList: string[] = []
+  if (hotel.images) {
+    try {
+      imageList = JSON.parse(hotel.images)
+    } catch {}
+  }
+
+  const tagList = [
+    ...(hotel.tags ? hotel.tags.split(',').map((t) => t.trim()).filter(Boolean) : []),
+    ...(hotel.facilities ? hotel.facilities.split(',').map((f) => f.trim()).filter(Boolean) : []),
+  ]
+
+  const nearbyList = hotel.nearby
+    ? hotel.nearby.split(',').map((n) => n.trim()).filter(Boolean)
+    : []
+
+  return (
+    <div>
+      <Descriptions column={1} bordered size="small" style={{ marginBottom: 16 }}>
+        <Descriptions.Item label="中文名">{hotel.name_cn}</Descriptions.Item>
+        {hotel.name_en && <Descriptions.Item label="英文名">{hotel.name_en}</Descriptions.Item>}
+        <Descriptions.Item label="地址">{hotel.address}</Descriptions.Item>
+        <Descriptions.Item label="星级">{'★'.repeat(hotel.star)}</Descriptions.Item>
+        {hotel.open_date && <Descriptions.Item label="开业日期">{hotel.open_date}</Descriptions.Item>}
+        <Descriptions.Item label="审核状态">
+          <HotelStatusTag status={hotel.status} />
+          {hotel.status === 'rejected' && hotel.reject_reason && (
+            <Text type="danger" style={{ display: 'block', marginTop: 4 }}>
+              原因：{hotel.reject_reason}
+            </Text>
+          )}
+        </Descriptions.Item>
+        <Descriptions.Item label="更新时间">{new Date(hotel.updated_at).toLocaleString()}</Descriptions.Item>
+      </Descriptions>
+
+      {hotel.cover_image && (
+        <div style={{ marginBottom: 16 }}>
+          <Text strong>封面图片</Text>
+          <div style={{ marginTop: 8 }}>
+            <Image src={hotel.cover_image} height={160} style={{ objectFit: 'cover', borderRadius: 4 }} />
+          </div>
+        </div>
+      )}
+
+      {imageList.length > 0 && (
+        <div style={{ marginBottom: 16 }}>
+          <Text strong>图集</Text>
+          <div style={{ marginTop: 8 }}>
+            <Image.PreviewGroup>
+              <Space wrap>
+                {imageList.map((url, i) => (
+                  <Image key={i} src={url} width={120} height={90} style={{ objectFit: 'cover', borderRadius: 4 }} />
+                ))}
+              </Space>
+            </Image.PreviewGroup>
+          </div>
+        </div>
+      )}
+
+      {tagList.length > 0 && (
+        <div style={{ marginBottom: 16 }}>
+          <Text strong>设施服务</Text>
+          <div style={{ marginTop: 8 }}>
+            <Space wrap>
+              {tagList.map((tag) => <Tag key={tag}>{tag}</Tag>)}
+            </Space>
+          </div>
+        </div>
+      )}
+
+      {nearbyList.length > 0 && (
+        <div>
+          <Text strong>附近景点</Text>
+          <div style={{ marginTop: 8 }}>
+            <Space wrap>
+              {nearbyList.map((place) => <Tag key={place} color="blue">{place}</Tag>)}
+            </Space>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function Audit() {
   const [hotels, setHotels] = useState<Hotel[]>([])
   const [loading, setLoading] = useState(false)
-  const [statusFilter, setStatusFilter] = useState<HotelStatus | undefined>()
+  const [statusFilter, setStatusFilter] = useState<string>('all')
   const [rejectModal, setRejectModal] = useState<{ open: boolean; hotel: Hotel | null }>({
     open: false,
     hotel: null
   })
   const [rejectReason, setRejectReason] = useState('')
   const [rejectLoading, setRejectLoading] = useState(false)
+  const [detailDrawer, setDetailDrawer] = useState<{ open: boolean; hotel: Hotel | null }>({
+    open: false,
+    hotel: null
+  })
 
   const fetchHotels = async () => {
     setLoading(true)
@@ -34,7 +123,7 @@ export default function Audit() {
         ...rejected.data.data,
         ...offline.data.data
       ]
-      all.sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
+      all.sort((a, b) => a.id - b.id)
       setHotels(all)
     } finally {
       setLoading(false)
@@ -45,9 +134,9 @@ export default function Audit() {
     fetchHotels()
   }, [])
 
-  const displayedHotels = statusFilter
-    ? hotels.filter((h) => h.status === statusFilter)
-    : hotels
+  const displayedHotels = statusFilter === 'all'
+    ? hotels
+    : hotels.filter((h) => h.status === statusFilter)
 
   const pendingCount = hotels.filter((h) => h.status === 'pending').length
 
@@ -155,6 +244,13 @@ export default function Audit() {
       width: 220,
       render: (_: any, record: Hotel) => (
         <Space wrap>
+          <Button
+            size="small"
+            icon={<EyeOutlined />}
+            onClick={() => setDetailDrawer({ open: true, hotel: record })}
+          >
+            查看详情
+          </Button>
           {record.status === 'pending' && (
             <>
               <Button
@@ -226,11 +322,10 @@ export default function Audit() {
       <div style={{ marginBottom: 16 }}>
         <Select
           style={{ width: 160 }}
-          placeholder="筛选审核状态"
-          allowClear
           value={statusFilter}
           onChange={setStatusFilter}
           options={[
+            { label: '全部', value: 'all' },
             { label: '审核中', value: 'pending' },
             { label: '已通过', value: 'published' },
             { label: '未通过', value: 'rejected' },
@@ -267,6 +362,15 @@ export default function Audit() {
           showCount
         />
       </Modal>
+
+      <Drawer
+        title="酒店详情"
+        open={detailDrawer.open}
+        onClose={() => setDetailDrawer({ open: false, hotel: null })}
+        width={600}
+      >
+        {detailDrawer.hotel && <HotelDetail hotel={detailDrawer.hotel} />}
+      </Drawer>
     </div>
   )
 }

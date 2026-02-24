@@ -12,16 +12,19 @@ const { Text } = Typography
 export default function HotelList() {
   const [hotels, setHotels] = useState<Hotel[]>([])
   const [loading, setLoading] = useState(false)
-  const [statusFilter, setStatusFilter] = useState<HotelStatus | undefined>()
-  const [starFilter, setStarFilter] = useState<number | undefined>()
+  const [statusFilter, setStatusFilter] = useState<string>('all')
+  const [starFilter, setStarFilter] = useState<number>(0)
   const navigate = useNavigate()
   const user = useUserStore((state) => state.user)
 
   const fetchHotels = async () => {
     setLoading(true)
     try {
-      const res = await getHotels({ status: statusFilter, star: starFilter })
-      setHotels(res.data.data)
+      const res = await getHotels({
+        status: statusFilter === 'all' ? undefined : statusFilter as HotelStatus,
+        star: starFilter === 0 ? undefined : starFilter
+      })
+      setHotels([...res.data.data].sort((a, b) => a.id - b.id))
     } catch (error) {
       // 错误已在拦截器处理
     } finally {
@@ -143,11 +146,10 @@ export default function HotelList() {
       <div className={styles.filters}>
         <Select
           style={{ width: 150 }}
-          placeholder="筛选状态"
-          allowClear
           value={statusFilter}
           onChange={setStatusFilter}
           options={[
+            { label: '全部', value: 'all' },
             { label: '草稿', value: 'draft' },
             { label: '审核中', value: 'pending' },
             { label: '已通过', value: 'published' },
@@ -158,14 +160,12 @@ export default function HotelList() {
 
         <Select
           style={{ width: 150, marginLeft: 16 }}
-          placeholder="筛选星级"
-          allowClear
           value={starFilter}
           onChange={setStarFilter}
-          options={[1, 2, 3, 4, 5].map((star) => ({
-            label: `${star}星`,
-            value: star
-          }))}
+          options={[
+            { label: '全部星级', value: 0 },
+            ...[1, 2, 3, 4, 5].map((star) => ({ label: `${star}星`, value: star }))
+          ]}
         />
       </div>
 
