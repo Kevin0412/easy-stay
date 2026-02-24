@@ -8,17 +8,6 @@ npm install
 
 ## 编译运行
 
-### 微信小程序
-```bash
-npm run dev:weapp
-```
-然后用微信开发者工具打开 `dist` 目录
-
-### H5 网页
-```bash
-npm run dev:h5
-```
-
 ### Android App
 ```bash
 npm run android:dev

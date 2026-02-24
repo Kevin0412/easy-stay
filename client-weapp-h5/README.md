@@ -19,11 +19,6 @@ npm run dev:weapp
 npm run dev:h5
 ```
 
-### Android App
-```bash
-npm run android:dev
-```
-
 ## 后端地址配置
 
 修改 `.env` 文件中的 `API_URL`：
