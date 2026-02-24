@@ -242,23 +242,30 @@ taro build --type rn
 ## 八、后台管理系统设计
 
 **页面清单**：
-- 登录页
-- 注册页
-- 酒店列表（管理）
-- 酒店信息录入
-- 酒店审核页
+- 登录/注册页（角色选择：商户 / 管理员）
+- 酒店管理列表（商户）：状态筛选、星级筛选（含"全部"选项）、按 ID 排序
+- 酒店信息录入/编辑（商户）：含封面图、图集、设施服务、附近景点、房型管理、价格策略管理
+- 酒店审核页（管理员）：状态筛选（含"全部"选项）、查看详情、通过/不通过/下线/恢复
 
 **审核流程**：
 ```
 商户提交 → 状态 pending（审核中）
+管理员查看详情 → 执行审核决定
 管理员审核通过 → 状态 published（已通过）
 管理员审核不通过 → 状态 rejected（未通过，含原因）
 管理员下线 → 状态 offline（已下线，可恢复）
 管理员恢复 → 状态 published（重新上线）
 ```
 
+**酒店详情 Drawer**（管理员审核时可查看）：
+- 基本信息：中英文名、地址、星级、开业日期、当前审核状态
+- 封面图片预览
+- 图集（支持点击大图预览）
+- 设施服务标签
+- 附近景点标签
+
 **权限说明**：
-- 管理员（admin）：仅可访问酒店审核页，执行通过/不通过/下线/恢复操作
+- 管理员（admin）：仅可访问酒店审核页，执行查看详情/通过/不通过/下线/恢复操作
 - 商户（merchant）：仅可访问酒店管理页，进行酒店信息录入与提交
 - 普通用户（user）：无法登录后台管理系统
 
@@ -318,13 +325,22 @@ easy-stay/
 ├── client-admin/                 # 后台管理系统（React + AntD）
 │   ├── src/
 │   │   ├── pages/
-│   │   │   ├── login/         # 登录
-│   │   │   ├── hotel-list/    # 酒店管理列表
-│   │   │   ├── hotel-edit/    # 酒店录入/编辑
-│   │   │   └── audit/         # 审核页
-│   │   ├── components/        # 公共组件
-│   │   ├── services/          # API 服务
-│   │   └── App.tsx            # 应用入口
+│   │   │   ├── login/              # 登录/注册（角色选择）
+│   │   │   ├── hotel-list/         # 酒店管理列表（商户）
+│   │   │   ├── hotel-edit/         # 酒店录入/编辑
+│   │   │   │   └── components/
+│   │   │   │       ├── room-manager.tsx          # 房型管理
+│   │   │   │       └── price-strategy-manager.tsx # 价格策略管理
+│   │   │   └── audit/              # 酒店审核页（管理员）
+│   │   ├── components/
+│   │   │   ├── auth-route/         # 路由权限守卫
+│   │   │   ├── hotel-status-tag/   # 审核状态标签
+│   │   │   └── layout/             # 管理后台布局
+│   │   ├── services/               # API 封装（hotel.ts 等）
+│   │   ├── store/                  # 状态管理（Zustand）
+│   │   ├── router/                 # 路由配置
+│   │   ├── utils/                  # 工具函数
+│   │   └── App.tsx                 # 应用入口
 │   └── package.json
 │
 ├── client-android/               # Android 客户端（Taro RN）✅ 稳定
@@ -394,17 +410,46 @@ HOTEL_STATUS_PENDING
 - 特殊操作使用动词后缀
 
 ```
+# 认证
+POST   /api/auth/register
+POST   /api/auth/login
+GET    /api/auth/me
+
+# 酒店
 GET    /api/hotels
+GET    /api/hotels/carousel
 GET    /api/hotels/:id
 POST   /api/hotels
 PUT    /api/hotels/:id
 DELETE /api/hotels/:id
-
 POST   /api/hotels/:id/publish
 POST   /api/hotels/:id/approve
 POST   /api/hotels/:id/reject
 POST   /api/hotels/:id/offline
 POST   /api/hotels/:id/restore
+
+# 房型
+GET    /api/rooms/hotel/:hotel_id
+POST   /api/rooms
+PUT    /api/rooms/:id
+DELETE /api/rooms/:id
+
+# 价格策略
+GET    /api/prices/hotel/:hotel_id
+GET    /api/prices/calculate
+POST   /api/prices
+PUT    /api/prices/:id
+DELETE /api/prices/:id
+
+# 收藏
+GET    /api/favorites
+GET    /api/favorites/check/:hotel_id
+POST   /api/favorites
+DELETE /api/favorites/:hotel_id
+
+# 订单
+GET    /api/orders
+POST   /api/orders
 ```
 
 ---
@@ -889,7 +934,9 @@ distributionUrl=https\://mirrors.cloud.tencent.com/gradle/gradle-8.3-all.zip
 #### 后台管理（25分，B 负责）
 - [x] 登录/注册（商户/管理员角色）
 - [x] 酒店信息录入/编辑（含 facilities、nearby、房型图片字段）
-- [x] 审核列表（pending/approved/rejected/offline）
+- [x] 酒店管理列表（状态/星级筛选含"全部"选项，按 ID 排序）
+- [x] 审核列表（pending/published/rejected/offline，含"全部"筛选，按 ID 排序）
+- [x] 管理员查看酒店详情（Drawer 展示封面、图集、设施标签、附近景点）
 - [x] 审核通过/拒绝（含原因）/下线/恢复
 
 #### 预订流程（用户端额外功能）
