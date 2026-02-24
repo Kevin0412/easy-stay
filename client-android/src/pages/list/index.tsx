@@ -1,5 +1,5 @@
 import { View, Text, Input } from '@tarojs/components'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Taro, { useLoad, usePullDownRefresh, useReachBottom } from '@tarojs/taro'
 import { getHotels, Hotel } from '../../services/hotel'
 import HotelCard from '../../components/HotelCard'
@@ -24,6 +24,33 @@ export default function List() {
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
   const [showCalendar, setShowCalendar] = useState(false)
+
+  const [layout, setLayout] = useState({ columns: 1, itemWidth: 0 })
+
+  useEffect(() => {
+    const calc = () => {
+      let sw: number
+      try {
+        const { Dimensions } = require('react-native')
+        sw = Dimensions.get('window').width
+      } catch {
+        sw = Taro.getSystemInfoSync().windowWidth
+      }
+      const padding = 40
+      const gap = 15
+      const cols = sw >= 1024 ? 3 : sw >= 600 ? 2 : 1
+      const w = cols > 1 ? (sw - padding - gap * (cols - 1)) / cols : 0
+      setLayout({ columns: cols, itemWidth: w })
+    }
+    calc()
+    try {
+      const { Dimensions } = require('react-native')
+      const sub = Dimensions.addEventListener('change', calc)
+      return () => sub?.remove()
+    } catch {
+      return
+    }
+  }, [])
 
   const TAG_OPTIONS = ['豪华套房', '免费停车', '亲子设施', '免费早餐', '江景/湖景', '健身中心', '商务中心', '无边泳池']
   const [filterTags, setFilterTags] = useState<string[]>([])
@@ -150,12 +177,14 @@ export default function List() {
         >🔥 热度排序</Text>
       </View>
 
-      <View className='hotel-list'>
+      <View className='hotel-list' style={layout.columns > 1 ? { flexDirection: 'row', flexWrap: 'wrap' } : {}}>
         {filteredHotels.length === 0 && !loading && (
           <View className='empty-state'><Text className={d ? 'empty-text-dark' : 'empty-text'}>暂无酒店数据</Text></View>
         )}
-        {filteredHotels.map(hotel => (
-          <HotelCard key={hotel.id} hotel={hotel} checkIn={checkInDate} checkOut={checkOutDate} />
+        {filteredHotels.map((hotel, index) => (
+          <View key={hotel.id} style={layout.columns > 1 ? { width: layout.itemWidth, marginRight: index % layout.columns !== layout.columns - 1 ? 15 : 0, marginBottom: 15 } : {}}>
+            <HotelCard hotel={hotel} checkIn={checkInDate} checkOut={checkOutDate} />
+          </View>
         ))}
         {loading && <View className='loading-state'><Text className={d ? 'loading-text-dark' : 'loading-text'}>加载中...</Text></View>}
         {!loading && !hasMore && filteredHotels.length > 0 && (

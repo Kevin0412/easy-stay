@@ -4,7 +4,7 @@
 
 // 获取 API 基础地址
 export function getApiBaseUrl(): string {
-  return process.env.TARO_APP_API_URL || 'http://192.168.71.75:3000'
+  return process.env.TARO_APP_API_URL || 'http://localhost:3000'
 }
 
 // 导出配置
