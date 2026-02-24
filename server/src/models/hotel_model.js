@@ -16,7 +16,7 @@ async function create(hotel_data) {
  * 查询酒店列表
  */
 async function findAll(filters = {}) {
-  let query = 'SELECT * FROM hotels WHERE 1=1';
+  let query = 'SELECT *, DATE_FORMAT(open_date, "%Y-%m-%d") as open_date FROM hotels WHERE 1=1';
   const params = [];
 
   if (filters.status) {
@@ -58,7 +58,7 @@ async function findAll(filters = {}) {
  * 根据 ID 查询酒店
  */
 async function findById(id) {
-  const [rows] = await pool.query('SELECT * FROM hotels WHERE id = ?', [id]);
+  const [rows] = await pool.query('SELECT *, DATE_FORMAT(open_date, "%Y-%m-%d") as open_date FROM hotels WHERE id = ?', [id]);
   return rows[0];
 }
 
