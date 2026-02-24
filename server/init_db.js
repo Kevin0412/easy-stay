@@ -27,6 +27,13 @@ async function init() {
     }
     await conn.query('SET FOREIGN_KEY_CHECKS = 1');
 
+    // 补充缺失的列
+    const [columns] = await conn.query("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'hotels'");
+    const col_names = columns.map(c => c.COLUMN_NAME);
+    if (!col_names.includes('reject_reason')) {
+      await conn.query("ALTER TABLE hotels ADD COLUMN reject_reason VARCHAR(500) AFTER status");
+    }
+
     // 插入用户
     for (const u of mock_data.users) {
       await conn.query(
