@@ -199,7 +199,7 @@ client-admin/
 
 1. **开发模式**
    ```bash
-   cd client-user
+   cd client-weapp-h5
    npm run dev:h5        # H5 开发模式，自动启动服务器（默认 http://localhost:10086）
    npm run dev:weapp     # 微信小程序开发模式
    ```
