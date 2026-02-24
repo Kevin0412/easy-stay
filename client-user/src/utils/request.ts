@@ -17,14 +17,14 @@ interface Response<T = any> {
 /**
  * 封装的请求方法
  */
-export function request<T = any>(options: RequestOptions): Promise<Response<T>> {
+export async function request<T = any>(options: RequestOptions): Promise<Response<T>> {
   const { url, method = 'GET', data, header = {} } = options
 
   // 从本地存储获取 token
-  const token = Taro.getStorageSync('token')
-  if (token) {
-    header.Authorization = `Bearer ${token}`
-  }
+  try {
+    const res = await Taro.getStorage({ key: 'token' })
+    if (res.data) header.Authorization = `Bearer ${res.data}`
+  } catch (e) {}
 
   return new Promise((resolve, reject) => {
     Taro.request({
@@ -39,11 +39,11 @@ export function request<T = any>(options: RequestOptions): Promise<Response<T>> 
         if (res.statusCode >= 200 && res.statusCode < 300) {
           resolve(res.data as Response<T>)
         } else {
-          Taro.showToast({
-            title: '请求失败',
-            icon: 'none'
-          })
-          reject(res.data)
+          const data = res.data as Response<T>
+          if (!data?.message) {
+            Taro.showToast({ title: '请求失败', icon: 'none' })
+          }
+          reject(data)
         }
       },
       fail: (err) => {

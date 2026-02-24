@@ -82,7 +82,7 @@ export default {
     }
   },
   rn: {
-    appName: 'EasyStay',
+    appName: 'EasyStayUser',
     postcss: {
       cssModules: {
         enable: false

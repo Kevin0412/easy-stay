@@ -8,6 +8,7 @@ import './index.scss'
 
 export default function Order() {
   const { theme } = useThemeStore()
+  const d = theme === 'dark'
   const [params, setParams] = useState<any>({})
   const [submitting, setSubmitting] = useState(false)
   const { isLoggedIn } = useUserStore()
@@ -67,7 +68,7 @@ export default function Order() {
   }
 
   return (
-    <View className={`order-container theme-${theme}`}>
+    <View className={d ? 'order-container-dark' : 'order-container'}>
       <View className='order-header'>
         <View className='back-btn' onClick={() => Taro.navigateBack()}>
           <Text className='back-text'>← 返回</Text>
@@ -75,40 +76,40 @@ export default function Order() {
         <Text className='order-title'>确认预订</Text>
       </View>
 
-      <View className='order-card'>
-        <View className='order-row'>
-          <Text className='order-label'>酒店</Text>
-          <Text className='order-value'>{decodeURIComponent(params.hotelName || '')}</Text>
+      <View className={d ? 'order-card-dark' : 'order-card'}>
+        <View className={d ? 'order-row-dark' : 'order-row'}>
+          <Text className={d ? 'order-label-dark' : 'order-label'}>酒店</Text>
+          <Text className={d ? 'order-value-dark' : 'order-value'}>{decodeURIComponent(params.hotelName || '')}</Text>
         </View>
         {rooms.map(room => (
-          <View className='order-row' key={room.id}>
-            <Text className='order-label'>{room.type}</Text>
-            <Text className='order-value'>{room.count} 间</Text>
+          <View className={d ? 'order-row-dark' : 'order-row'} key={room.id}>
+            <Text className={d ? 'order-label-dark' : 'order-label'}>{room.type}</Text>
+            <Text className={d ? 'order-value-dark' : 'order-value'}>{room.count} 间</Text>
           </View>
         ))}
-        <View className='order-row'>
-          <Text className='order-label'>入住人数</Text>
-          <Text className='order-value'>{params.guests} 人</Text>
+        <View className={d ? 'order-row-dark' : 'order-row'}>
+          <Text className={d ? 'order-label-dark' : 'order-label'}>入住人数</Text>
+          <Text className={d ? 'order-value-dark' : 'order-value'}>{params.guests} 人</Text>
         </View>
-        <View className='order-row'>
-          <Text className='order-label'>入住</Text>
-          <Text className='order-value'>{params.checkIn}</Text>
+        <View className={d ? 'order-row-dark' : 'order-row'}>
+          <Text className={d ? 'order-label-dark' : 'order-label'}>入住</Text>
+          <Text className={d ? 'order-value-dark' : 'order-value'}>{params.checkIn}</Text>
         </View>
-        <View className='order-row'>
-          <Text className='order-label'>离店</Text>
-          <Text className='order-value'>{params.checkOut}</Text>
+        <View className={d ? 'order-row-dark' : 'order-row'}>
+          <Text className={d ? 'order-label-dark' : 'order-label'}>离店</Text>
+          <Text className={d ? 'order-value-dark' : 'order-value'}>{params.checkOut}</Text>
         </View>
-        <View className='order-row'>
-          <Text className='order-label'>间夜</Text>
-          <Text className='order-value'>{nights} 晚</Text>
+        <View className={d ? 'order-row-dark' : 'order-row'}>
+          <Text className={d ? 'order-label-dark' : 'order-label'}>间夜</Text>
+          <Text className={d ? 'order-value-dark' : 'order-value'}>{nights} 晚</Text>
         </View>
-        <View className='order-row total'>
-          <Text className='order-label'>总价</Text>
+        <View className='order-row-total'>
+          <Text className={d ? 'order-label-dark' : 'order-label'}>总价</Text>
           <Text className='order-price'>¥{Number(params.totalPrice || 0).toFixed(2)}</Text>
         </View>
       </View>
 
-      <View className={`confirm-btn ${submitting ? 'disabled' : ''}`} onClick={submitting ? undefined : handleConfirm}>
+      <View className={submitting ? 'confirm-btn-disabled' : 'confirm-btn'} onClick={submitting ? undefined : handleConfirm}>
         <Text className='confirm-btn-text'>{submitting ? '提交中...' : '确认预订'}</Text>
       </View>
     </View>

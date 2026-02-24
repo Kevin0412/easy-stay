@@ -1,93 +1,123 @@
 .order-container {
-  min-height: 100vh;
-  background: #f5f5f5;
+  background-color: #f5f5f5;
+}
 
-  &.theme-dark {
-    background: #121212;
-    .order-card {
-      background: #1e1e1e;
-      .order-row { border-color: #333; }
-      .order-label { color: #aaa !important; }
-      .order-value { color: #fff !important; }
-      .order-price { color: #ff6b35 !important; }
-    }
-  }
+.order-header {
+  background-color: #667eea;
+  padding: 60px 40px 40px;
+  align-items: center;
+  position: relative;
+}
 
-  .order-header {
-    background: #667eea;
-    padding: 60px 40px 40px;
-    text-align: center;
-    position: relative;
+.back-btn {
+  position: absolute;
+  left: 24px;
+  top: 60px;
+}
 
-    .back-btn {
-      position: absolute;
-      left: 24px;
-      top: 50%;
-      transform: translateY(-50%);
-      .back-text { font-size: 28px; color: #fff; }
-    }
+.back-text {
+  font-size: 28px;
+  color: #fff;
+}
 
-    .order-title {
-      font-size: 36px;
-      color: #fff;
-      font-weight: bold;
-    }
-  }
+.order-title {
+  font-size: 36px;
+  color: #fff;
+  font-weight: bold;
+}
 
-  .order-card {
-    background: #fff;
-    margin: 32px;
-    border-radius: 16px;
-    padding: 8px 0;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+.order-card {
+  background-color: #fff;
+  margin: 32px;
+  border-radius: 16px;
+  padding: 8px 0;
+}
 
-    .order-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 28px 40px;
-      border-bottom: 1px solid #f5f5f5;
+.order-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28px 40px;
+  border-bottom-width: 1px;
+  border-bottom-color: #f5f5f5;
 
-      &:last-child { border-bottom: none; }
+}
 
-      &.total {
-        padding-top: 32px;
-        padding-bottom: 32px;
-      }
+.order-label {
+  font-size: 28px;
+  color: #999;
+}
 
-      .order-label {
-        font-size: 28px;
-        color: #999;
-      }
+.order-value {
+  font-size: 28px;
+  color: #333;
+}
 
-      .order-value {
-        font-size: 28px;
-        color: #333;
-        max-width: 60%;
-        text-align: right;
-      }
+.order-price {
+  font-size: 40px;
+  color: #ff6b35;
+  font-weight: bold;
+}
 
-      .order-price {
-        font-size: 40px;
-        color: #ff6b35;
-        font-weight: bold;
-      }
-    }
-  }
+.order-row-total {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28px 40px;
+}
 
-  .confirm-btn {
-    margin: 0 32px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    border-radius: 16px;
-    padding: 32px;
-    text-align: center;
+.confirm-btn-disabled {
+  margin-left: 32px;
+  margin-right: 32px;
+  border-radius: 16px;
+  padding: 32px;
+  align-items: center;
+}
 
-    &.disabled { opacity: 0.6; }
+.confirm-btn {
+  margin-left: 32px;
+  margin-right: 32px;
+  background-color: #667eea;
+  border-radius: 16px;
+  padding: 32px;
+  align-items: center;
+}
 
-    .confirm-btn-text {
-      font-size: 32px;
-      color: #fff;
-      font-weight: bold;
-    }
-  }
+.confirm-btn-text {
+  font-size: 32px;
+  color: #fff;
+  font-weight: bold;
+}
+
+.order-container-dark {
+  background-color: #1a1a2e;
+  flex: 1;
+}
+.order-label-dark {
+  font-size: 28px;
+  color: #666;
+}
+
+.order-card-dark {
+  background-color: #16213e;
+  margin: 32px;
+  border-radius: 16px;
+  padding: 8px 0;
+}
+
+.order-row-dark {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28px 40px;
+  border-bottom-width: 1px;
+  border-bottom-color: #2a2a4a;
+}
+
+.order-value-dark {
+  font-size: 28px;
+  color: #e0e0e0;
 }

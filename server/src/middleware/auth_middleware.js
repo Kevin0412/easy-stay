@@ -53,8 +53,24 @@ function requireMerchant(req, res, next) {
   next();
 }
 
+/**
+ * 可选验证 JWT token（有token就解析，没有就跳过）
+ */
+function optionalAuth(req, res, next) {
+  const auth_header = req.headers.authorization;
+  if (auth_header && auth_header.startsWith('Bearer ')) {
+    try {
+      req.user = jwt.verify(auth_header.substring(7), process.env.JWT_SECRET);
+    } catch (error) {
+      // token无效，忽略
+    }
+  }
+  next();
+}
+
 module.exports = {
   authenticate,
+  optionalAuth,
   requireAdmin,
   requireMerchant
 };

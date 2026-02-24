@@ -13,23 +13,28 @@ interface UserState {
 
 export const useUserStore = create<UserState>((set, get) => ({
   user: null,
-  token: Taro.getStorageSync('token') || null,
+  token: null,
 
   setUser: (user) => set({ user }),
 
   setToken: (token) => {
     set({ token })
     if (token) {
-      Taro.setStorageSync('token', token)
+      Taro.setStorage({ key: 'token', data: token })
     } else {
-      Taro.removeStorageSync('token')
+      Taro.removeStorage({ key: 'token' })
     }
   },
 
   logout: () => {
     set({ user: null, token: null })
-    Taro.removeStorageSync('token')
+    Taro.removeStorage({ key: 'token' })
   },
 
   isLoggedIn: () => !!get().token
 }))
+
+// Hydrate token from async storage
+Taro.getStorage({ key: 'token' }).then(res => {
+  if (res.data) useUserStore.setState({ token: res.data as string })
+}).catch(() => {})
