@@ -1,3 +1,8 @@
+/**
+ * @deprecated 已废弃 - 仅用于早期开发阶段，项目已切换至 MySQL 数据库。
+ * 如需使用，在 .env 中设置 USE_MOCK_DB=true（不推荐）。
+ */
+
 // Mock 数据存储
 const mock_data = {
   users: [

@@ -38,6 +38,8 @@ PORT=3000
 mysql -u root -p < database.sql
 ```
 
+> **注意**：项目早期提供了 `mock_database.js` 用于无 MySQL 环境下的开发调试（通过 `.env` 中 `USE_MOCK_DB=true` 启用）。现已切换至 MySQL，mock 数据库已废弃，请勿在正式环境使用。
+
 ### 4. 启动服务
 
 ```bash
@@ -125,12 +127,11 @@ Authorization: Bearer <token>
 
 #### 获取酒店列表
 - **GET** `/api/hotels?status=published&star=5`
-- 权限: 登录用户
-- 商户只能看到自己的酒店，管理员可以看到所有酒店
+- 权限: 公开（商户登录后只返回自己的酒店）
 
 #### 获取酒店详情
 - **GET** `/api/hotels/:id`
-- 权限: 登录用户
+- 权限: 公开
 
 #### 更新酒店信息
 - **PUT** `/api/hotels/:id`
@@ -204,6 +205,42 @@ Authorization: Bearer <token>
 
 ---
 
+### 订单接口
+
+#### 创建订单
+- **POST** `/api/orders`
+- 权限: 登录用户
+- Body: `{ hotel_id, room_id, check_in, check_out, nights, total_price }`
+- 说明: 创建时会检查房间库存（事务锁），库存不足返回 `room_out_of_stock`
+
+#### 获取我的订单
+- **GET** `/api/orders`
+- 权限: 登录用户
+- 返回当前用户的所有订单（含酒店名称、房型名称）
+
+---
+
+### 收藏接口
+
+#### 获取我的收藏
+- **GET** `/api/favorites`
+- 权限: 登录用户
+
+#### 添加收藏
+- **POST** `/api/favorites`
+- 权限: 登录用户
+- Body: `{ hotel_id }`
+
+#### 检查是否已收藏
+- **GET** `/api/favorites/check/:hotel_id`
+- 权限: 登录用户
+
+#### 取消收藏
+- **DELETE** `/api/favorites/:hotel_id`
+- 权限: 登录用户
+
+---
+
 ## 数据库表结构
 
 ### users（用户表）
@@ -218,6 +255,12 @@ Authorization: Bearer <token>
 
 ### price_strategies（价格策略表）
 - id, hotel_id, room_id, strategy_name, discount, start_date, end_date, created_at
+
+### orders（订单表）
+- id, user_id, hotel_id, room_id, check_in, check_out, nights, total_price, status, created_at
+
+### favorites（收藏表）
+- id, user_id, hotel_id, created_at
 
 ---
 

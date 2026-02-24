@@ -1,5 +1,10 @@
 const orderModel = require('../models/order_model');
 
+/**
+ * 创建订单
+ * @param {Object} req - 请求对象，body 包含 hotel_id, room_id, check_in, check_out, nights, total_price, guests, room_count
+ * @param {Object} res - 响应对象
+ */
 async function createOrder(req, res) {
   try {
     const { hotel_id, room_id, check_in, check_out, nights, total_price, guests, room_count } = req.body;
@@ -23,6 +28,11 @@ async function createOrder(req, res) {
   }
 }
 
+/**
+ * 获取当前用户的订单列表
+ * @param {Object} req - 请求对象，通过 req.user.user_id 获取当前用户
+ * @param {Object} res - 响应对象
+ */
 async function getMyOrders(req, res) {
   try {
     const orders = await orderModel.findByUser(req.user.user_id);

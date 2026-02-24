@@ -34,12 +34,20 @@ export interface Room {
   updated_at: string
 }
 
-// 获取酒店列表
+/**
+ * 获取酒店列表
+ * @param {Object} params - 查询参数（status, star, keyword, city, sort, page, limit）
+ * @returns {Promise} 酒店列表
+ */
 export function getHotels(params?: { status?: string; star?: number; keyword?: string; city?: string; sort?: string; page?: number; limit?: number }) {
   return get<Hotel[]>('/api/hotels', params)
 }
 
-// 获取酒店详情
+/**
+ * 获取酒店详情
+ * @param {number} id - 酒店 ID
+ * @returns {Promise} 酒店详情（含房型列表）
+ */
 export function getHotelById(id: number) {
   return get<Hotel>(`/api/hotels/${id}`)
 }

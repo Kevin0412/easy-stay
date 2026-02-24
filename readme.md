@@ -327,7 +327,7 @@ easy-stay/
 │   │   └── App.tsx            # 应用入口
 │   └── package.json
 │
-├── client-android/               # Android 客户端（Taro RN）🚧 开发中
+├── client-android/               # Android 客户端（Taro RN）✅ 稳定
 │   └── ...
 │
 └── readme.md
@@ -343,11 +343,12 @@ easy-stay/
 
 ### 一、变量命名规范
 
-**风格**：全小写 + 下划线分隔（snake_case）
+**风格**：
+- **后端（Node.js）**：全小写 + 下划线分隔（snake_case）
+- **前端（React/TypeScript）**：小驼峰（camelCase），与 React 社区惯例一致
+- **数据库字段、接口参数、JSON 字段**：统一使用 snake_case
 
-**适用范围**：变量名、数据库字段、接口参数、JSON 字段、常量（大写）
-
-✅ 推荐：
+✅ 后端推荐：
 ```js
 hotel_list
 user_info
@@ -356,10 +357,17 @@ total_price
 is_published
 ```
 
-❌ 避免：
-```js
+✅ 前端推荐：
+```ts
+fetchHotels
+loadHotel
 hotelList
 checkInDate
+totalPrice
+```
+
+❌ 避免：
+```js
 TotalPrice
 data1
 ```
@@ -524,7 +532,7 @@ PORT=3000
 
 ### 📱 用户端多端支持
 
-用户端基于 Taro 3.6.23 框架开发，支持以下平台：
+用户端基于 Taro 4.x 框架开发，支持以下平台：
 
 - **H5 网页版**：浏览器访问
 - **微信小程序**：微信开发者工具
@@ -532,7 +540,7 @@ PORT=3000
 
 ---
 
-## 十三、后台管理系统运行指南
+## 十四、后台管理系统运行指南
 
 ### 🚀 快速启动
 
@@ -579,7 +587,7 @@ cd client-weapp-h5
 npm install --legacy-peer-deps
 ```
 
-> 注意：由于 Taro 3.x 的依赖兼容性问题，需要使用 `--legacy-peer-deps` 参数
+> 注意：由于 Taro 依赖兼容性问题，可能需要使用 `--legacy-peer-deps` 参数
 
 ---
 
@@ -628,31 +636,23 @@ npm run build:weapp
 
 ---
 
-### 📲 Android App（Taro RN）🚧 开发中
+### 📲 Android App（Taro RN）
 
 本项目使用 **Taro 4.x** 构建 React Native 输出，与用户端共享业务代码。
 
-> ⚠️ client-android 目前仍在开发中，以下指南可能会随开发进度更新。
+#### 环境要求
 
-#### 前置准备
+- Node.js v16+
+- JDK 17（AGP 要求，JDK 11 或 21 均不兼容）
+- Android SDK
+- ADB 工具
+- USB 连接的 Android 设备（需开启开发者选项和 USB 调试）
 
-1. **安装 Android SDK**（如果还没有）
-   ```bash
-   # 检查 Android SDK 是否已安装
-   ls ~/Android/Sdk
-   ```
+JDK 17 安装（Ubuntu）：
 
-2. **配置环境变量**
-   ```bash
-   export ANDROID_HOME=$HOME/Android/Sdk
-   export PATH=$PATH:$ANDROID_HOME/platform-tools
-   ```
-
-3. **连接 Android 设备**
-   ```bash
-   # 启用 USB 调试，连接手机后检查
-   adb devices
-   ```
+```bash
+sudo apt-get install -y openjdk-17-jdk
+```
 
 #### 编译和运行步骤
 
@@ -664,72 +664,84 @@ npm start
 # 后端运行在 http://localhost:3000
 ```
 
-**步骤 2：启动 Taro H5 开发服务器**
+**步骤 2：确认设备连接**
 
 ```bash
-cd client-weapp-h5
-npm run dev:h5
-# H5 运行在 http://localhost:10086
+adb devices
+# 确保输出中有设备且状态为 device
 ```
 
-**步骤 3：配置本机 IP 地址**
+**步骤 3：设置端口转发**
 
-编辑 `client-weapp-h5/src/config/index.ts`，修改 `DEV_HOST` 为你的局域网 IP：
-
-```typescript
-// 查看本机 IP：ip addr 或 ifconfig
-export const DEV_HOST = '192.168.x.x'  // 修改为你的 IP
-```
-
-**步骤 4：编译并安装 APP**
+将电脑的 Metro bundler 和后端 API 端口转发到设备：
 
 ```bash
-cd ../client-android
-
-# 首次运行需要安装依赖
-npm install
-
-# 编译并安装到设备
-export ANDROID_HOME=$HOME/Android/Sdk
-export PATH=$PATH:$ANDROID_HOME/platform-tools
-npx react-native run-android --deviceId <你的设备ID>
-
-# 或者不指定设备ID（如果只连接了一个设备）
-npx react-native run-android
+adb reverse tcp:8081 tcp:8081
+adb reverse tcp:3000 tcp:3000
 ```
 
-**步骤 5：在手机上打开 APP**
+> USB 重新插拔或 ADB 重启后转发会丢失，需重新执行。可通过 `adb reverse --list` 查看当前转发状态。
 
-- APP 名称：**EasyStay**
-- APP 会自动加载 Taro H5 页面
-- 支持热更新：修改代码后 H5 自动刷新
+**步骤 4：启动 Metro 开发服务器**
 
-#### 快速重新部署
+```bash
+cd client-android
+npm run android:dev
+```
 
-如果修改了 APP 代码（client-android/App.tsx），需要重新编译：
+如果 8081 端口被占用：
+
+```bash
+lsof -ti:8081 | xargs kill -9
+```
+
+**步骤 5：构建并安装 APK**
+
+首次运行或原生层代码变更时需要重新构建：
 
 ```bash
 cd client-android
 
-# 卸载旧版本（可选）
-adb uninstall com.easystaynative
+# 构建 RN bundle
+npx taro build --type rn --platform android
 
-# 重新编译安装
-npx react-native run-android
+# 构建 debug APK（需指定 JDK 17）
+JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 ./android/gradlew -p android assembleDebug
+
+# 安装到设备
+adb install -r android/app/build/outputs/apk/debug/app-debug.apk
 ```
 
-如果只修改了 Taro 项目代码（client-weapp-h5/src），**无需重新编译 APP**，H5 会自动热更新。
+**步骤 6：启动应用**
+
+```bash
+adb shell monkey -p com.easystayuser -c android.intent.category.LAUNCHER 1
+```
+
+> 仅修改 JS/TS 代码时无需重新构建 APK，Metro 会自动热更新。在设备上摇一摇选择 Reload 或双击 R 可手动刷新。
+
+#### 快速重新部署
+
+如果修改了原生层代码（android/ 目录下的文件），需要重新编译：
+
+```bash
+cd client-android
+
+npx taro build --type rn --platform android
+JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 ./android/gradlew -p android assembleDebug
+adb install -r android/app/build/outputs/apk/debug/app-debug.apk
+```
+
+如果只修改了 JS/TS 代码，Metro 会自动热更新，无需重新构建 APK。
 
 #### 生成 Release APK
 
 ```bash
-cd client-android/android
+cd client-android
 
-# 生成签名的 release APK
-./gradlew assembleRelease
+JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 ./android/gradlew -p android assembleRelease
 
-# APK 位置
-# android/app/build/outputs/apk/release/app-release.apk
+# APK 位置：android/app/build/outputs/apk/release/app-release.apk
 ```
 
 #### 常用 ADB 命令
@@ -738,14 +750,21 @@ cd client-android/android
 # 查看连接的设备
 adb devices
 
+# 端口转发（USB 重插后需重新执行）
+adb reverse tcp:8081 tcp:8081
+adb reverse tcp:3000 tcp:3000
+
+# 查看当前转发状态
+adb reverse --list
+
 # 安装 APK
-adb install app-release.apk
+adb install -r android/app/build/outputs/apk/debug/app-debug.apk
 
 # 卸载应用
-adb uninstall com.easystaynative
+adb uninstall com.easystayuser
 
 # 查看应用日志
-adb logcat | grep EasyStay
+adb logcat | grep EasyStayUser
 
 # 重启 ADB 服务
 adb kill-server
@@ -762,11 +781,17 @@ adb start-server
 npm install --legacy-peer-deps ajv
 ```
 
-#### 2. React Native 编译报错
+#### 2. AGP 要求 Java 17
 
-确保已安装以下依赖：
+```
+Android Gradle plugin requires Java 17 to run.
+```
+
+安装 JDK 17 并通过 `JAVA_HOME` 指定：
+
 ```bash
-npm install --legacy-peer-deps @tarojs/rn-runner@3.6.23 @tarojs/rn-supporter@3.6.23
+sudo apt-get install -y openjdk-17-jdk
+JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 ./android/gradlew -p android assembleDebug
 ```
 
 #### 3. 样式在 React Native 中不显示
@@ -811,7 +836,7 @@ distributionUrl=https\://mirrors.cloud.tencent.com/gradle/gradle-8.3-all.zip
 
 ### 📝 版本信息
 
-- **Taro**: 3.6.23
+- **Taro**: 4.1.11
 - **React**: 18.3.1
 - **Node.js**: 建议 v16-v20
 - **npm**: 建议 v8+
@@ -826,7 +851,7 @@ distributionUrl=https\://mirrors.cloud.tencent.com/gradle/gradle-8.3-all.zip
 
 ---
 
-## 十四、功能完成情况与待办事项
+## 十五、功能完成情况与待办事项
 
 > 评分截止：2/26 20:00，答辩：3/2–3/5
 
@@ -921,6 +946,6 @@ distributionUrl=https\://mirrors.cloud.tencent.com/gradle/gradle-8.3-all.zip
 | server | Node.js 后端服务 | ✅ 稳定 |
 | client-admin | 后台管理系统（React + AntD） | ✅ 稳定 |
 | client-weapp-h5 | 用户端（微信小程序 / H5） | ✅ 稳定 |
-| client-android | Android 客户端（Taro RN） | 🚧 开发中 |
+| client-android | Android 客户端（Taro RN） | ✅ 稳定 |
 
 ---

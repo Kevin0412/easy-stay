@@ -16,6 +16,8 @@ interface Response<T = any> {
 
 /**
  * 封装的请求方法
+ * @param {RequestOptions} options - 请求配置（url, method, data, header）
+ * @returns {Promise<Response<T>>} 响应数据
  */
 export function request<T = any>(options: RequestOptions): Promise<Response<T>> {
   const { url, method = 'GET', data, header = {} } = options
@@ -57,7 +59,12 @@ export function request<T = any>(options: RequestOptions): Promise<Response<T>> 
   })
 }
 
-// GET 请求
+/**
+ * GET 请求
+ * @param {string} url - 请求路径
+ * @param {Object} params - 查询参数，自动拼接到 URL
+ * @returns {Promise<Response<T>>} 响应数据
+ */
 export function get<T = any>(url: string, params?: any): Promise<Response<T>> {
   // 将参数拼接到URL中
   if (params) {
@@ -72,17 +79,32 @@ export function get<T = any>(url: string, params?: any): Promise<Response<T>> {
   return request<T>({ url, method: 'GET' })
 }
 
-// POST 请求
+/**
+ * POST 请求
+ * @param {string} url - 请求路径
+ * @param {any} data - 请求体数据
+ * @returns {Promise<Response<T>>} 响应数据
+ */
 export function post<T = any>(url: string, data?: any): Promise<Response<T>> {
   return request<T>({ url, method: 'POST', data })
 }
 
-// PUT 请求
+/**
+ * PUT 请求
+ * @param {string} url - 请求路径
+ * @param {any} data - 请求体数据
+ * @returns {Promise<Response<T>>} 响应数据
+ */
 export function put<T = any>(url: string, data?: any): Promise<Response<T>> {
   return request<T>({ url, method: 'PUT', data })
 }
 
-// DELETE 请求
+/**
+ * DELETE 请求
+ * @param {string} url - 请求路径
+ * @param {any} data - 请求体数据
+ * @returns {Promise<Response<T>>} 响应数据
+ */
 export function del<T = any>(url: string, data?: any): Promise<Response<T>> {
   return request<T>({ url, method: 'DELETE', data })
 }

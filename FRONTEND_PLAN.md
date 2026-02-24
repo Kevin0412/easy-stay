@@ -251,7 +251,7 @@ client-admin/
 
 **涉及文件：**
 ```
-client-user/
+client-weapp-h5/
 ├── src/
 │   ├── pages/list/
 │   │   └── index.tsx
@@ -284,7 +284,7 @@ client-user/
 
 **涉及文件：**
 ```
-client-user/
+client-weapp-h5/
 ├── src/
 │   ├── pages/detail/
 │   │   └── index.tsx
@@ -314,7 +314,7 @@ client-user/
 
 **涉及文件：**
 ```
-client-user/
+client-weapp-h5/
 ├── src/
 │   ├── pages/home/
 │   │   └── index.tsx
@@ -342,7 +342,7 @@ client-user/
 
 **涉及文件：**
 ```
-client-user/
+client-weapp-h5/
 ├── src/
 │   ├── theme/
 │   │   ├── index.ts
@@ -385,8 +385,7 @@ client-user/
 - **构建工具**: Vite
 
 ### 用户端
-- **框架**: Taro 3.x + React + TypeScript
-- **UI 库**: Taro UI / NutUI（可选）
+- **框架**: Taro 4.x + React + TypeScript
 - **状态管理**: Zustand / Redux Toolkit
 - **HTTP 请求**: Taro.request 封装
 - **多端支持**: 微信小程序 + H5

@@ -13,7 +13,7 @@ const request = axios.create({
   timeout: 10000
 })
 
-// 请求拦截器：自动注入Token
+/** 请求拦截器：自动注入 Token */
 request.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = useUserStore.getState().token
@@ -24,7 +24,7 @@ request.interceptors.request.use(
   }
 )
 
-// 响应拦截器：统一错误处理
+/** 响应拦截器：统一错误处理（401 跳转登录，403 权限提示） */
 request.interceptors.response.use(
   (response) => response,
   (error: AxiosError<ApiResponse>) => {
