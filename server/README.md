@@ -145,15 +145,31 @@ Authorization: Bearer <token>
 - 权限: 商户（仅自己的酒店）
 - 将酒店状态从 draft 改为 pending
 
+#### 获取轮播图酒店
+- **GET** `/api/hotels/carousel`
+- 权限: 公开
+- 返回: `{ success, data: [hotel] }`
+
 #### 审核通过
 - **POST** `/api/hotels/:id/approve`
 - 权限: 管理员
 - 将酒店状态改为 published
 
+#### 审核拒绝
+- **POST** `/api/hotels/:id/reject`
+- 权限: 管理员
+- Body: `{ reason }`
+- 将酒店状态改为 rejected，记录拒绝原因
+
 #### 下线酒店
 - **POST** `/api/hotels/:id/offline`
 - 权限: 管理员
 - 将酒店状态改为 offline
+
+#### 恢复上线
+- **POST** `/api/hotels/:id/restore`
+- 权限: 管理员
+- 将酒店状态从 offline 恢复为 published
 
 ---
 
@@ -204,6 +220,38 @@ Authorization: Bearer <token>
 
 ---
 
+### 订单接口
+
+#### 创建订单
+- **POST** `/api/orders`
+- 权限: 登录用户
+- Body: `{ hotel_id, room_id, check_in, check_out, guests, room_count }`
+- 使用事务 + 行锁防止超卖
+
+#### 获取我的订单
+- **GET** `/api/orders`
+- 权限: 登录用户
+- 返回当前用户的所有订单
+
+---
+
+### 收藏接口
+
+#### 添加收藏
+- **POST** `/api/favorites`
+- 权限: 登录用户
+- Body: `{ hotel_id }`
+
+#### 取消收藏
+- **DELETE** `/api/favorites/:id`
+- 权限: 登录用户
+
+#### 获取收藏列表
+- **GET** `/api/favorites`
+- 权限: 登录用户
+
+---
+
 ## 数据库表结构
 
 ### users（用户表）
@@ -211,13 +259,22 @@ Authorization: Bearer <token>
 - role: `admin`（管理员）, `merchant`（商户）, `user`（普通用户）
 
 ### hotels（酒店表）
-- id, name_cn, name_en, address, star, open_date, status, created_by, created_at, updated_at
+- id, name_cn, name_en, address, star, open_date, status, reject_reason
+- cover_image, images（JSON）, tags, facilities（JSON）, nearby（JSON）
+- created_by, views, created_at, updated_at
 
 ### rooms（房型表）
-- id, hotel_id, room_type, price, stock, created_at, updated_at
+- id, hotel_id, room_type, price, stock, max_guests, image, created_at, updated_at
 
 ### price_strategies（价格策略表）
 - id, hotel_id, room_id, strategy_name, discount, start_date, end_date, created_at
+
+### orders（订单表）
+- id, user_id, hotel_id, room_id, check_in, check_out, nights, total_price
+- guests, room_count, status, created_at
+
+### favorites（收藏表）
+- id, user_id, hotel_id, created_at
 
 ---
 
