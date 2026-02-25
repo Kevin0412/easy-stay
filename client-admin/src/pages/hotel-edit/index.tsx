@@ -140,8 +140,12 @@ export default function HotelEdit() {
       }
 
       if (isEdit) {
-        await updateHotel(Number(id), formData)
-        message.success('更新成功')
+        const res = await updateHotel(Number(id), formData)
+        if (res.data?.data?.need_resubmit) {
+          message.warning('保存成功，请重新提交审核')
+        } else {
+          message.success('更新成功')
+        }
       } else {
         await createHotel(formData)
         message.success('创建成功')
