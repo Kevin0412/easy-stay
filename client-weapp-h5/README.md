@@ -3,8 +3,10 @@
 ## 安装依赖
 
 ```bash
-npm install
+npm install --legacy-peer-deps
 ```
+
+> 注意：Taro 依赖存在兼容性问题，必须使用 `--legacy-peer-deps` 参数
 
 ## 编译运行
 
@@ -21,10 +23,19 @@ npm run dev:h5
 
 ## 后端地址配置
 
-修改 `.env` 文件中的 `API_URL`：
+修改 `src/config/index.ts` 中的默认地址，或通过环境变量 `TARO_APP_API_URL` 覆盖：
+
+```typescript
+// src/config/index.ts
+export function getApiBaseUrl(): string {
+  return process.env.TARO_APP_API_URL || 'http://你的IP:3000'
+}
+```
+
+也可以在项目根目录创建 `.env.development` 文件：
 
 ```bash
-API_URL=http://你的IP:3000
+TARO_APP_API_URL=http://你的IP:3000
 ```
 
 修改后重新编译即可生效。

@@ -17,7 +17,7 @@
 
 ### 审核管理（管理员）
 - 查看待审核酒店
-- 审核通过/下线操作
+- 审核通过/拒绝（附原因）/下线/恢复上线操作
 
 ## 技术栈
 
@@ -92,7 +92,7 @@ npm run preview
 1. 使用管理员账号登录
 2. 左侧菜单点击"酒店审核"
 3. 查看待审核酒店列表
-4. 点击"审核通过"或"下线"
+4. 点击"审核通过"、"拒绝（填写原因）"或"下线"
 
 ## 项目结构
 
@@ -106,15 +106,20 @@ src/
 │   ├── login/          # 登录/注册
 │   ├── hotel-list/     # 酒店列表
 │   ├── hotel-edit/     # 酒店编辑
+│   │   └── components/
+│   │       ├── room-manager.tsx         # 房型管理子组件
+│   │       └── price-strategy-manager.tsx # 价格策略子组件
 │   └── audit/          # 审核页面
 ├── services/           # API 服务
 │   ├── auth.ts         # 认证
 │   ├── hotel.ts        # 酒店
-│   └── room.ts         # 房型
+│   ├── room.ts         # 房型
+│   └── price.ts        # 价格策略
 ├── store/              # 状态管理
 │   └── user-store.ts   # 用户状态
 ├── utils/              # 工具函数
-│   └── request.ts      # HTTP 请求封装
+│   ├── request.ts      # HTTP 请求封装
+│   └── date.ts         # 日期工具函数
 ├── router/             # 路由配置
 └── styles/             # 全局样式
 ```
