@@ -1,0 +1,13 @@
+# Gradle build outputs
+build/
+app/build/
+
+# Gradle cache
+.gradle/
+
+# Local properties (SDK path etc.)
+local.properties
+
+# IntelliJ / Android Studio
+*.iml
+.idea/
