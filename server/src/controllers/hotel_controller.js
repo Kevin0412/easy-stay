@@ -186,10 +186,15 @@ async function updateHotel(req, res) {
 
     await hotelModel.update(id, hotel_data);
 
+    // 已发布的酒店被修改后，需重新提交审核
+    if (hotel.status === 'published') {
+      await hotelModel.updateStatus(id, 'draft');
+    }
+
     res.json({
       success: true,
-      data: {},
-      message: 'hotel_updated_successfully'
+      data: { need_resubmit: hotel.status === 'published' },
+      message: hotel.status === 'published' ? 'hotel_updated_need_resubmit' : 'hotel_updated_successfully'
     });
   } catch (error) {
     console.error('Update hotel error:', error);
