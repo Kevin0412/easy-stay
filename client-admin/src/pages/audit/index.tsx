@@ -97,6 +97,7 @@ export default function Audit() {
   const [hotels, setHotels] = useState<Hotel[]>([])
   const [loading, setLoading] = useState(false)
   const [statusFilter, setStatusFilter] = useState<string>('all')
+  const [keyword, setKeyword] = useState('')
   const [rejectModal, setRejectModal] = useState<{ open: boolean; hotel: Hotel | null }>({
     open: false,
     hotel: null
@@ -134,9 +135,9 @@ export default function Audit() {
     fetchHotels()
   }, [])
 
-  const displayedHotels = statusFilter === 'all'
-    ? hotels
-    : hotels.filter((h) => h.status === statusFilter)
+  const displayedHotels = hotels
+    .filter((h) => statusFilter === 'all' || h.status === statusFilter)
+    .filter((h) => !keyword || h.name_cn.includes(keyword))
 
   const pendingCount = hotels.filter((h) => h.status === 'pending').length
 
@@ -319,7 +320,14 @@ export default function Audit() {
         />
       )}
 
-      <div style={{ marginBottom: 16 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+        <Input.Search
+          style={{ width: 220 }}
+          placeholder="搜索酒店名称"
+          allowClear
+          onSearch={setKeyword}
+          onChange={(e) => { if (!e.target.value) setKeyword('') }}
+        />
         <Select
           style={{ width: 160 }}
           value={statusFilter}

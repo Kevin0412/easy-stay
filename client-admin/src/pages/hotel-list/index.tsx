@@ -169,7 +169,7 @@ export default function HotelList() {
         />
 
         <Select
-          style={{ width: 150, marginLeft: 16 }}
+          style={{ width: 150 }}
           value={starFilter}
           onChange={setStarFilter}
           options={[
