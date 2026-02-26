@@ -36,10 +36,10 @@ export interface HotelFormData {
 
 /**
  * 获取酒店列表
- * @param {Object} params - 查询参数（status, star）
+ * @param {Object} params - 查询参数（status, star, keyword）
  * @returns {Promise} 酒店列表
  */
-export function getHotels(params?: { status?: HotelStatus; star?: number }) {
+export function getHotels(params?: { status?: HotelStatus; star?: number; keyword?: string }) {
   return request.get<ApiResponse<Hotel[]>>('/hotels', { params })
 }
 

@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Form, Input, InputNumber, DatePicker, Button, Card, message, Space, Checkbox } from 'antd'
-import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons'
+import { Form, Input, InputNumber, DatePicker, Button, Card, message, Space, Checkbox, Upload } from 'antd'
+import type { UploadFile } from 'antd'
+import { PlusOutlined } from '@ant-design/icons'
 import dayjs from 'dayjs'
 import { getHotelById, createHotel, updateHotel, HotelFormData } from '@/services/hotel'
+import { useUserStore } from '@/store/user-store'
 import { parseDate } from '@/utils/date'
 import RoomManager from './components/room-manager'
 import PriceStrategyManager from './components/price-strategy-manager'
@@ -26,54 +28,16 @@ const HOTEL_TAGS = [
   '宠物友好',
 ]
 
-/** 图片 URL 输入框，带实时预览 */
-function ImageInput({
-  value,
-  onChange,
-  placeholder,
-}: {
-  value?: string
-  onChange?: (v: string) => void
-  placeholder?: string
-}) {
-  return (
-    <div>
-      <Input
-        value={value}
-        onChange={(e) => onChange?.(e.target.value)}
-        placeholder={placeholder}
-      />
-      {value && (
-        <img
-          src={value}
-          alt="预览"
-          style={{
-            display: 'block',
-            marginTop: 6,
-            maxHeight: 100,
-            maxWidth: 240,
-            objectFit: 'cover',
-            borderRadius: 4,
-            border: '1px solid #f0f0f0',
-          }}
-          onError={(e) => {
-            e.currentTarget.style.display = 'none'
-          }}
-          onLoad={(e) => {
-            e.currentTarget.style.display = 'block'
-          }}
-        />
-      )}
-    </div>
-  )
-}
 
 export default function HotelEdit() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
+  const [coverFileList, setCoverFileList] = useState<UploadFile[]>([])
+  const [galleryFileList, setGalleryFileList] = useState<UploadFile[]>([])
   const isEdit = !!id
+  const token = useUserStore((state) => state.token)
 
   useEffect(() => {
     if (isEdit) {
@@ -86,11 +50,21 @@ export default function HotelEdit() {
       const res = await getHotelById(Number(id))
       const hotel = res.data.data
 
-      let imageList: { url: string }[] = []
+      // 封面图回填
+      if (hotel.cover_image) {
+        setCoverFileList([{ uid: '-1', name: 'cover', status: 'done', url: hotel.cover_image }])
+      }
+
+      // 图集回填
       if (hotel.images) {
         try {
-          const parsed = JSON.parse(hotel.images)
-          imageList = parsed.map((url: string) => ({ url }))
+          const urls: string[] = JSON.parse(hotel.images)
+          setGalleryFileList(urls.map((url, i) => ({
+            uid: `${-i - 1}`,
+            name: `image-${i + 1}`,
+            status: 'done' as const,
+            url,
+          })))
         } catch {}
       }
 
@@ -106,8 +80,6 @@ export default function HotelEdit() {
         address: hotel.address,
         star: hotel.star,
         open_date: hotel.open_date ? parseDate(hotel.open_date) : null,
-        cover_image: hotel.cover_image || '',
-        images: imageList,
         tags: tagList,
         nearby: hotel.nearby || '',
       })
@@ -119,12 +91,10 @@ export default function HotelEdit() {
   const handleSubmit = async (values: any) => {
     setLoading(true)
     try {
-      const imageUrls = (values.images || [])
-        .map((item: { url: string }) => item.url?.trim())
-        .filter(Boolean)
-
-      // tags 数组转回逗号分隔字符串
-      const tagsStr = (values.tags || []).join(',') || undefined
+      const cover_image = coverFileList[0]?.response?.data?.url || coverFileList[0]?.url || undefined
+      const imageUrls = galleryFileList
+        .map((f) => f.response?.data?.url || f.url)
+        .filter(Boolean) as string[]
 
       const formData: HotelFormData = {
         name_cn: values.name_cn,
@@ -132,9 +102,9 @@ export default function HotelEdit() {
         address: values.address,
         star: values.star,
         open_date: values.open_date ? dayjs(values.open_date).format('YYYY-MM-DD') : undefined,
-        cover_image: values.cover_image?.trim() || undefined,
+        cover_image,
         images: imageUrls.length > 0 ? JSON.stringify(imageUrls) : undefined,
-        tags: tagsStr,
+        tags: (values.tags || []).join(',') || undefined,
         facilities: undefined,
         nearby: values.nearby?.trim() || undefined,
       }
@@ -202,51 +172,42 @@ export default function HotelEdit() {
 
           <Form.Item
             name="cover_image"
-            label="封面图片 URL"
-            extra="用于列表页展示，输入 URL 后实时预览"
+            label="封面图片"
+            extra="用于列表页展示，建议尺寸 800×500"
           >
-            <ImageInput placeholder="https://example.com/cover.jpg" />
+            <Upload
+              action="/api/upload"
+              headers={{ Authorization: `Bearer ${token}` }}
+              listType="picture-card"
+              fileList={coverFileList}
+              maxCount={1}
+              accept="image/*"
+              onChange={({ fileList }) => setCoverFileList(fileList)}
+            >
+              {coverFileList.length < 1 && (
+                <div><PlusOutlined /><div style={{ marginTop: 8 }}>上传封面</div></div>
+              )}
+            </Upload>
           </Form.Item>
 
           <Form.Item
             label="图集（最多10张）"
-            extra="用于详情页轮播展示，输入 URL 后实时预览"
+            extra="用于详情页轮播展示"
           >
-            <Form.List name="images">
-              {(fields, { add, remove }) => (
-                <>
-                  {fields.map((field, index) => (
-                    <Space
-                      key={field.key}
-                      align="start"
-                      style={{ display: 'flex', marginBottom: 12 }}
-                    >
-                      <Form.Item
-                        {...field}
-                        name={[field.name, 'url']}
-                        rules={[{ required: true, message: '请输入图片 URL 或删除此行' }]}
-                        style={{ marginBottom: 0, minWidth: 420 }}
-                      >
-                        <ImageInput placeholder={`图片 ${index + 1} URL`} />
-                      </Form.Item>
-                      <MinusCircleOutlined
-                        style={{ marginTop: 8, color: '#ff4d4f' }}
-                        onClick={() => remove(field.name)}
-                      />
-                    </Space>
-                  ))}
-                  {fields.length < 10 && (
-                    <Button
-                      type="dashed"
-                      onClick={() => add()}
-                      icon={<PlusOutlined />}
-                    >
-                      添加图片
-                    </Button>
-                  )}
-                </>
+            <Upload
+              action="/api/upload"
+              headers={{ Authorization: `Bearer ${token}` }}
+              listType="picture-card"
+              fileList={galleryFileList}
+              maxCount={10}
+              accept="image/*"
+              multiple
+              onChange={({ fileList }) => setGalleryFileList(fileList)}
+            >
+              {galleryFileList.length < 10 && (
+                <div><PlusOutlined /><div style={{ marginTop: 8 }}>上传图片</div></div>
               )}
-            </Form.List>
+            </Upload>
           </Form.Item>
 
           <Form.Item name="tags" label="设施服务">
