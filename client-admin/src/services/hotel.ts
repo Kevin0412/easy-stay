@@ -34,7 +34,7 @@ export interface HotelFormData {
   nearby?: string
 }
 
-export function getHotels(params?: { status?: HotelStatus; star?: number }) {
+export function getHotels(params?: { status?: HotelStatus; star?: number; keyword?: string }) {
   return request.get<ApiResponse<Hotel[]>>('/hotels', { params })
 }
 

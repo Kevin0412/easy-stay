@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Table, Button, Space, Select, Modal, message, Alert, Typography } from 'antd'
+import { Table, Button, Space, Select, Input, Modal, message, Alert, Typography } from 'antd'
 import { PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import { getHotels, deleteHotel, publishHotel, Hotel, HotelStatus } from '@/services/hotel'
 import { useUserStore } from '@/store/user-store'
@@ -14,13 +14,14 @@ export default function HotelList() {
   const [loading, setLoading] = useState(false)
   const [statusFilter, setStatusFilter] = useState<HotelStatus | undefined>()
   const [starFilter, setStarFilter] = useState<number | undefined>()
+  const [keyword, setKeyword] = useState('')
   const navigate = useNavigate()
   const user = useUserStore((state) => state.user)
 
   const fetchHotels = async () => {
     setLoading(true)
     try {
-      const res = await getHotels({ status: statusFilter, star: starFilter })
+      const res = await getHotels({ status: statusFilter, star: starFilter, keyword: keyword || undefined })
       setHotels(res.data.data)
     } catch (error) {
       // 错误已在拦截器处理
@@ -31,7 +32,7 @@ export default function HotelList() {
 
   useEffect(() => {
     fetchHotels()
-  }, [statusFilter, starFilter])
+  }, [statusFilter, starFilter, keyword])
 
   const handleDelete = (id: number) => {
     Modal.confirm({
@@ -141,6 +142,14 @@ export default function HotelList() {
       )}
 
       <div className={styles.filters}>
+        <Input.Search
+          style={{ width: 220 }}
+          placeholder="搜索酒店名称/地址"
+          allowClear
+          onSearch={setKeyword}
+          onChange={(e) => { if (!e.target.value) setKeyword('') }}
+        />
+
         <Select
           style={{ width: 150 }}
           placeholder="筛选状态"

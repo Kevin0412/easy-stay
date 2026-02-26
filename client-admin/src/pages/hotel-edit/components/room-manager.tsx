@@ -1,45 +1,9 @@
 import { useEffect, useState } from 'react'
-import { Card, Table, Button, Space, Modal, Form, Input, InputNumber, message } from 'antd'
+import { Card, Table, Button, Space, Modal, Form, Input, InputNumber, message, Upload } from 'antd'
+import type { UploadFile } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { getRoomsByHotelId, createRoom, updateRoom, deleteRoom, Room, RoomFormData } from '@/services/room'
-
-/** 图片 URL 输入框，带实时预览 */
-function ImageInput({
-  value,
-  onChange,
-  placeholder,
-}: {
-  value?: string
-  onChange?: (v: string) => void
-  placeholder?: string
-}) {
-  return (
-    <div>
-      <Input
-        value={value}
-        onChange={(e) => onChange?.(e.target.value)}
-        placeholder={placeholder}
-      />
-      {value && (
-        <img
-          src={value}
-          alt="预览"
-          style={{
-            display: 'block',
-            marginTop: 6,
-            maxHeight: 100,
-            maxWidth: 240,
-            objectFit: 'cover',
-            borderRadius: 4,
-            border: '1px solid #f0f0f0',
-          }}
-          onError={(e) => { e.currentTarget.style.display = 'none' }}
-          onLoad={(e) => { e.currentTarget.style.display = 'block' }}
-        />
-      )}
-    </div>
-  )
-}
+import { useUserStore } from '@/store/user-store'
 
 interface RoomManagerProps {
   hotelId: number
@@ -50,9 +14,10 @@ export default function RoomManager({ hotelId }: RoomManagerProps) {
   const [loading, setLoading] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
   const [editingRoom, setEditingRoom] = useState<Room | null>(null)
+  const [imageFileList, setImageFileList] = useState<UploadFile[]>([])
   const [form] = Form.useForm()
+  const token = useUserStore((state) => state.token)
 
-  // 加载房型列表
   const fetchRooms = async () => {
     setLoading(true)
     try {
@@ -67,27 +32,33 @@ export default function RoomManager({ hotelId }: RoomManagerProps) {
     fetchRooms()
   }, [hotelId])
 
-  // 打开新建/编辑弹窗
   const openModal = (room?: Room) => {
     setEditingRoom(room || null)
     if (room) {
       form.setFieldsValue(room)
+      setImageFileList(
+        room.image
+          ? [{ uid: '-1', name: 'image', status: 'done', url: room.image }]
+          : []
+      )
     } else {
       form.resetFields()
+      setImageFileList([])
     }
     setModalOpen(true)
   }
 
-  // 提交房型表单
   const handleSubmit = async (values: any) => {
     try {
+      const image = imageFileList[0]?.response?.data?.url || imageFileList[0]?.url || undefined
+
       const formData: RoomFormData = {
         hotel_id: hotelId,
         room_type: values.room_type,
         price: values.price,
         stock: values.stock,
         max_guests: values.max_guests,
-        image: values.image?.trim() || undefined
+        image,
       }
 
       if (editingRoom) {
@@ -105,7 +76,6 @@ export default function RoomManager({ hotelId }: RoomManagerProps) {
     }
   }
 
-  // 删除房型
   const handleDelete = (id: number) => {
     Modal.confirm({
       title: '确认删除',
@@ -135,32 +105,16 @@ export default function RoomManager({ hotelId }: RoomManagerProps) {
           <span style={{ color: '#ccc', fontSize: 12 }}>无图片</span>
         )
     },
-    {
-      title: '房型名称',
-      dataIndex: 'room_type'
-    },
-    {
-      title: '价格（元/晚）',
-      dataIndex: 'price'
-    },
-    {
-      title: '库存',
-      dataIndex: 'stock'
-    },
-    {
-      title: '最多入住人数',
-      dataIndex: 'max_guests'
-    },
+    { title: '房型名称', dataIndex: 'room_type' },
+    { title: '价格（元/晚）', dataIndex: 'price' },
+    { title: '库存', dataIndex: 'stock' },
+    { title: '最多入住人数', dataIndex: 'max_guests' },
     {
       title: '操作',
       render: (_: any, record: Room) => (
         <Space>
-          <Button size="small" onClick={() => openModal(record)}>
-            编辑
-          </Button>
-          <Button size="small" danger onClick={() => handleDelete(record.id)}>
-            删除
-          </Button>
+          <Button size="small" onClick={() => openModal(record)}>编辑</Button>
+          <Button size="small" danger onClick={() => handleDelete(record.id)}>删除</Button>
         </Space>
       )
     }
@@ -224,15 +178,25 @@ export default function RoomManager({ hotelId }: RoomManagerProps) {
             <InputNumber min={1} style={{ width: '100%' }} />
           </Form.Item>
 
-          <Form.Item name="image" label="房型图片 URL（可选）">
-            <ImageInput placeholder="https://example.com/room.jpg" />
+          <Form.Item label="房型图片（可选）">
+            <Upload
+              action="/api/upload"
+              headers={{ Authorization: `Bearer ${token}` }}
+              listType="picture-card"
+              fileList={imageFileList}
+              maxCount={1}
+              accept="image/*"
+              onChange={({ fileList }) => setImageFileList(fileList)}
+            >
+              {imageFileList.length < 1 && (
+                <div><PlusOutlined /><div style={{ marginTop: 8 }}>上传图片</div></div>
+              )}
+            </Upload>
           </Form.Item>
 
           <Form.Item>
             <Space>
-              <Button type="primary" htmlType="submit">
-                保存
-              </Button>
+              <Button type="primary" htmlType="submit">保存</Button>
               <Button onClick={() => setModalOpen(false)}>取消</Button>
             </Space>
           </Form.Item>
