@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { Table, Button, Space, Modal, Input, message, Typography, Select, Alert, Drawer, Descriptions, Image, Tag } from 'antd'
 import { CheckOutlined, CloseOutlined, StopOutlined, RedoOutlined, BellOutlined, EyeOutlined } from '@ant-design/icons'
 import { getHotels, approveHotel, rejectHotel, offlineHotel, restoreHotel, Hotel, HotelStatus } from '@/services/hotel'
+import { getRoomsByHotelId, Room } from '@/services/room'
+import { getPriceStrategiesByHotelId, PriceStrategy } from '@/services/price'
 import HotelStatusTag from '@/components/hotel-status-tag'
 import styles from './index.module.scss'
 
@@ -9,6 +11,14 @@ const { TextArea } = Input
 const { Text } = Typography
 
 function HotelDetail({ hotel }: { hotel: Hotel }) {
+  const [rooms, setRooms] = useState<Room[]>([])
+  const [strategies, setStrategies] = useState<PriceStrategy[]>([])
+
+  useEffect(() => {
+    getRoomsByHotelId(hotel.id).then(res => setRooms(res.data.data || []))
+    getPriceStrategiesByHotelId(hotel.id).then(res => setStrategies(res.data.data || []))
+  }, [hotel.id])
+
   let imageList: string[] = []
   if (hotel.images) {
     try {
@@ -24,6 +34,31 @@ function HotelDetail({ hotel }: { hotel: Hotel }) {
   const nearbyList = hotel.nearby
     ? hotel.nearby.split(',').map((n) => n.trim()).filter(Boolean)
     : []
+
+  const roomColumns = [
+    { title: '房型', dataIndex: 'room_type' },
+    { title: '价格/晚', dataIndex: 'price', render: (p: number) => `¥${p}` },
+    { title: '库存', dataIndex: 'stock' },
+    { title: '最多入住', dataIndex: 'max_guests', render: (n: number) => `${n}人` },
+  ]
+
+  const strategyColumns = [
+    { title: '策略名称', dataIndex: 'strategy_name' },
+    {
+      title: '适用范围',
+      render: (_: any, r: PriceStrategy) =>
+        r.room_id ? (rooms.find(rm => rm.id === r.room_id)?.room_type || `房型${r.room_id}`) : '全酒店通用'
+    },
+    { title: '折扣', dataIndex: 'discount', render: (d: number) => `${+(d * 10).toFixed(1)}折` },
+    { title: '有效期', render: (_: any, r: PriceStrategy) => `${r.start_date} ~ ${r.end_date}` },
+    {
+      title: '状态',
+      render: (_: any, r: PriceStrategy) =>
+        new Date(r.end_date) < new Date()
+          ? <Tag color="default">已过期</Tag>
+          : <Tag color="green">有效</Tag>
+    },
+  ]
 
   return (
     <div>
@@ -80,7 +115,7 @@ function HotelDetail({ hotel }: { hotel: Hotel }) {
       )}
 
       {nearbyList.length > 0 && (
-        <div>
+        <div style={{ marginBottom: 16 }}>
           <Text strong>附近景点</Text>
           <div style={{ marginTop: 8 }}>
             <Space wrap>
@@ -89,6 +124,32 @@ function HotelDetail({ hotel }: { hotel: Hotel }) {
           </div>
         </div>
       )}
+
+      <div style={{ marginBottom: 16 }}>
+        <Text strong>房型信息</Text>
+        <Table
+          style={{ marginTop: 8 }}
+          columns={roomColumns}
+          dataSource={rooms}
+          rowKey="id"
+          size="small"
+          pagination={false}
+          locale={{ emptyText: '暂无房型' }}
+        />
+      </div>
+
+      <div>
+        <Text strong>折扣策略</Text>
+        <Table
+          style={{ marginTop: 8 }}
+          columns={strategyColumns}
+          dataSource={strategies}
+          rowKey="id"
+          size="small"
+          pagination={false}
+          locale={{ emptyText: '暂无折扣策略' }}
+        />
+      </div>
     </div>
   )
 }
